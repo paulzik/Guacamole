@@ -53,6 +53,10 @@ MeshFilter::~MeshFilter() {
 
 }
 
+GLsizei MeshFilter::getIndexCount() {
+    return indices.size();
+}
+
 const char* MeshFilter::GetComponentName() const  {
 	return "MeshFilter";
 }

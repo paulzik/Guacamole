@@ -11,6 +11,7 @@
 #include "ECS/Scene.h"
 #include "ECS/MeshFilter.h"
 #include "ECS/PrimitiveFactory.h"
+#include "ECS/MeshRenderer.h"
 
 using namespace glm;
 using namespace std;
@@ -107,10 +108,8 @@ int main() {
 
     Entity cube1("Cube1", vec3(0, 0, 0));
     MeshFilter& mesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
+    MeshRenderer& meshrend = cube1.AddComponent<MeshRenderer>();
     mesh.InitGPU();
-
-    
-
 
     // Uniform locations
     GLuint modelLoc = glGetUniformLocation(shader, "model");

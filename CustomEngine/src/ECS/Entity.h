@@ -22,24 +22,20 @@ public:
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)
     {
-        components.push_back(
-            std::make_unique<T>(std::forward<Args>(args)...)
-        );
-
+        auto comp = std::make_unique<T>(std::forward<Args>(args)...);
+        comp->SetOwner(this); // set the owner pointer
+        components.push_back(std::move(comp));
         return *static_cast<T*>(components.back().get());
     }
 
     //Gets the first component of type T it gets in the components
     template<typename T>
-    T* GetComponent() {
-        static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
-
+    T& GetComponent() {
         for (auto& c : components) {
-            if(T* checkPointer =  dynamic_cast<T*>(c.get()))
-                return checkedPointer;
+            if (auto ptr = dynamic_cast<T*>(c.get()))
+                return *ptr; // returns lvalue
         }
-
-        return nullptr;
+        throw std::runtime_error("Component not found");
     }
 
     template<typename T>

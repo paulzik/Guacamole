@@ -41,6 +41,13 @@ file(GLOB_RECURSE ENGINE_SOURCES
     "${CMAKE_SOURCE_DIR}/src/*.h"
 )
 
+# Copy shaders to the runtime directory (build folder) every build
+add_custom_target(CopyShaders ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/src/Shaders
+        ${CMAKE_BINARY_DIR}/Shaders
+)
+
 # ---------------------------------------------------------
 # ImGui sources (explicit — safe & recommended)
 # ---------------------------------------------------------
