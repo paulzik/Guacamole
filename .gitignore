@@ -1,0 +1,33 @@
+# Build directory
+CustomEngine/build/
+cmake-build-*/
+out/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio / Visual Studio Code
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.user
+*.opensdf
+*.sdf
+*.pdb
+*.obj
+*.tlog
+*.ipch
+*.db
+*.opendb
+
+# Executables
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Logs
+*.log
