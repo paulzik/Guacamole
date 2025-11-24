@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "ECS/MeshFilter.h"
 #include "ECS/Entity.h"
+#include "ECS/Transform.h"
 
 MeshRenderer::MeshRenderer()
 {
@@ -46,18 +47,9 @@ void MeshRenderer::Start()
 
 void MeshRenderer::Update()
 {
+    Transform& transform = owner->GetComponent<Transform>();
+
     glUseProgram(shaderProgram);
-
-    // -----------------------------
-    // MODEL MATRIX
-    // -----------------------------
-    float scale = 1.0f;
-    float posx = 0, posy = 0, posz = 0;
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(posx, posy, posz));
-    model = glm::rotate(model, 0.0f, glm::vec3(0, 1, 0));
-    model = glm::scale(model, glm::vec3(scale));
 
     // -----------------------------
     // VIEW MATRIX
@@ -83,7 +75,7 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "model"),
-        1, GL_FALSE, glm::value_ptr(model)
+        1, GL_FALSE, glm::value_ptr(transform.getModelMatrix())
     );
 
     glUniformMatrix4fv(

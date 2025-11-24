@@ -12,6 +12,7 @@
 #include "ECS/MeshFilter.h"
 #include "ECS/PrimitiveFactory.h"
 #include "ECS/MeshRenderer.h"
+#include "ECS/Transform.h"
 
 using namespace glm;
 using namespace std;
@@ -23,6 +24,7 @@ GLuint compileShader(GLenum type, const char* src) {
     glCompileShader(shader);
     return shader;
 }
+float rotAngle = 0;
 
 int main() {
 
@@ -59,7 +61,6 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
 
-    float scale = 1.0f;
     float posx = 0, posy = 0, posz = 0;
     float lightx = 2, lighty = 2, lightz = 2;
 
@@ -68,7 +69,7 @@ int main() {
     
     cout << "------" << endl;
     cube1.PrintComponents();
-        
+       
 
     while (running) {
         SDL_Event e;
@@ -83,7 +84,6 @@ int main() {
 
         // --- ImGui sliders ---
         ImGui::Begin("Cube Transform");
-        ImGui::SliderFloat("Scale", &scale, 0.1f, 2.0f);
         ImGui::SliderFloat("PosX", &posx, -2.0f, 2.0f);
         ImGui::SliderFloat("PosY", &posy, -2.0f, 2.0f);
         ImGui::SliderFloat("PosZ", &posz, -2.0f, 2.0f);
@@ -99,6 +99,8 @@ int main() {
 
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        cube1.GetComponent<Transform>().setPosition(vec3(posx, posy, posz));
 
         meshrend.Update();
 
