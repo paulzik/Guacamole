@@ -1,10 +1,11 @@
 ﻿cmake_minimum_required(VERSION 3.16)
-project(CustomEngine)
+project(CustomEngine LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ---------------------------------------------------------
-# Paths to external libraries
+# External library paths
 # ---------------------------------------------------------
 set(SDL3_DIR "${CMAKE_SOURCE_DIR}/external/SDL3-3.2.26")
 set(GLEW_DIR "${CMAKE_SOURCE_DIR}/external/glew-2.2.0")
@@ -15,11 +16,11 @@ set(IMGUI_DIR "${CMAKE_SOURCE_DIR}/external/imgui")
 # ---------------------------------------------------------
 message(STATUS "Checking SDL3 LIB: ${SDL3_DIR}/lib/x64/SDL3.lib")
 
-if (EXISTS "${SDL3_DIR}/lib/x64/SDL3.lib")
-    message(STATUS "SDL3 LIB FOUND!")
-else()
+if(NOT EXISTS "${SDL3_DIR}/lib/x64/SDL3.lib")
     message(FATAL_ERROR "SDL3 LIB NOT FOUND at ${SDL3_DIR}/lib/x64/SDL3.lib")
 endif()
+
+message(STATUS "SDL3 LIB FOUND!")
 
 # ---------------------------------------------------------
 # Include directories
@@ -34,22 +35,15 @@ include_directories(
 )
 
 # ---------------------------------------------------------
-# Automatically collect all your engine source files
+# Automatically collect engine source files
 # ---------------------------------------------------------
 file(GLOB_RECURSE ENGINE_SOURCES
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_SOURCE_DIR}/src/*.h"
 )
 
-# Copy shaders to the runtime directory (build folder) every build
-add_custom_target(CopyShaders ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/src/Shaders
-        ${CMAKE_BINARY_DIR}/Shaders
-)
-
 # ---------------------------------------------------------
-# ImGui sources (explicit — safe & recommended)
+# ImGui sources
 # ---------------------------------------------------------
 set(IMGUI_SOURCES
     "${IMGUI_DIR}/imgui.cpp"
@@ -61,7 +55,7 @@ set(IMGUI_SOURCES
 )
 
 # ---------------------------------------------------------
-# Executable
+# Executable - MUST come before custom commands
 # ---------------------------------------------------------
 add_executable(CustomEngine
     main.cpp
@@ -78,25 +72,40 @@ link_directories(
 )
 
 # ---------------------------------------------------------
-# ABSOLUTE PATH linking (guaranteed to work)
+# Link libraries
 # ---------------------------------------------------------
 target_link_libraries(CustomEngine PRIVATE
-    "${SDL3_DIR}/lib/x64/SDL3.lib"   # direct path → no lookup required
+    "${SDL3_DIR}/lib/x64/SDL3.lib"
     "${GLEW_DIR}/lib/Release/x64/glew32.lib"
     opengl32
 )
 
 # ---------------------------------------------------------
-# Copy needed DLLs after build
+# Copy shaders after build (no separate project!)
+# ---------------------------------------------------------
+add_custom_command(TARGET CustomEngine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/src/Shaders"
+        "${CMAKE_BINARY_DIR}/Shaders"
+    COMMENT "Copying shaders to build directory"
+)
+
+# ---------------------------------------------------------
+# Copy required DLLs after build
 # ---------------------------------------------------------
 add_custom_command(TARGET CustomEngine POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${SDL3_DIR}/lib/x64/SDL3.dll"
-    $<TARGET_FILE_DIR:CustomEngine>
+        "${SDL3_DIR}/lib/x64/SDL3.dll"
+        $<TARGET_FILE_DIR:CustomEngine>
 )
 
 add_custom_command(TARGET CustomEngine POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${GLEW_DIR}/bin/Release/x64/glew32.dll"
-    $<TARGET_FILE_DIR:CustomEngine>
+        "${GLEW_DIR}/bin/Release/x64/glew32.dll"
+        $<TARGET_FILE_DIR:CustomEngine>
 )
+
+# ---------------------------------------------------------
+# Set working directory (Visual Studio)
+# ---------------------------------------------------------
+set_property(TARGET CustomEngine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")

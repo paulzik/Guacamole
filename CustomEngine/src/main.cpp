@@ -16,63 +16,6 @@
 using namespace glm;
 using namespace std;
 
-// ====================== SHADERS ========================
-const char* vertexShaderSrc = R"(
-#version 330 core
-layout(location = 0) in vec3 aPos;
-layout(location = 1) in vec3 aColor;
-layout(location = 2) in vec3 aNormal;
-
-out vec3 FragPos;
-out vec3 Normal;
-out vec3 vertexColor;
-
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
-void main()
-{
-    FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal  = mat3(transpose(inverse(model))) * aNormal;
-    vertexColor = aColor;
-
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
-}
-)";
-
-const char* fragmentShaderSrc = R"(
-#version 330 core
-out vec4 FragColor;
-
-in vec3 FragPos;
-in vec3 Normal;
-in vec3 vertexColor;
-
-uniform vec3 lightPos;
-uniform vec3 viewPos;
-
-void main()
-{
-    // Ambient
-    vec3 ambient = 0.1 * vertexColor;
-
-    // Diffuse
-    vec3 lightDir = normalize(lightPos - FragPos);
-    float diff = max(dot(normalize(Normal), lightDir), 0.0);
-    vec3 diffuse = diff * vertexColor;
-
-    // Specular
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, normalize(Normal));
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = vec3(0.3) * spec;
-
-    vec3 result = ambient + diffuse + specular;
-    FragColor = vec4(result, 1.0);
-}
-)";
-
 // Shader compile helper
 GLuint compileShader(GLenum type, const char* src) {
     GLuint shader = glCreateShader(type);
@@ -80,7 +23,6 @@ GLuint compileShader(GLenum type, const char* src) {
     glCompileShader(shader);
     return shader;
 }
-
 
 int main() {
 
@@ -97,33 +39,17 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
-    // Compile shaders
-    GLuint vs = compileShader(GL_VERTEX_SHADER, vertexShaderSrc);
-    GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSrc);
-    GLuint shader = glCreateProgram();
-    glAttachShader(shader, vs);
-    glAttachShader(shader, fs);
-    glLinkProgram(shader);
-    glUseProgram(shader);
-
     Entity cube1("Cube1", vec3(0, 0, 0));
     MeshFilter& mesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& meshrend = cube1.AddComponent<MeshRenderer>();
     mesh.InitGPU();
+    meshrend.Start();
 
     // Uniform locations
-    GLuint modelLoc = glGetUniformLocation(shader, "model");
-    GLuint viewLoc = glGetUniformLocation(shader, "view");
-    GLuint projLoc = glGetUniformLocation(shader, "projection");
-    GLuint lightPosLoc = glGetUniformLocation(shader, "lightPos");
-    GLuint viewPosLoc = glGetUniformLocation(shader, "viewPos");
-
-    glm::vec3 lightPos(2, 2, 2);
-    glm::vec3 cameraPos(0, 0, 3);
-
-    glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
-    glm::mat4 projection = glm::perspective(radians(45.0f), 1280.f / 720.f, 0.1f, 100.f);
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+    GLuint modelLoc = glGetUniformLocation(meshrend.shaderProgram, "model");
+    GLuint viewLoc = glGetUniformLocation(meshrend.shaderProgram, "view");
+    GLuint projLoc = glGetUniformLocation(meshrend.shaderProgram, "projection");
+    GLuint lightPosLoc = glGetUniformLocation(meshrend.shaderProgram, "lightPos");
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
@@ -174,21 +100,7 @@ int main() {
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glUseProgram(shader);
-        glm::mat4 view = glm::lookAt(cameraPos, vec3(0, 0, 0), vec3(0, 1, 0));
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, value_ptr(view));
-        glUniform3fv(viewPosLoc, 1, value_ptr(cameraPos));
-
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, vec3(posx, posy, posz));
-        model = glm::rotate(model, (float)SDL_GetTicks() * 0.001f, vec3(0, 1, 0));
-        model = glm::scale(model, vec3(scale));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, value_ptr(model));
-
-        lightPos = vec3(lightx, lighty, lightz);
-        glUniform3fv(lightPosLoc, 1, value_ptr(lightPos));
-
-        mesh.Draw();
+        meshrend.Update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
