@@ -8,6 +8,7 @@
 #include "ECS/MeshFilter.h"
 #include "ECS/Entity.h"
 #include "ECS/Transform.h"
+#include "ECS/Scene.h"
 
 MeshRenderer::MeshRenderer()
 {
@@ -52,25 +53,6 @@ void MeshRenderer::Update()
     glUseProgram(shaderProgram);
 
     // -----------------------------
-    // VIEW MATRIX
-    // -----------------------------
-    glm::vec3 cameraPos(0, 0, 3);
-    glm::mat4 view = glm::lookAt(
-        cameraPos,              // camera position
-        glm::vec3(0, 0, 0),     // look at
-        glm::vec3(0, 1, 0)      // up
-    );
-
-    // -----------------------------
-    // PROJECTION MATRIX
-    // -----------------------------
-    glm::mat4 projection = glm::perspective(
-        glm::radians(45.0f),
-        1280.f / 720.f,          // aspect ratio
-        0.1f, 100.f
-    );
-
-    // -----------------------------
     // SET UNIFORMS
     // -----------------------------
     glUniformMatrix4fv(
@@ -80,12 +62,12 @@ void MeshRenderer::Update()
 
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "view"),
-        1, GL_FALSE, glm::value_ptr(view)
+        1, GL_FALSE, glm::value_ptr(Scene::Get().getCamera()->getViewMatrix())
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "projection"),
-        1, GL_FALSE, glm::value_ptr(projection)
+        1, GL_FALSE, glm::value_ptr(Scene::Get().getCamera()->getProjectionMatrix())
     );
 
     // -----------------------------
@@ -100,7 +82,7 @@ void MeshRenderer::Update()
 
     glUniform3fv(
         glGetUniformLocation(shaderProgram, "viewPos"),
-        1, glm::value_ptr(cameraPos)
+        1, glm::value_ptr(Scene::Get().getCamera()->getOwner()->GetComponent<Transform>().getPosition())
     );
 
     // -----------------------------

@@ -13,6 +13,7 @@
 #include "ECS/PrimitiveFactory.h"
 #include "ECS/MeshRenderer.h"
 #include "ECS/Transform.h"
+#include "ECS/Camera.h"
 
 using namespace glm;
 using namespace std;
@@ -41,6 +42,9 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
+    Entity camera("MainCamera", vec3(0, 0, 3));
+    camera.AddComponent<Camera>(vec3(0,0,0));
+
     Entity cube1("Cube1", vec3(0, 0, 0));
     MeshFilter& mesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& meshrend = cube1.AddComponent<MeshRenderer>();
@@ -62,6 +66,7 @@ int main() {
     ImGui::StyleColorsDark();
 
     float posx = 0, posy = 0, posz = 0;
+    float lookX = 0, lookY = 0, lookZ = 0;
     float lightx = 2, lighty = 2, lightz = 2;
 
     bool running = true;
@@ -95,12 +100,19 @@ int main() {
         ImGui::SliderFloat("Light Z", &lightz, -5.0f, 5.0f);
         ImGui::End();
 
+        ImGui::Begin("Camera");
+        ImGui::SliderFloat("CameraPosX", &lookX, -5.0f, 5.0f);
+        ImGui::SliderFloat("CameraPosY", &lookY, -5.0f, 5.0f);
+        ImGui::SliderFloat("CameraPosZ", &lookZ, -5.0f, 5.0f);
+        ImGui::End();
+
         ImGui::Render();
 
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         cube1.GetComponent<Transform>().setPosition(vec3(posx, posy, posz));
+        camera.GetComponent<Camera>().setLookAtVector(vec3(lookX, lookY, lookZ));
 
         meshrend.Update();
 

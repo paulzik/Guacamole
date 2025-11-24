@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 
 class Entity {
 
@@ -23,7 +24,7 @@ public:
     T& AddComponent(Args&&... args)
     {
         auto comp = std::make_unique<T>(std::forward<Args>(args)...);
-        comp->SetOwner(this); // set the owner pointer
+        comp->setOwner(this); // set the owner pointer
         components.push_back(std::move(comp));
         return *static_cast<T*>(components.back().get());
     }

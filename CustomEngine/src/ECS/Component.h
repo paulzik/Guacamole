@@ -15,5 +15,6 @@ public:
 
     virtual const char* GetComponentName() const = 0;
 
-    void SetOwner(Entity* _owner) { owner = _owner; }
+    void setOwner(Entity* _owner);
+    Entity* getOwner();
 };
