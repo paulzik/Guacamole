@@ -18,15 +18,6 @@
 using namespace glm;
 using namespace std;
 
-// Shader compile helper
-GLuint compileShader(GLenum type, const char* src) {
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &src, NULL);
-    glCompileShader(shader);
-    return shader;
-}
-float rotAngle = 0;
-
 int main() {
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -50,12 +41,6 @@ int main() {
     MeshRenderer& meshrend = cube1.AddComponent<MeshRenderer>();
     mesh.InitGPU();
     meshrend.Start();
-
-    // Uniform locations
-    GLuint modelLoc = glGetUniformLocation(meshrend.shaderProgram, "model");
-    GLuint viewLoc = glGetUniformLocation(meshrend.shaderProgram, "view");
-    GLuint projLoc = glGetUniformLocation(meshrend.shaderProgram, "projection");
-    GLuint lightPosLoc = glGetUniformLocation(meshrend.shaderProgram, "lightPos");
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();

@@ -6,7 +6,6 @@ MeshFilter::MeshFilter(const std::vector<Vertex>& _vertices, const std::vector<u
 {
 }
 
-
 void MeshFilter::InitGPU() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -38,14 +37,6 @@ void MeshFilter::InitGPU() {
         (void*)(sizeof(glm::vec3) * 2));
     glEnableVertexAttribArray(2);
 
-    glBindVertexArray(0);
-}
-
-
-
-void MeshFilter::Draw() {
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
