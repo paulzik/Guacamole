@@ -2,12 +2,14 @@
 #include <vector>
 #include "Entity.h"
 #include "ECS/Camera.h"
+#include "Lighting/Light.h"
 
 class Scene {
 private:
 	std::vector<Entity*> scenegraph;
 
 	Camera* sceneCamera;
+	std::vector<Light*> lights;
 
 public:
 	Scene();
@@ -21,4 +23,7 @@ public:
 
 	Camera* getCamera();
 	void AddCamera(Camera* camera);
+
+	void AddLight(Light* light);
+	std::vector<Light*> getLights();
 };

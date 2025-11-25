@@ -12,5 +12,5 @@ public:
 
 	static MeshFilter CreateCubePrimitive(float size = 1.0f);
 	//static MeshFilter CreatePlanePrimitive(float size = 1.0f);
-	//static MeshFilter CreateSpherePrimitive(float size = 1.0f);
+	static MeshFilter CreateSpherePrimitive(float size = 1.0f);
 };

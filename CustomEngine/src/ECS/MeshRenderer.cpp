@@ -71,19 +71,31 @@ void MeshRenderer::Update()
     );
 
     // -----------------------------
-    // LIGHTING
+    // Camera
     // -----------------------------
-    glm::vec3 lightPos(2, 2, 2);
-
-    glUniform3fv(
-        glGetUniformLocation(shaderProgram, "lightPos"),
-        1, glm::value_ptr(lightPos)
-    );
-
     glUniform3fv(
         glGetUniformLocation(shaderProgram, "viewPos"),
         1, glm::value_ptr(Scene::Get().getCamera()->getOwner()->GetComponent<Transform>().getPosition())
     );
+
+    // -----------------------------
+    // Lights
+    // -----------------------------
+    const auto& lights = Scene::Get().getLights();
+    int lightCount = static_cast<int>(lights.size());
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "lightCount"), lightCount);
+
+    for (int i = 0; i < lightCount; i++)
+    {
+        Light* light = lights[i];
+
+        std::string base = "lights[" + std::to_string(i) + "]";
+
+        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().getLights()[i]->getOwner()->GetComponent<Transform>().getPosition()));
+        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".color").c_str()), 1, glm::value_ptr(light->getColor()));
+        glUniform1f(glGetUniformLocation(shaderProgram, (base + ".intensity").c_str()), light->getIntensity());
+    }
 
     // -----------------------------
     // DRAW MESH
