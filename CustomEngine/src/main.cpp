@@ -42,6 +42,13 @@ int main() {
     mesh.InitGPU();
     meshrend.Start();
 
+    Entity sphere1("Sphere1", vec3(1, 1, -1));
+    MeshFilter& meshSphere = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
+    MeshRenderer& meshrendSphere = sphere1.AddComponent<MeshRenderer>();
+    meshSphere.InitGPU();
+    meshrendSphere.Start();
+
+
     Entity light1("Light1", vec3(0, 1, 5));
     light1.AddComponent<Light>(vec3(1,1,1), 0.5f);
 
@@ -104,7 +111,9 @@ int main() {
         cube1.GetComponent<Transform>().setRotation(angle, glm::vec3(0, 1, 0));
         camera.GetComponent<Camera>().setLookAtVector(vec3(lookX, lookY, lookZ));
         light1.GetComponent<Transform>().setPosition(vec3(lightx, lighty, lightz));
+        
         meshrend.Update();
+        meshrendSphere.Update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
