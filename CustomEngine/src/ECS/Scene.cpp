@@ -15,12 +15,12 @@ Scene::~Scene() {
 
 }
 
-void Scene::AddEntity(Entity* entity)
+void Scene::AddEntity(Entity* entity, Entity* parent = nullptr)
 {
-	scenegraph.AddEntity(entity);
+	scenegraph.AddEntity(entity, parent);
 }
 
-Camera* Scene::getCamera()
+Camera* Scene::GetCamera()
 {
 	return sceneCamera;
 }
@@ -46,6 +46,11 @@ std::vector<Light*> Scene::getLights()
 		std::cout << "No lights added" << std::endl;
 	}
 	return lights;
+}
+
+Scenegraph& Scene::GetScenegraph()
+{
+	return scenegraph;
 }
 
 void Scene::RemoveEntity(Entity* entity) {

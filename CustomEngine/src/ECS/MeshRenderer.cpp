@@ -62,12 +62,12 @@ void MeshRenderer::Update()
 
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "view"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().getCamera()->getViewMatrix())
+        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->getViewMatrix())
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "projection"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().getCamera()->getProjectionMatrix())
+        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->getProjectionMatrix())
     );
 
     // -----------------------------
@@ -75,7 +75,7 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniform3fv(
         glGetUniformLocation(shaderProgram, "viewPos"),
-        1, glm::value_ptr(Scene::Get().getCamera()->getOwner()->GetComponent<Transform>().getPosition())
+        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().getPosition())
     );
 
     // -----------------------------

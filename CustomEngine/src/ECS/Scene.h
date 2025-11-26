@@ -18,13 +18,15 @@ public:
 
 	static Scene& Get();
 
-	void AddEntity(Entity* entity);
+	void AddEntity(Entity* entity, Entity* parent);
 	void RemoveEntity(Entity* entity);
 	void PrintEntities();
 
-	Camera* getCamera();
+	Camera* GetCamera();
 	void AddCamera(Camera* camera);
 
 	void AddLight(Light* light);
 	std::vector<Light*> getLights();
+
+	Scenegraph& GetScenegraph();
 };

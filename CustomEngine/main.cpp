@@ -14,6 +14,7 @@
 #include "ECS/MeshRenderer.h"
 #include "ECS/Transform.h"
 #include "ECS/Camera.h"
+#include "ScenegraphEditor/ScenegraphEditor.h"
 
 using namespace glm;
 using namespace std;
@@ -51,6 +52,9 @@ int main() {
 
     Entity light1("Light1", vec3(0, 1, 5));
     light1.AddComponent<Light>(vec3(1,1,1), 0.5f);
+
+    // Bind the editor to the scenegraph
+    ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
@@ -101,6 +105,8 @@ int main() {
         ImGui::SliderFloat("CameraPosY", &lookY, -5.0f, 5.0f);
         ImGui::SliderFloat("CameraPosZ", &lookZ, -5.0f, 5.0f);
         ImGui::End();
+
+        sceneEditor.Draw();
 
         ImGui::Render();
 

@@ -12,13 +12,23 @@ private:
     std::vector<std::unique_ptr<Component>> components;
     int EntityID;
     const char* name;
+    Entity* parent = nullptr;
+    std::vector<Entity*> children;
 
 public:
+    Entity(const char* name, glm::vec3 entityPosition, Entity* parent);
     Entity(const char* name, glm::vec3 entityPosition);
     ~Entity();
 
     const char* GetName();
     void PrintComponents();
+
+    void SetParent(Entity* parent);
+    Entity* GetParent();
+
+    std::vector<Entity*> GetChildren();
+    void AddChild(Entity* child);
+    void RemoveChild(Entity* child);
 
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)
