@@ -3,10 +3,11 @@
 #include "Entity.h"
 #include "ECS/Camera.h"
 #include "Lighting/Light.h"
+#include "Scenegraph/Scenegraph.h"
 
 class Scene {
 private:
-	std::vector<Entity*> scenegraph;
+	Scenegraph scenegraph;
 
 	Camera* sceneCamera;
 	std::vector<Light*> lights;

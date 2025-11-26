@@ -17,7 +17,7 @@ Scene::~Scene() {
 
 void Scene::AddEntity(Entity* entity)
 {
-	scenegraph.push_back(entity);
+	scenegraph.AddEntity(entity);
 }
 
 Camera* Scene::getCamera()
@@ -49,14 +49,9 @@ std::vector<Light*> Scene::getLights()
 }
 
 void Scene::RemoveEntity(Entity* entity) {
-	scenegraph.erase(
-		std::remove(scenegraph.begin(), scenegraph.end(), entity),
-		scenegraph.end()
-	);
+	scenegraph.RemoveEntity(entity);
 }
 
 void Scene::PrintEntities() {
-	for (Entity* e : scenegraph) {
-		std::cout << e->GetName() << std::endl;
-	}
+	scenegraph.PrintEntities();
 }
