@@ -12,6 +12,7 @@ private:
     //View Matrix data
     glm::vec3 lookAtVector = glm::vec3(0, 0, 0);
     glm::vec3 upVector = glm::vec3(0, 1, 0);
+    glm::vec3 forward;
 
     //Projection Matrix data
     float fov = glm::radians(45.0f);
@@ -39,5 +40,12 @@ public:
 
     float GetFarPlane();
     void SetFarPlane(float fp);
+
+    glm::vec3 GetLookAt() const;
+    void Update();
+
+    void SetForward(glm::vec3 dir);
+    void Move(glm::vec3 delta);
+    glm::vec3 GetForwardFromRotation();
 
 };

@@ -65,8 +65,6 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
 
-    float lookX = 0, lookY = 0, lookZ = 0;
-
     bool running = true;
 
 
@@ -83,12 +81,6 @@ int main() {
 
         // --- ImGui sliders ---
 
-        ImGui::Begin("Camera");
-        ImGui::SliderFloat("CameraPosX", &lookX, -5.0f, 5.0f);
-        ImGui::SliderFloat("CameraPosY", &lookY, -5.0f, 5.0f);
-        ImGui::SliderFloat("CameraPosZ", &lookZ, -5.0f, 5.0f);
-        ImGui::End();
-
         sceneEditor.Draw();
         inspectorWindow.Draw();
 
@@ -96,11 +88,10 @@ int main() {
 
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        camera.GetComponent<Camera>().SetLookAtVector(vec3(lookX, lookY, lookZ));
         
         meshrend.Update();
         meshrendSphere.Update();
+        camera.GetComponent<Camera>().Update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);

@@ -75,4 +75,40 @@ void Camera::SetFarPlane(float fp)
     farPlane = fp;
 }
 
+glm::vec3 Camera::GetLookAt() const
+{
+    return  owner->GetComponent<Transform>().GetPosition() + forward;
+}
+
+void Camera::SetForward(glm::vec3 dir)
+{
+    forward = glm::normalize(dir);
+}
+
+void Camera::Move(glm::vec3 delta)
+{
+    glm::vec3 pos = owner->GetComponent<Transform>().GetPosition();
+    pos += delta;
+    owner->GetComponent<Transform>().SetPosition(pos);
+
+    lookAtVector = pos + forward;
+}
+
+void Camera::Update()
+{
+    Transform& transform = owner->GetComponent<Transform>();
+
+    glm::vec3 position = transform.GetPosition();
+    forward = GetForwardFromRotation();
+
+    lookAtVector = position + forward;
+}
+
+glm::vec3 Camera::GetForwardFromRotation()
+{
+    glm::quat q = owner->GetComponent<Transform>().GetRotationQuat();
+
+    return glm::normalize(q * glm::vec3(0, 0, -1));
+}
+
 
