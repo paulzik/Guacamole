@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include <iostream>
+#include "SelectedEntity.h"
 
 Scene& Scene::Get()
 {

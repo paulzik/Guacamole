@@ -50,10 +50,11 @@ public:
     }
 
     template<typename T>
-    std::list<T*> GetComponents() {
+    std::vector<T*> GetComponents() {
         static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
 
-        std::list<T*> componentsList;
+        std::vector<T*> componentsList;
+        componentsList.reserve(components.size());
 
         for (auto& c : components) {
             if (T* casted = dynamic_cast<T*>(c.get())) {

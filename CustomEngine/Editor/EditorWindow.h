@@ -1,12 +1,12 @@
 #pragma once
-#include <vector>
 
 class EditorWindow {
 protected:
-	const char* windowName;
+    const char* windowName;
 
 public:
-	EditorWindow(const char* name);
-	~EditorWindow();
-	virtual void Draw() = 0;
+    EditorWindow(const char* name);
+    virtual ~EditorWindow();
+
+    virtual void Draw() = 0;
 };

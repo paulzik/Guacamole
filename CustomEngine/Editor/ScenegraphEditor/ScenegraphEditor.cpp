@@ -1,6 +1,7 @@
 #include "ScenegraphEditor.h"
 #include <iostream>
 #include <imgui.h>
+#include "SelectedEntity.h"
 
 ScenegraphEditor::ScenegraphEditor(Scenegraph* _scenegraph)
 	:EditorWindow("Scenegraph"), scenegraph(_scenegraph)
@@ -25,6 +26,11 @@ void ScenegraphEditor::Draw()
 
             bool node_open = ImGui::TreeNodeEx((void*)entity, flags, "%s", entity->GetName());
 
+            if (ImGui::IsItemClicked())
+            {
+                SelectedEntity::Set(entity);
+            }
+
             if (node_open)
             {
                 for (auto& child : entity->GetChildren())
@@ -34,7 +40,6 @@ void ScenegraphEditor::Draw()
             }
         };
 
-    // Start from root entities
     for (auto& root : scenegraph->GetRoots())
         DrawNode(root);
 

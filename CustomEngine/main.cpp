@@ -15,6 +15,7 @@
 #include "ECS/Transform.h"
 #include "ECS/Camera.h"
 #include "ScenegraphEditor/ScenegraphEditor.h"
+#include <InspectorWindow/InspectorWindow.h>
 
 using namespace glm;
 using namespace std;
@@ -55,6 +56,7 @@ int main() {
 
     // Bind the editor to the scenegraph
     ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
+    InspectorWindow inspectorWindow;
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
@@ -107,6 +109,7 @@ int main() {
         ImGui::End();
 
         sceneEditor.Draw();
+        inspectorWindow.Draw();
 
         ImGui::Render();
 
