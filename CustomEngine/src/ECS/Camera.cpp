@@ -47,12 +47,12 @@ void Camera::SetUpVector(glm::vec3 up)
 
 float Camera::GetFov()
 {
-    return glm::radians(fov);
+    return glm::degrees(fov);
 }
 
-void Camera::SetFov(float fv)
+void Camera::SetFov(float degrees)
 {
-    fov = glm::radians(fv);
+    fov = glm::radians(degrees);
 }
 
 float Camera::GetNearPlane()
