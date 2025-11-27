@@ -34,5 +34,7 @@ public:
     GLuint GetVAO() const { return VAO; }
     void InitGPU();
 
-    GLsizei getIndexCount();
+    GLsizei GetIndexCount();
+
+    int GetTrianglesCount();
 };

@@ -103,7 +103,7 @@ int main() {
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        camera.GetComponent<Camera>().setLookAtVector(vec3(lookX, lookY, lookZ));
+        camera.GetComponent<Camera>().SetLookAtVector(vec3(lookX, lookY, lookZ));
         light1.GetComponent<Transform>().SetPosition(vec3(lightx, lighty, lightz));
         
         meshrend.Update();

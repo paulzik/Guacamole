@@ -62,12 +62,12 @@ void MeshRenderer::Update()
 
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "view"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->getViewMatrix())
+        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetViewMatrix())
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "projection"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->getProjectionMatrix())
+        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetProjectionMatrix())
     );
 
     // -----------------------------
@@ -103,7 +103,7 @@ void MeshRenderer::Update()
     MeshFilter& mesh = owner->GetComponent<MeshFilter>();
 
     glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, mesh.getIndexCount(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
 }
 
 

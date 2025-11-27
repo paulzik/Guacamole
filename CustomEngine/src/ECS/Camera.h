@@ -25,10 +25,19 @@ public:
 
     const char* GetComponentName() const override;
 
-    glm::mat4 getViewMatrix();
-    glm::mat4 getProjectionMatrix();
+    glm::mat4 GetViewMatrix();
+    glm::mat4 GetProjectionMatrix();
 
-    void setLookAtVector(glm::vec3 lookAt);
-    void setUpVector(glm::vec3 up);
+    void SetLookAtVector(glm::vec3 lookAt);
+    void SetUpVector(glm::vec3 up);
+
+    float GetFov();
+    void SetFov(float fv);
+
+    float GetNearPlane();
+    void SetNearPlane(float np);
+
+    float GetFarPlane();
+    void SetFarPlane(float fp);
 
 };

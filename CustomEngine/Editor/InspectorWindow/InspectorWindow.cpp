@@ -23,7 +23,7 @@ void InspectorWindow::Draw() {
 
     // Draw all components for this entity
     for (Component* c : entity->GetComponents<Component>()) {
-        if (ImGui::CollapsingHeader(c->GetComponentName())) {
+        if (ImGui::CollapsingHeader(c->GetComponentName(), ImGuiTreeNodeFlags_DefaultOpen)) {
 
             ComponentEditor* editor =
                 EditorRegistry::Instance().CreateEditorFor(c);

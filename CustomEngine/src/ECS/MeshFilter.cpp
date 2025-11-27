@@ -44,8 +44,13 @@ MeshFilter::~MeshFilter() {
 
 }
 
-GLsizei MeshFilter::getIndexCount() {
+GLsizei MeshFilter::GetIndexCount() {
     return indices.size();
+}
+
+int MeshFilter::GetTrianglesCount()
+{
+    return GetIndexCount()/3;
 }
 
 const char* MeshFilter::GetComponentName() const  {

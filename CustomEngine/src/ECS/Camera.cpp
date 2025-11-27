@@ -17,7 +17,7 @@ const char* Camera::GetComponentName() const {
 	return "Camera";
 }
 
-glm::mat4 Camera::getViewMatrix()
+glm::mat4 Camera::GetViewMatrix()
 {
 	viewMatrix = glm::lookAt(
         owner->GetComponent<Transform>().GetPosition(),              // camera position
@@ -28,21 +28,51 @@ glm::mat4 Camera::getViewMatrix()
 	return viewMatrix;
 }
 
-glm::mat4 Camera::getProjectionMatrix()
+glm::mat4 Camera::GetProjectionMatrix()
 {
     projectionMatrix = glm::perspective(fov, aspect, nearPlane, farPlane);
 
     return projectionMatrix;
 }
 
-void Camera::setLookAtVector(glm::vec3 lookAt)
+void Camera::SetLookAtVector(glm::vec3 lookAt)
 {
     lookAtVector = lookAt;
 }
 
-void Camera::setUpVector(glm::vec3 up)
+void Camera::SetUpVector(glm::vec3 up)
 {
     upVector = up;
+}
+
+float Camera::GetFov()
+{
+    return glm::radians(fov);
+}
+
+void Camera::SetFov(float fv)
+{
+    fov = glm::radians(fv);
+}
+
+float Camera::GetNearPlane()
+{
+    return nearPlane;
+}
+
+void Camera::SetNearPlane(float np)
+{
+    nearPlane = np;
+}
+
+float Camera::GetFarPlane()
+{
+    return farPlane;
+}
+
+void Camera::SetFarPlane(float fp)
+{
+    farPlane = fp;
 }
 
 

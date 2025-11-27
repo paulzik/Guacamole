@@ -6,17 +6,17 @@ void TransformEditor::Draw(Component* component) {
     Transform* transform = static_cast<Transform*>(component);
 
     glm::vec3 pos = transform->GetPosition();
-    if (ImGui::InputFloat3("Position", glm::value_ptr(pos))) {
+    if (ImGui::DragFloat3("Position", glm::value_ptr(pos), 0.1f, 0.0f, 0.0f)) {
         transform->SetPosition(pos);
     }
 
     glm::vec3 rot = transform->GetRotationEuler();
-    if (ImGui::InputFloat3("Rotation", glm::value_ptr(rot))) {
+    if (ImGui::DragFloat3("Rotation", glm::value_ptr(rot), 0.1f, 0.0f, 0.0f)) {
         transform->SetRotation(rot);
     }
 
     glm::vec3 sc = transform->GetScale();
-    if (ImGui::InputFloat3("Scale", glm::value_ptr(sc))) {
+    if (ImGui::DragFloat3("Scale", glm::value_ptr(sc), 0.1f, 0.0f, 0.0f)) {
         transform->SetScale(sc);
     }
 
