@@ -20,7 +20,7 @@ const char* Camera::GetComponentName() const {
 glm::mat4 Camera::getViewMatrix()
 {
 	viewMatrix = glm::lookAt(
-        owner->GetComponent<Transform>().getPosition(),              // camera position
+        owner->GetComponent<Transform>().GetPosition(),              // camera position
         lookAtVector,                                                // look at
         upVector                                                    // up
     );

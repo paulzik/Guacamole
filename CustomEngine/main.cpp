@@ -50,7 +50,6 @@ int main() {
     meshSphere.InitGPU();
     meshrendSphere.Start();
 
-
     Entity light1("Light1", vec3(0, 1, 5));
     light1.AddComponent<Light>(vec3(1,1,1), 0.5f);
 
@@ -66,17 +65,11 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
 
-    float posx = 0, posy = 0, posz = 0;
     float lookX = 0, lookY = 0, lookZ = 0;
     float lightx = 2, lighty = 2, lightz = 2;
 
     bool running = true;
 
-    
-    cout << "------" << endl;
-    cube1.PrintComponents();
-      
-    float angle = 0;
 
     while (running) {
         SDL_Event e;
@@ -90,12 +83,6 @@ int main() {
         ImGui::NewFrame();
 
         // --- ImGui sliders ---
-        ImGui::Begin("Cube Transform");
-        ImGui::SliderFloat("PosX", &posx, -2.0f, 2.0f);
-        ImGui::SliderFloat("PosY", &posy, -2.0f, 2.0f);
-        ImGui::SliderFloat("PosZ", &posz, -2.0f, 2.0f);
-        ImGui::End();
-
         ImGui::Begin("Light Position");
         ImGui::SliderFloat("Light X", &lightx, -5.0f, 5.0f);
         ImGui::SliderFloat("Light Y", &lighty, -5.0f, 5.0f);
@@ -115,11 +102,9 @@ int main() {
 
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        angle += 0.1f;
-        cube1.GetComponent<Transform>().setPosition(vec3(posx, posy, posz));
-        cube1.GetComponent<Transform>().setRotation(angle, glm::vec3(0, 1, 0));
+
         camera.GetComponent<Camera>().setLookAtVector(vec3(lookX, lookY, lookZ));
-        light1.GetComponent<Transform>().setPosition(vec3(lightx, lighty, lightz));
+        light1.GetComponent<Transform>().SetPosition(vec3(lightx, lighty, lightz));
         
         meshrend.Update();
         meshrendSphere.Update();

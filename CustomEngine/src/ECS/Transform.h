@@ -16,12 +16,17 @@ public:
 	Transform(glm::vec3 pos);
 	~Transform();
 
-	glm::vec3 getPosition();
+	glm::vec3 GetPosition();
+	glm::quat GetRotationQuat();
+	glm::vec3 GetRotationEuler();
+	glm::vec3 GetScale();
 	const char* GetComponentName() const override;
 
-	void setPosition(glm::vec3 pos);
-	void setRotation(float angle, glm::vec3 axis);
-	void setScale(glm::vec3 sc);
+	void SetPosition(glm::vec3 pos);
+	void SetRotation(float angle, glm::vec3 axis);
+	void SetRotation(glm::quat quat);
+	void SetRotation(glm::vec3 euler);
+	void SetScale(glm::vec3 sc);
 	
-	glm::mat4 getModelMatrix();
+	glm::mat4 GetModelMatrix();
 };

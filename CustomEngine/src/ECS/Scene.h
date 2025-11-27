@@ -26,7 +26,7 @@ public:
 	void AddCamera(Camera* camera);
 
 	void AddLight(Light* light);
-	std::vector<Light*> getLights();
+	std::vector<Light*> GetLights();
 
 	Scenegraph& GetScenegraph();
 };

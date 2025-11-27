@@ -13,22 +13,22 @@ const char* Light::GetComponentName() const {
 	return "Light";
 }
 
-glm::vec3 Light::getColor() const
+glm::vec3 Light::GetColor() const
 {
 	return color;
 }
 
-float Light::getIntensity() const
+float Light::GetIntensity() const
 {
 	return intensity;
 }
 
-void Light::setIntensity(float _intencity)
+void Light::SetIntensity(float _intencity)
 {
 	intensity = _intencity;
 }
 
-void Light::setColor(glm::vec3 _color)
+void Light::SetColor(glm::vec3 _color)
 {
 	color = _color;
 }

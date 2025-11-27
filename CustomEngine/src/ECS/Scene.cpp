@@ -41,7 +41,7 @@ void Scene::AddLight(Light* light)
 	lights.push_back(light);
 }
 
-std::vector<Light*> Scene::getLights()
+std::vector<Light*> Scene::GetLights()
 {
 	if (lights.size() == 0) {
 		std::cout << "No lights added" << std::endl;

@@ -10,27 +10,53 @@ Transform::~Transform() {
 
 }
 
-glm::vec3 Transform::getPosition() 
+glm::vec3 Transform::GetPosition() 
 {
 	return position;
 }
 
-void Transform::setPosition(glm::vec3 pos)
+glm::quat Transform::GetRotationQuat() 
+{
+	return rotation;
+}
+
+glm::vec3 Transform::GetRotationEuler()
+{
+	return glm::eulerAngles(rotation);
+}
+
+
+glm::vec3 Transform::GetScale()
+{
+	return scale;
+}
+
+void Transform::SetPosition(glm::vec3 pos)
 {
 	position = pos;
 }
 
-void Transform::setRotation(float angle, glm::vec3 axis)
+void Transform::SetRotation(float angle, glm::vec3 axis)
 {
 	rotation = glm::angleAxis(glm::radians(angle), glm::normalize(axis));
 }
 
-void Transform::setScale(glm::vec3 sc)
+void Transform::SetRotation(glm::quat quat)
+{
+	rotation = quat;
+}
+
+void Transform::SetRotation(glm::vec3 euler)
+{
+	rotation = glm::quat(euler);
+}
+
+void Transform::SetScale(glm::vec3 sc)
 {
 	scale = sc;
 }
 
-glm::mat4 Transform::getModelMatrix()
+glm::mat4 Transform::GetModelMatrix()
 {
     glm::mat4 modelMatrix = glm::mat4(1.0f);
 

@@ -57,7 +57,7 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniformMatrix4fv(
         glGetUniformLocation(shaderProgram, "model"),
-        1, GL_FALSE, glm::value_ptr(transform.getModelMatrix())
+        1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix())
     );
 
     glUniformMatrix4fv(
@@ -75,13 +75,13 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniform3fv(
         glGetUniformLocation(shaderProgram, "viewPos"),
-        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().getPosition())
+        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().GetPosition())
     );
 
     // -----------------------------
     // Lights
     // -----------------------------
-    const auto& lights = Scene::Get().getLights();
+    const auto& lights = Scene::Get().GetLights();
     int lightCount = static_cast<int>(lights.size());
 
     glUniform1i(glGetUniformLocation(shaderProgram, "lightCount"), lightCount);
@@ -92,9 +92,9 @@ void MeshRenderer::Update()
 
         std::string base = "lights[" + std::to_string(i) + "]";
 
-        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().getLights()[i]->getOwner()->GetComponent<Transform>().getPosition()));
-        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".color").c_str()), 1, glm::value_ptr(light->getColor()));
-        glUniform1f(glGetUniformLocation(shaderProgram, (base + ".intensity").c_str()), light->getIntensity());
+        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().GetLights()[i]->getOwner()->GetComponent<Transform>().GetPosition()));
+        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
+        glUniform1f(glGetUniformLocation(shaderProgram, (base + ".intensity").c_str()), light->GetIntensity());
     }
 
     // -----------------------------
