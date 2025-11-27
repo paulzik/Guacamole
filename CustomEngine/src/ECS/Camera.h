@@ -42,7 +42,7 @@ public:
     void SetFarPlane(float fp);
 
     glm::vec3 GetLookAt() const;
-    void Update();
+    void Update() override;
 
     void SetForward(glm::vec3 dir);
     void Move(glm::vec3 delta);
