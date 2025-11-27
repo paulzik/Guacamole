@@ -66,7 +66,6 @@ int main() {
     ImGui::StyleColorsDark();
 
     float lookX = 0, lookY = 0, lookZ = 0;
-    float lightx = 2, lighty = 2, lightz = 2;
 
     bool running = true;
 
@@ -83,11 +82,6 @@ int main() {
         ImGui::NewFrame();
 
         // --- ImGui sliders ---
-        ImGui::Begin("Light Position");
-        ImGui::SliderFloat("Light X", &lightx, -5.0f, 5.0f);
-        ImGui::SliderFloat("Light Y", &lighty, -5.0f, 5.0f);
-        ImGui::SliderFloat("Light Z", &lightz, -5.0f, 5.0f);
-        ImGui::End();
 
         ImGui::Begin("Camera");
         ImGui::SliderFloat("CameraPosX", &lookX, -5.0f, 5.0f);
@@ -104,7 +98,6 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         camera.GetComponent<Camera>().SetLookAtVector(vec3(lookX, lookY, lookZ));
-        light1.GetComponent<Transform>().SetPosition(vec3(lightx, lighty, lightz));
         
         meshrend.Update();
         meshrendSphere.Update();
