@@ -48,7 +48,7 @@ int main() {
     camera.AddComponent<Camera>(vec3(0, 0, 0));
 
     // ---------------- Scene primitives ----------------
-    Entity cube1("Cube1", vec3(0, 0, 0));
+    Entity cube1("Cube1", vec3(-1.2f, 0, 0));
     MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
     cubeMesh.InitGPU();
@@ -70,7 +70,6 @@ int main() {
     // ---------------- Asset Importers ----------------
     AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
     AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
-    AssetImporterRegistry::RegisterImporter(".gltf", new ModelImporter());
 
     // ---------------- Load model ----------------
 
