@@ -7,6 +7,9 @@
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_opengl3.h"
 #include <iostream>
+#include <memory>
+#include <vector>
+
 #include "ECS/Entity.h"
 #include "ECS/Scene.h"
 #include "ECS/MeshFilter.h"
@@ -16,18 +19,22 @@
 #include "ECS/Camera.h"
 #include "ScenegraphEditor/ScenegraphEditor.h"
 #include <InspectorWindow/InspectorWindow.h>
+#include "ModelImporter/Resources.h"
+#include "ModelImporter/AssetImporterRegistry.h"
+#include "ModelImporter/ModelImporter.h"
 
 using namespace glm;
 using namespace std;
 
 int main() {
-
+    // ---------------- SDL + OpenGL ----------------
     SDL_Init(SDL_INIT_VIDEO);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    SDL_Window* window = SDL_CreateWindow("ImGui + Phong Cube", 1280, 720, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    SDL_Window* window = SDL_CreateWindow("ImGui + Phong Cube", 1280, 720,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     SDL_GLContext glContext = SDL_GL_CreateContext(window);
     glewInit();
 
@@ -35,27 +42,58 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
+    // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
-    camera.AddComponent<Camera>(vec3(0,0,0));
+    camera.AddComponent<Camera>(vec3(0, 0, 0));
 
+    // ---------------- Scene primitives ----------------
     Entity cube1("Cube1", vec3(0, 0, 0));
-    MeshFilter& mesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
-    MeshRenderer& meshrend = cube1.AddComponent<MeshRenderer>();
-    mesh.InitGPU();
-    meshrend.Start();
+    MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
+    MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
+    cubeMesh.InitGPU();
+    cubeRenderer.Start();
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
-    MeshFilter& meshSphere = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
-    MeshRenderer& meshrendSphere = sphere1.AddComponent<MeshRenderer>();
-    meshSphere.InitGPU();
-    meshrendSphere.Start();
+    MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
+    MeshRenderer& sphereRenderer = sphere1.AddComponent<MeshRenderer>();
+    sphereMesh.InitGPU();
+    sphereRenderer.Start();
 
     Entity light1("Light1", vec3(0, 1, 5));
-    light1.AddComponent<Light>(vec3(1,1,1), 0.5f);
+    light1.AddComponent<Light>(vec3(1, 1, 1), 0.5f);
 
-    // Bind the editor to the scenegraph
+    // ---------------- Scenegraph Editor / Inspector ----------------
     ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
     InspectorWindow inspectorWindow;
+
+    // ---------------- Asset Importers ----------------
+    AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
+    AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
+    AssetImporterRegistry::RegisterImporter(".gltf", new ModelImporter());
+
+    // ---------------- Load model ----------------
+    std::shared_ptr<Asset> asset = Resources::Load("Assets/Models/Bomb.fbx");
+    std::shared_ptr<Model> model = std::dynamic_pointer_cast<Model>(asset);
+    if (!model) {
+        std::cerr << "Failed to load model!" << std::endl;
+    }
+
+    // Keep entities alive in a vector
+    std::vector<std::unique_ptr<Entity>> modelEntities;
+    std::vector<MeshRenderer*> modelRenderers;
+
+    for (auto& meshFilter : model->meshes) {
+        meshFilter->InitGPU();
+
+        // Create an entity for each mesh
+        auto entity = std::make_unique<Entity>("BombMesh", vec3(0, 0, 0));
+        entity->AddComponent<MeshFilter>(*meshFilter);
+        MeshRenderer& mr = entity->AddComponent<MeshRenderer>();
+        mr.Start();
+
+        modelRenderers.push_back(&mr);
+        modelEntities.push_back(std::move(entity)); // store ownership
+    }
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
@@ -66,8 +104,6 @@ int main() {
     ImGui::StyleColorsDark();
 
     bool running = true;
-
-
     while (running) {
         SDL_Event e;
         while (SDL_PollEvent(&e)) {
@@ -79,8 +115,6 @@ int main() {
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
-        // --- ImGui sliders ---
-
         sceneEditor.Draw();
         inspectorWindow.Draw();
 
@@ -88,9 +122,13 @@ int main() {
 
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        meshrend.Update();
-        meshrendSphere.Update();
+
+        // ---------------- Update ----------------
+        for (auto* r : modelRenderers)
+            r->Update();
+
+        cubeRenderer.Update();
+        sphereRenderer.Update();
         camera.GetComponent<Camera>().Update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -100,7 +138,6 @@ int main() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
-
     SDL_DestroyWindow(window);
     SDL_Quit();
 }

@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(CustomEngine LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # ------------------------------
 # Third-party library paths
 # ------------------------------
@@ -89,6 +88,16 @@ link_directories(
     "${GLEW_DIR}/lib/Release/x64"
 )
 
+# --- Assimp options ---
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)     # avoid DLLs
+set(ASSIMP_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(ThirdParty/assimp EXCLUDE_FROM_ALL)
+
 # ------------------------------
 # Linking
 # ------------------------------
@@ -97,8 +106,8 @@ target_link_libraries(CustomEngine PRIVATE
     "${SDL3_DIR}/lib/x64/SDL3.lib"
     "${GLEW_DIR}/lib/Release/x64/glew32.lib"
     opengl32
+    assimp
 )
-
 # ------------------------------
 # Copy shaders after build
 # ------------------------------
