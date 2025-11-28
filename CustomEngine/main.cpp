@@ -22,6 +22,7 @@
 #include "ModelImporter/Resources.h"
 #include "ModelImporter/AssetImporterRegistry.h"
 #include "ModelImporter/ModelImporter.h"
+#include "ModelImporter/ModelInstantiator.h"
 
 using namespace glm;
 using namespace std;
@@ -72,28 +73,8 @@ int main() {
     AssetImporterRegistry::RegisterImporter(".gltf", new ModelImporter());
 
     // ---------------- Load model ----------------
-    std::shared_ptr<Asset> asset = Resources::Load("Assets/Models/Bomb.fbx");
-    std::shared_ptr<Model> model = std::dynamic_pointer_cast<Model>(asset);
-    if (!model) {
-        std::cerr << "Failed to load model!" << std::endl;
-    }
 
-    // Keep entities alive in a vector
-    std::vector<std::unique_ptr<Entity>> modelEntities;
-    std::vector<MeshRenderer*> modelRenderers;
-
-    for (auto& meshFilter : model->meshes) {
-        meshFilter->InitGPU();
-
-        // Create an entity for each mesh
-        auto entity = std::make_unique<Entity>("BombMesh", vec3(0, 0, 0));
-        entity->AddComponent<MeshFilter>(*meshFilter);
-        MeshRenderer& mr = entity->AddComponent<MeshRenderer>();
-        mr.Start();
-
-        modelRenderers.push_back(&mr);
-        modelEntities.push_back(std::move(entity)); // store ownership
-    }
+    shared_ptr<Entity> bomb =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Bomb.fbx"), "Bomb");
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
@@ -124,8 +105,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // ---------------- Update ----------------
-        for (auto* r : modelRenderers)
-            r->Update();
+        bomb->GetComponent<MeshRenderer>().Update();
 
         cubeRenderer.Update();
         sphereRenderer.Update();

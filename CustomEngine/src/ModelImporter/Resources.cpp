@@ -23,10 +23,8 @@ std::shared_ptr<Asset> Resources::Load(const std::string& path)
         return nullptr;
     }
 
-    // Pass the full path to the importer
     return importer->Load(fullPath.string());
 }
-
 
 void Resources::SetBasePath(const std::filesystem::path& path)
 {
