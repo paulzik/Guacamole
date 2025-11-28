@@ -96,9 +96,8 @@ void Camera::Move(glm::vec3 delta)
 
 void Camera::Update()
 {
-    Transform& transform = owner->GetComponent<Transform>();
+    glm::vec3 position = owner->GetComponent<Transform>().GetPosition();
 
-    glm::vec3 position = transform.GetPosition();
     forward = GetForwardFromRotation();
 
     lookAtVector = position + forward;
