@@ -23,6 +23,8 @@ public:
     const char* GetName();
     void PrintComponents();
 
+    void Update();
+
     void SetParent(Entity* parent);
     Entity* GetParent();
 

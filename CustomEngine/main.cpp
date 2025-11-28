@@ -104,12 +104,7 @@ int main() {
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // ---------------- Update ----------------
-        bomb->GetComponent<MeshRenderer>().Update();
-
-        cubeRenderer.Update();
-        sphereRenderer.Update();
-        camera.GetComponent<Camera>().Update();
+        Scene::Get().Update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);

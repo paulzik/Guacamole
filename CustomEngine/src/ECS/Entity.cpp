@@ -68,3 +68,11 @@ void Entity::RemoveChild(Entity* child)
             child->SetParent(nullptr);
     }
 }
+
+void Entity::Update()
+{
+    for (auto& comp : components)
+    {
+        comp->Update();
+    }
+}

@@ -18,6 +18,12 @@ Scene::~Scene() {
 
 void Scene::AddEntity(Entity* entity, Entity* parent = nullptr)
 {
+	if (!entity) {
+		std::cerr << "Entity to insert is null" << std::endl;
+		return;
+	}
+
+	entities.push_back(entity);
 	scenegraph.AddEntity(entity, parent);
 }
 
@@ -55,8 +61,34 @@ Scenegraph& Scene::GetScenegraph()
 }
 
 void Scene::RemoveEntity(Entity* entity) {
+	if (!entity) {
+		std::cerr << "Entity to remove is null" << std::endl;
+		return;
+	}
+
+	// Remove from the linear vector
+	auto it = std::find(entities.begin(), entities.end(), entity);
+	if (it != entities.end()) {
+		entities.erase(it);
+	}
+	else {
+		std::cerr << "Entity not found in linear vector" << std::endl;
+	}
+
+	// Remove from the scenegraph
 	scenegraph.RemoveEntity(entity);
+
+	delete entity;
 }
+
+void Scene::Update() 
+{
+	for (Entity* e : entities)
+	{
+		e->Update();
+	}
+}
+
 
 void Scene::PrintEntities() {
 	scenegraph.PrintEntities();

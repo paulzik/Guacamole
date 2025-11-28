@@ -8,6 +8,7 @@
 class Scene {
 private:
 	Scenegraph scenegraph;
+	std::vector<Entity*> entities;
 
 	Camera* sceneCamera;
 	std::vector<Light*> lights;
@@ -27,6 +28,8 @@ public:
 
 	void AddLight(Light* light);
 	std::vector<Light*> GetLights();
+
+	void Update();
 
 	Scenegraph& GetScenegraph();
 };
