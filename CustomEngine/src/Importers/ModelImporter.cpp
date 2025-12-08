@@ -99,6 +99,20 @@ std::shared_ptr<MeshFilter> ModelImporter::ProcessMesh(aiMesh* mesh, const aiSce
             vertex.color = { 1.0f, 1.0f, 1.0f };
         }
 
+        // UVs (optional)
+        if (mesh->HasTextureCoords(0)) // first UV set
+        {
+            vertex.uv = {
+                mesh->mTextureCoords[0][i].x,
+                1.0f - mesh->mTextureCoords[0][i].y
+            };
+        }
+        else
+        {
+            vertex.uv = { 0.0f, 0.0f }; // default UV if none present
+        }
+
+
         vertices.push_back(vertex);
     }
 

@@ -23,6 +23,7 @@
 #include "Importers/ModelImporter.h"
 #include "Importers/ModelInstantiator.h"
 #include "Importers/ShaderImporter.h"
+#include "Importers/Texture2DImporter.h"
 
 using namespace glm;
 using namespace std;
@@ -49,6 +50,8 @@ int main() {
 
     AssetImporterRegistry::RegisterImporter(".vert", new ShaderImporter());
     AssetImporterRegistry::RegisterImporter(".frag", new ShaderImporter());
+
+    AssetImporterRegistry::RegisterImporter(".png", new Texture2DImporter());
 
     //Shaders
     auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
@@ -82,8 +85,12 @@ int main() {
     InspectorWindow inspectorWindow;
 
     // ---------------- Load model ----------------
-    shared_ptr<Entity> bomb =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Bomb.fbx"), "Bomb");
-    bomb->GetComponent<MeshRenderer>().material = standardMaterial;
+    shared_ptr<Entity> bomb =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Miner.fbx"), "Bomb");
+    auto albedo = Resources::Load("Assets/Models/MinerTexture.png");
+    auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
+    //auto normal = Resources::Load("brick_normal.png");
+    auto bombMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
+    bomb->GetComponent<MeshRenderer>().material = bombMaterial;
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();

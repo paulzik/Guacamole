@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec3 FragPos;
 in vec3 Normal;
 in vec3 vertexColor;
+in vec2 TexCoords;
 
 uniform vec3 viewPos;
 
@@ -17,6 +18,9 @@ struct Light {
 
 uniform int lightCount;
 uniform Light lights[MAX_LIGHTS];
+
+uniform sampler2D albedoTexture;
+uniform bool useTexture;
 
 void main()
 {
@@ -43,8 +47,11 @@ void main()
         result += ambient + diffuse + specular;
     }
 
-    // Multiply by vertex color/material
-    result *= vertexColor;
+    vec3 finalColor = vertexColor;
+    if (useTexture)
+        finalColor *= texture(albedoTexture, TexCoords).rgb;
+
+    result *= finalColor;
 
     FragColor = vec4(result, 1.0);
 }

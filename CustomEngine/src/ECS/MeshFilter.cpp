@@ -37,6 +37,11 @@ void MeshFilter::InitGPU() {
         (void*)(sizeof(glm::vec3) * 2));
     glEnableVertexAttribArray(2);
 
+    // uv -> location 3
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        (void*)(sizeof(glm::vec3) * 3));
+    glEnableVertexAttribArray(3);
+
     glBindVertexArray(0);
 }
 

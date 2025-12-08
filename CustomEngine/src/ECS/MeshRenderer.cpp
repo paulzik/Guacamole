@@ -93,6 +93,14 @@ void MeshRenderer::Update()
         glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
     }
 
+    glUniform1i(glGetUniformLocation(material->shader->programID, "useTexture"), material->albedo != nullptr);
+
+    if (material->albedo) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, material->albedo->ID); // Bind your texture
+        glUniform1i(glGetUniformLocation(material->shader->programID, "albedoTexture"), 0); // Texture unit 0    
+    }
+
     // -----------------------------
     // DRAW MESH
     // -----------------------------
