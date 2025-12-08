@@ -41,15 +41,6 @@ std::shared_ptr<Asset> ModelImporter::Load(const std::string& path)
     return std::make_shared<Model>(meshFilters);
 }
 
-bool ModelImporter::CanImport(const std::string& extension) const
-{
-    std::string ext = extension;
-    if (ext[0] == '.') ext.erase(0, 1); // remove leading dot
-    for (auto& c : ext) c = tolower(c);
-
-    return ext == "fbx" || ext == "obj" || ext == "gltf" || ext == "glb";
-}
-
 std::vector<std::shared_ptr<MeshFilter>> ModelImporter::ProcessScene(const aiScene* scene)
 {
     std::vector<std::shared_ptr<MeshFilter>> meshes;

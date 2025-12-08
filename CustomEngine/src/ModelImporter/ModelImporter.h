@@ -15,7 +15,6 @@ public:
 
     // IAssetImporter interface
     std::shared_ptr<Asset> Load(const std::string& path) override;
-    bool CanImport(const std::string& extension) const override;
 
 private:
     // Helpers for processing Assimp data

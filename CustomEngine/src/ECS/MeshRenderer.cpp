@@ -21,52 +21,42 @@ MeshRenderer::~MeshRenderer() {
 
 void MeshRenderer::Start()
 {
-    std::string vertexShaderSrc = LoadShader("Shaders/BasicVertex.vert");
-    std::string fragmentShaderSrc = LoadShader("Shaders/BasicFragment.frag");
-
-    // Compile
-    vertexshader = compileShader(GL_VERTEX_SHADER, vertexShaderSrc.c_str());
-    fragmentshader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSrc.c_str());
-
-    CheckShaderErrors(vertexshader);
-    CheckShaderErrors(fragmentshader);
-
-    // Link
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexshader);
-    glAttachShader(shaderProgram, fragmentshader);
-    glLinkProgram(shaderProgram);
-
-    GLint success;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        char log[1024];
-        glGetProgramInfoLog(shaderProgram, 1024, NULL, log);
-        std::cerr << "Program Link Error:\n" << log << std::endl;
+    if (shader == nullptr) {
+        std::cerr << "MeshRenderer ERROR: No shader assigned! in entity: " << owner->GetName() << std::endl;
+        return;
     }
 }
 
 void MeshRenderer::Update()
 {
+    if (!shader) {
+        std::cerr << "MeshRenderer ERROR: No shader assigned!\n";
+        return;
+    }
+    if (shader->programID == 0) {
+        std::cerr << "MeshRenderer ERROR: Shader program not compiled!\n";
+        return;
+    }
+
     Transform& transform = owner->GetComponent<Transform>();
 
-    glUseProgram(shaderProgram);
+    glUseProgram(shader->programID);
 
     // -----------------------------
     // SET UNIFORMS
     // -----------------------------
     glUniformMatrix4fv(
-        glGetUniformLocation(shaderProgram, "model"),
+        glGetUniformLocation(shader->programID, "model"),
         1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix())
     );
 
     glUniformMatrix4fv(
-        glGetUniformLocation(shaderProgram, "view"),
+        glGetUniformLocation(shader->programID, "view"),
         1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetViewMatrix())
     );
 
     glUniformMatrix4fv(
-        glGetUniformLocation(shaderProgram, "projection"),
+        glGetUniformLocation(shader->programID, "projection"),
         1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetProjectionMatrix())
     );
 
@@ -74,7 +64,7 @@ void MeshRenderer::Update()
     // Camera
     // -----------------------------
     glUniform3fv(
-        glGetUniformLocation(shaderProgram, "viewPos"),
+        glGetUniformLocation(shader->programID, "viewPos"),
         1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().GetPosition())
     );
 
@@ -84,7 +74,7 @@ void MeshRenderer::Update()
     const auto& lights = Scene::Get().GetLights();
     int lightCount = static_cast<int>(lights.size());
 
-    glUniform1i(glGetUniformLocation(shaderProgram, "lightCount"), lightCount);
+    glUniform1i(glGetUniformLocation(shader->programID, "lightCount"), lightCount);
 
     for (int i = 0; i < lightCount; i++)
     {
@@ -92,9 +82,9 @@ void MeshRenderer::Update()
 
         std::string base = "lights[" + std::to_string(i) + "]";
 
-        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().GetLights()[i]->getOwner()->GetComponent<Transform>().GetPosition()));
-        glUniform3fv(glGetUniformLocation(shaderProgram, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
-        glUniform1f(glGetUniformLocation(shaderProgram, (base + ".intensity").c_str()), light->GetIntensity());
+        glUniform3fv(glGetUniformLocation(shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().GetLights()[i]->getOwner()->GetComponent<Transform>().GetPosition()));
+        glUniform3fv(glGetUniformLocation(shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
+        glUniform1f(glGetUniformLocation(shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
     }
 
     // -----------------------------
@@ -105,42 +95,6 @@ void MeshRenderer::Update()
     glBindVertexArray(mesh.VAO);
     glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
 }
-
-
-
-GLuint MeshRenderer::compileShader(GLenum type, const char* src) {
-    GLuint shader = glCreateShader(type);
-    glShaderSource(shader, 1, &src, NULL);
-    glCompileShader(shader);
-    return shader;
-}
-
-std::string MeshRenderer::LoadShader(const std::string& filepath)
-{
-    std::ifstream file(filepath);
-    if (!file.is_open()) {
-        std::cerr << "ERROR: Could not open shader file: " << filepath << std::endl;
-        return "";
-    }
-
-    std::stringstream ss;
-    ss << file.rdbuf();
-    return ss.str();
-}
-
-void MeshRenderer::CheckShaderErrors(GLuint shader)
-{
-    GLint success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        char log[1024];
-        glGetShaderInfoLog(shader, 1024, NULL, log);
-        std::cerr << "Shader Compile Error:\n" << log << std::endl;
-    }
-}
-
 
 const char* MeshRenderer::GetComponentName() const  {
 	return "MeshRenderer";

@@ -9,7 +9,6 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-
 #include "ECS/Entity.h"
 #include "ECS/Scene.h"
 #include "ECS/MeshFilter.h"
@@ -23,6 +22,7 @@
 #include "ModelImporter/AssetImporterRegistry.h"
 #include "ModelImporter/ModelImporter.h"
 #include "ModelImporter/ModelInstantiator.h"
+#include "ModelImporter/ShaderImporter.h"
 
 using namespace glm;
 using namespace std;
@@ -43,6 +43,17 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
+    // ---------------- Asset Importers ----------------
+    AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
+    AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
+
+    AssetImporterRegistry::RegisterImporter(".vert", new ShaderImporter());
+    AssetImporterRegistry::RegisterImporter(".frag", new ShaderImporter());
+
+    //Shaders
+    auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
+
+
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
     camera.AddComponent<Camera>(vec3(0, 0, 0));
@@ -51,12 +62,15 @@ int main() {
     Entity cube1("Cube1", vec3(-1.2f, 0, 0));
     MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
+    cubeRenderer.shader = standardShader;
     cubeMesh.InitGPU();
     cubeRenderer.Start();
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
     MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
     MeshRenderer& sphereRenderer = sphere1.AddComponent<MeshRenderer>();
+    sphereRenderer.shader = standardShader;
+
     sphereMesh.InitGPU();
     sphereRenderer.Start();
 
@@ -67,13 +81,9 @@ int main() {
     ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
     InspectorWindow inspectorWindow;
 
-    // ---------------- Asset Importers ----------------
-    AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
-    AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
-
     // ---------------- Load model ----------------
-
     shared_ptr<Entity> bomb =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Bomb.fbx"), "Bomb");
+    bomb->GetComponent<MeshRenderer>().shader = standardShader;
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();

@@ -1,13 +1,12 @@
 #pragma once
 #include "ECS/Component.h"
-#include <string>
-#include <GL/glew.h>
+#include "ModelImporter/Material.h"
+#include "ModelImporter/Shader.h"
 
 class MeshRenderer : public Component {
 public:
-    GLuint shaderProgram;
-    GLuint vertexshader;
-    GLuint fragmentshader;
+    Material* material = nullptr;
+    Shader* shader = nullptr;
 
     MeshRenderer();
     ~MeshRenderer();
@@ -18,7 +17,5 @@ public:
     const char* GetComponentName() const override;
 
 private:
-    std::string LoadShader(const std::string& filepath);
-    GLuint compileShader(GLenum type, const char* src);
-    void CheckShaderErrors(GLuint shader);
+
 };
