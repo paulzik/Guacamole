@@ -1,5 +1,5 @@
-#include "ModelInstantiator.h"
-#include "Model.h"
+#include "Importers/ModelInstantiator.h"
+#include "Assets/Model.h"
 #include <memory>
 #include "ECS/MeshRenderer.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Material.h"
-#include "ModelImporter/Asset.h"
+#include "Assets/Asset.h"
 #include "glm/vec4.hpp"
 
 class Material : public Asset

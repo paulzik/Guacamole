@@ -1,4 +1,4 @@
-#include "ModelImporter/AssetImporterRegistry.h"
+#include "Importers/AssetImporterRegistry.h"
 
 std::unordered_map<std::string, IAssetImporter*> AssetImporterRegistry::s_Importers;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "ECS/Entity.h"
-#include "ModelImporter/Asset.h"
+#include "Assets/Asset.h"
 
 class ModelInstantiator
 {

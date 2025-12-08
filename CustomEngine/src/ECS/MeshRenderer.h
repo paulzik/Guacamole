@@ -1,7 +1,7 @@
 #pragma once
 #include "ECS/Component.h"
-#include "ModelImporter/Material.h"
-#include "ModelImporter/Shader.h"
+#include "Assets/Material.h"
+#include "Assets/Shader.h"
 
 class MeshRenderer : public Component {
 public:

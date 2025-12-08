@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "ModelImporter/Resources.h"
+#include "Importers/Resources.h"
 #include <iostream>
 
 GLuint Shader::compileShader(GLenum type, const char* src)

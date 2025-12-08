@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 #include <assimp/scene.h>
-#include "IAssetImporter.h"
-#include "Model.h"
+#include "Importers/IAssetImporter.h"
+#include "Assets/Model.h"
 #include "ECS/MeshFilter.h"
 
 class ShaderImporter : public IAssetImporter

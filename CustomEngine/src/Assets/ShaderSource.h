@@ -1,6 +1,6 @@
 #pragma once
-#include "ShaderSource.h"
-#include "ModelImporter/Asset.h"
+#include "Assets/ShaderSource.h"
+#include "Assets/Asset.h"
 #include <memory>
 #include <string>
 

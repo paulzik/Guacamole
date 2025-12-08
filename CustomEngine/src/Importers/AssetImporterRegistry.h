@@ -1,5 +1,5 @@
 #pragma once
-#include "ModelImporter/IAssetImporter.h"
+#include "Importers/IAssetImporter.h"
 #include <string>
 #include <unordered_map>
 

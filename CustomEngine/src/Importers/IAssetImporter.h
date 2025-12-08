@@ -1,5 +1,5 @@
 #pragma once
-#include "ModelImporter/Asset.h"
+#include "Assets/Asset.h"
 #include <string>
 #include <memory>
 

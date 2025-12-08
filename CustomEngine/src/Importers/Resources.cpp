@@ -1,5 +1,5 @@
-#include "ModelImporter/Resources.h"
-#include "ModelImporter/AssetImporterRegistry.h"
+#include "Importers/Resources.h"
+#include "Importers/AssetImporterRegistry.h"
 #include <filesystem>
 #include <string>
 #include <iostream>

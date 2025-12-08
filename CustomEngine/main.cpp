@@ -18,11 +18,11 @@
 #include "ECS/Camera.h"
 #include "ScenegraphEditor/ScenegraphEditor.h"
 #include <InspectorWindow/InspectorWindow.h>
-#include "ModelImporter/Resources.h"
-#include "ModelImporter/AssetImporterRegistry.h"
-#include "ModelImporter/ModelImporter.h"
-#include "ModelImporter/ModelInstantiator.h"
-#include "ModelImporter/ShaderImporter.h"
+#include "Importers/Resources.h"
+#include "Importers/AssetImporterRegistry.h"
+#include "Importers/ModelImporter.h"
+#include "Importers/ModelInstantiator.h"
+#include "Importers/ShaderImporter.h"
 
 using namespace glm;
 using namespace std;
