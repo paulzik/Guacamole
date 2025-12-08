@@ -2,11 +2,11 @@
 #include "ECS/Component.h"
 #include "Assets/Material.h"
 #include "Assets/Shader.h"
+#include <memory>
 
 class MeshRenderer : public Component {
 public:
-    Material* material = nullptr;
-    Shader* shader = nullptr;
+    std::shared_ptr<Material> material = nullptr;
 
     MeshRenderer();
     ~MeshRenderer();

@@ -21,7 +21,13 @@ MeshRenderer::~MeshRenderer() {
 
 void MeshRenderer::Start()
 {
-    if (shader == nullptr) {
+    if (material == nullptr) {
+
+        std::cerr << "MeshRenderer ERROR: No material assigned! in entity: " << owner->GetName() << std::endl;
+        return;
+    }
+
+    if (material->shader == nullptr) {
         std::cerr << "MeshRenderer ERROR: No shader assigned! in entity: " << owner->GetName() << std::endl;
         return;
     }
@@ -29,34 +35,34 @@ void MeshRenderer::Start()
 
 void MeshRenderer::Update()
 {
-    if (!shader) {
-        std::cerr << "MeshRenderer ERROR: No shader assigned!\n";
+    if (!material) {
+        std::cerr << "MeshRenderer ERROR: No material assigned!\n";
         return;
     }
-    if (shader->programID == 0) {
+    if (material->shader->programID == 0) {
         std::cerr << "MeshRenderer ERROR: Shader program not compiled!\n";
         return;
     }
 
     Transform& transform = owner->GetComponent<Transform>();
 
-    glUseProgram(shader->programID);
+    glUseProgram(material->shader->programID);
 
     // -----------------------------
     // SET UNIFORMS
     // -----------------------------
     glUniformMatrix4fv(
-        glGetUniformLocation(shader->programID, "model"),
+        glGetUniformLocation(material->shader->programID, "model"),
         1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix())
     );
 
     glUniformMatrix4fv(
-        glGetUniformLocation(shader->programID, "view"),
+        glGetUniformLocation(material->shader->programID, "view"),
         1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetViewMatrix())
     );
 
     glUniformMatrix4fv(
-        glGetUniformLocation(shader->programID, "projection"),
+        glGetUniformLocation(material->shader->programID, "projection"),
         1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetProjectionMatrix())
     );
 
@@ -64,7 +70,7 @@ void MeshRenderer::Update()
     // Camera
     // -----------------------------
     glUniform3fv(
-        glGetUniformLocation(shader->programID, "viewPos"),
+        glGetUniformLocation(material->shader->programID, "viewPos"),
         1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().GetPosition())
     );
 
@@ -74,7 +80,7 @@ void MeshRenderer::Update()
     const auto& lights = Scene::Get().GetLights();
     int lightCount = static_cast<int>(lights.size());
 
-    glUniform1i(glGetUniformLocation(shader->programID, "lightCount"), lightCount);
+    glUniform1i(glGetUniformLocation(material->shader->programID, "lightCount"), lightCount);
 
     for (int i = 0; i < lightCount; i++)
     {
@@ -82,9 +88,9 @@ void MeshRenderer::Update()
 
         std::string base = "lights[" + std::to_string(i) + "]";
 
-        glUniform3fv(glGetUniformLocation(shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().GetLights()[i]->getOwner()->GetComponent<Transform>().GetPosition()));
-        glUniform3fv(glGetUniformLocation(shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
-        glUniform1f(glGetUniformLocation(shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
+        glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().GetLights()[i]->getOwner()->GetComponent<Transform>().GetPosition()));
+        glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
+        glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
     }
 
     // -----------------------------

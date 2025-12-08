@@ -52,7 +52,7 @@ int main() {
 
     //Shaders
     auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
-
+    auto standardMaterial = make_shared<Material>(standardShader);
 
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
@@ -62,14 +62,14 @@ int main() {
     Entity cube1("Cube1", vec3(-1.2f, 0, 0));
     MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
-    cubeRenderer.shader = standardShader;
+    cubeRenderer.material = standardMaterial;
     cubeMesh.InitGPU();
     cubeRenderer.Start();
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
     MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
     MeshRenderer& sphereRenderer = sphere1.AddComponent<MeshRenderer>();
-    sphereRenderer.shader = standardShader;
+    sphereRenderer.material = standardMaterial;
 
     sphereMesh.InitGPU();
     sphereRenderer.Start();
@@ -83,7 +83,7 @@ int main() {
 
     // ---------------- Load model ----------------
     shared_ptr<Entity> bomb =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Bomb.fbx"), "Bomb");
-    bomb->GetComponent<MeshRenderer>().shader = standardShader;
+    bomb->GetComponent<MeshRenderer>().material = standardMaterial;
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();

@@ -1,6 +1,7 @@
 #include "Shader.h"
 #include "Importers/Resources.h"
 #include <iostream>
+#include <memory>
 
 GLuint Shader::compileShader(GLenum type, const char* src)
 {
@@ -25,12 +26,12 @@ void Shader::CheckShaderErrors(GLuint shader)
     }
 }
 
-Shader* Shader::FromFiles(const std::string& vert, const std::string& frag)
+std::shared_ptr<Shader> Shader::FromFiles(const std::string& vert, const std::string& frag)
 {
     auto vs = Resources::Load(vert);
     auto fs = Resources::Load(frag);
 
-    return new Shader(vs, fs);
+    return std::make_shared<Shader>(vs, fs);
 }
 
 Shader::Shader(std::shared_ptr<Asset> vertAsset,

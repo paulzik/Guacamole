@@ -15,7 +15,7 @@ public:
     void Bind() const { glUseProgram(programID); }
     void Unbind() const { glUseProgram(0); }
 
-    static Shader* FromFiles(const std::string& vertPath, const std::string& fragPath);
+    static std::shared_ptr<Shader> FromFiles(const std::string& vertPath, const std::string& fragPath);
 
 private:
     GLuint compileShader(GLenum type, const char* src);
