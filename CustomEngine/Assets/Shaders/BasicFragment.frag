@@ -11,7 +11,9 @@ uniform vec3 viewPos;
 #define MAX_LIGHTS 16
 
 struct Light {
+    int type;      // 0 = directional, 1 = point
     vec3 position;
+    vec3 direction;
     vec3 color;
     float intensity;
 };
@@ -40,7 +42,16 @@ void main()
         vec3 ambient = 0.1 * lights[i].color * lights[i].intensity;
 
         // --- Diffuse ---
-        vec3 lightDir = normalize(lights[i].position - FragPos);
+        vec3 lightDir;
+        if (lights[i].type == 0) {
+            // directional
+            lightDir = normalize(-lights[i].direction);
+        } 
+        else {
+            // point light
+            lightDir = normalize(lights[i].position - FragPos);
+        
+        }
         float diff = max(dot(normal, lightDir), 0.0);
         vec3 diffuse = diff * lights[i].color * lights[i].intensity * (1.0 - metallic);
 

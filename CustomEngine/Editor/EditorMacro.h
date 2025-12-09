@@ -3,9 +3,9 @@
 
 #define CUSTOM_EDITOR(ComponentType, EditorType) \
     namespace { \
-        struct EditorType##_AutoRegister { \
-            EditorType##_AutoRegister() { \
+        struct EditorType##_##ComponentType##_AutoRegister { \
+            EditorType##_##ComponentType##_AutoRegister() { \
                 EditorRegistry::Instance().Register<ComponentType, EditorType>(); \
             } \
-        } EditorType##_AutoRegister_Instance; \
+        } EditorType##_##ComponentType##_AutoRegister_Instance; \
     }

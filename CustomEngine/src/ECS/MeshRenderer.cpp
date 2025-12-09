@@ -85,12 +85,24 @@ void MeshRenderer::Update()
     for (int i = 0; i < lightCount; i++)
     {
         Light* light = lights[i];
+        Transform& tr = light->getOwner()->GetComponent<Transform>();
 
         std::string base = "lights[" + std::to_string(i) + "]";
 
-        glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(Scene::Get().GetLights()[i]->getOwner()->GetComponent<Transform>().GetPosition()));
+        glUniform1i(glGetUniformLocation(material->shader->programID, (base + ".type").c_str()), light->GetType());
         glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
         glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
+
+        if (light->GetType() == LightType::POINT)
+        {
+            glm::vec3 pos = tr.GetPosition();
+            glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(pos));
+        }
+        else if (light->GetType() == LightType::DIRECTIONAL)
+        {
+            glm::vec3 dir = tr.GetForward();
+            glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".direction").c_str()), 1, glm::value_ptr(dir));
+        }
     }
 
     glUniform1i(glGetUniformLocation(material->shader->programID, "useTexture"), material->albedo != nullptr);

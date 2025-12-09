@@ -24,6 +24,8 @@
 #include "Importers/ModelInstantiator.h"
 #include "Importers/ShaderImporter.h"
 #include "Importers/Texture2DImporter.h"
+#include "Lighting/PointLight.h"
+#include "Lighting/DirectionalLight.h"
 
 using namespace glm;
 using namespace std;
@@ -77,8 +79,11 @@ int main() {
     sphereMesh.InitGPU();
     sphereRenderer.Start();
 
-    Entity light1("Light1", vec3(0, 1, 5));
-    light1.AddComponent<Light>(vec3(1, 1, 1), 0.5f);
+    Entity light1("Light1", vec3(-5, 0, 0));
+    light1.AddComponent<PointLight>(vec3(1, 1, 1), 1.0f);
+
+    Entity light2("Light2", vec3(5, 0, 3));
+    light2.AddComponent<PointLight>(vec3(1, 0, 0), 1.0f);
 
     // ---------------- Scenegraph Editor / Inspector ----------------
     ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());

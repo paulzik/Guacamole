@@ -31,6 +31,11 @@ glm::vec3 Transform::GetScale()
 	return scale;
 }
 
+glm::vec3 Transform::GetForward() const
+{
+	return glm::normalize(rotation * glm::vec3(0, 0, -1));
+}
+
 void Transform::SetPosition(glm::vec3 pos)
 {
 	position = pos;

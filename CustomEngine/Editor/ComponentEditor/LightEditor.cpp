@@ -1,5 +1,7 @@
 #include "LightEditor.h"
 #include "Lighting/Light.h"
+#include "Lighting/PointLight.h"
+#include "Lighting/DirectionalLight.h"
 #include "EditorMacro.h"
 #include <glm/gtc/type_ptr.hpp>
 
@@ -17,4 +19,5 @@ void LightEditor::Draw(Component* component) {
     }
 }
 
-CUSTOM_EDITOR(Light, LightEditor);
+CUSTOM_EDITOR(PointLight, LightEditor);
+CUSTOM_EDITOR(DirectionalLight, LightEditor);

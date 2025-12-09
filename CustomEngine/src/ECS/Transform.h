@@ -20,6 +20,9 @@ public:
 	glm::quat GetRotationQuat();
 	glm::vec3 GetRotationEuler();
 	glm::vec3 GetScale();
+
+	glm::vec3 GetForward() const;
+
 	const char* GetComponentName() const override;
 
 	void SetPosition(glm::vec3 pos);
