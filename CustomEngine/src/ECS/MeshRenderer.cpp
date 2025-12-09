@@ -101,6 +101,9 @@ void MeshRenderer::Update()
         glUniform1i(glGetUniformLocation(material->shader->programID, "albedoTexture"), 0); // Texture unit 0    
     }
 
+    glUseProgram(material->shader->programID);
+    glUniform1f(glGetUniformLocation(material->shader->programID, "metallic"), material->metallic);
+
     // -----------------------------
     // DRAW MESH
     // -----------------------------

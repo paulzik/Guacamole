@@ -17,7 +17,14 @@ public:
 
     static std::shared_ptr<Shader> FromFiles(const std::string& vertPath, const std::string& fragPath);
 
+    const std::shared_ptr<ShaderSource> GetVertexShader();
+    const std::shared_ptr<ShaderSource> GetFragmentShader();
+
 private:
     GLuint compileShader(GLenum type, const char* src);
     void CheckShaderErrors(GLuint shader);
+
+    std::shared_ptr<ShaderSource> vertexShader;
+    std::shared_ptr<ShaderSource> fragmentShader;
+
 };

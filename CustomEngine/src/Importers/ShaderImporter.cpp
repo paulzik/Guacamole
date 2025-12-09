@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 #include <string>
 
 std::shared_ptr<Asset> ShaderImporter::Load(const std::string& path)
@@ -20,6 +21,7 @@ std::shared_ptr<Asset> ShaderImporter::Load(const std::string& path)
 
     auto shaderAsset = std::make_shared<ShaderSource>();
     shaderAsset->path = path;
+    shaderAsset->name = std::filesystem::path(path).filename().string();
     shaderAsset->sourceCode = ss.str();
 
     if (path.ends_with(".vert"))

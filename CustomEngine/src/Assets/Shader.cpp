@@ -34,19 +34,28 @@ std::shared_ptr<Shader> Shader::FromFiles(const std::string& vert, const std::st
     return std::make_shared<Shader>(vs, fs);
 }
 
-Shader::Shader(std::shared_ptr<Asset> vertAsset,
-    std::shared_ptr<Asset> fragAsset)
+const std::shared_ptr<ShaderSource> Shader::GetVertexShader()
 {
-    auto vert = std::dynamic_pointer_cast<ShaderSource>(vertAsset);
-    auto frag = std::dynamic_pointer_cast<ShaderSource>(fragAsset);
+    return vertexShader;
+}
 
-    if (!vert || !frag) {
+const std::shared_ptr<ShaderSource> Shader::GetFragmentShader()
+{
+    return fragmentShader;
+}
+
+Shader::Shader(std::shared_ptr<Asset> vertAsset, std::shared_ptr<Asset> fragAsset)
+{
+    vertexShader = std::dynamic_pointer_cast<ShaderSource>(vertAsset);
+    fragmentShader = std::dynamic_pointer_cast<ShaderSource>(fragAsset);
+
+    if (!vertexShader || !fragmentShader) {
         std::cerr << "ERROR: Shader assets are not ShaderSource!" << std::endl;
         return;
     }
 
-    GLuint vs = compileShader(GL_VERTEX_SHADER, vert->sourceCode.c_str());
-    GLuint fs = compileShader(GL_FRAGMENT_SHADER, frag->sourceCode.c_str());
+    GLuint vs = compileShader(GL_VERTEX_SHADER, vertexShader->sourceCode.c_str());
+    GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader->sourceCode.c_str());
 
     // -------- LINK PROGRAM --------
     programID = glCreateProgram();

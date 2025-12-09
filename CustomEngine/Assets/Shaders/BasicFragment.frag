@@ -22,10 +22,16 @@ uniform Light lights[MAX_LIGHTS];
 uniform sampler2D albedoTexture;
 uniform bool useTexture;
 
+uniform float metallic;
+
 void main()
 {
     vec3 normal = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
+
+    vec3 finalColor = vertexColor;
+    if (useTexture)
+        finalColor *= texture(albedoTexture, TexCoords).rgb;
 
     vec3 result = vec3(0.0);
 
@@ -36,22 +42,17 @@ void main()
         // --- Diffuse ---
         vec3 lightDir = normalize(lights[i].position - FragPos);
         float diff = max(dot(normal, lightDir), 0.0);
-        vec3 diffuse = diff * lights[i].color * lights[i].intensity;
+        vec3 diffuse = diff * lights[i].color * lights[i].intensity * (1.0 - metallic);
 
         // --- Specular ---
         vec3 reflectDir = reflect(-lightDir, normal);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
-        vec3 specular = vec3(0.3) * spec * lights[i].intensity;
 
-        // Add to result
+        vec3 specularColor = mix(vec3(0.3), finalColor, metallic);
+        vec3 specular = specularColor * spec * lights[i].intensity;
+
         result += ambient + diffuse + specular;
     }
 
-    vec3 finalColor = vertexColor;
-    if (useTexture)
-        finalColor *= texture(albedoTexture, TexCoords).rgb;
-
-    result *= finalColor;
-
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result * finalColor, 1.0);  // apply base color once
 }
