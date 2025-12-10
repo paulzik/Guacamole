@@ -1,11 +1,11 @@
-#include "LightEditor.h"
+#include "DirectionalLightEditor.h"
 #include "Lighting/Light.h"
 #include "Lighting/PointLight.h"
 #include "Lighting/DirectionalLight.h"
 #include "EditorMacro.h"
 #include <glm/gtc/type_ptr.hpp>
 
-void LightEditor::Draw(Component* component) {
+void DirectionalLightEditor::Draw(Component* component) {
     Light* light = static_cast<Light*>(component);
 
     float intensity = light->GetIntensity();
@@ -19,5 +19,4 @@ void LightEditor::Draw(Component* component) {
     }
 }
 
-CUSTOM_EDITOR(PointLight, LightEditor);
-CUSTOM_EDITOR(DirectionalLight, LightEditor);
+CUSTOM_EDITOR(DirectionalLight, DirectionalLightEditor);

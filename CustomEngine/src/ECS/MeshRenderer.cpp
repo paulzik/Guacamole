@@ -9,6 +9,8 @@
 #include "ECS/Entity.h"
 #include "ECS/Transform.h"
 #include "ECS/Scene.h"
+#include <Lighting/PointLight.h>
+#include <Lighting/DirectionalLight.h>
 
 MeshRenderer::MeshRenderer()
 {
@@ -95,11 +97,15 @@ void MeshRenderer::Update()
 
         if (light->GetType() == LightType::POINT)
         {
+            auto* pointLight = static_cast<PointLight*>(light);
             glm::vec3 pos = tr.GetPosition();
             glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(pos));
+            glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".radius").c_str()), pointLight->GetRadius());
+
         }
         else if (light->GetType() == LightType::DIRECTIONAL)
         {
+            auto* directionalLight = static_cast<DirectionalLight*>(light);
             glm::vec3 dir = tr.GetForward();
             glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".direction").c_str()), 1, glm::value_ptr(dir));
         }
@@ -113,7 +119,6 @@ void MeshRenderer::Update()
         glUniform1i(glGetUniformLocation(material->shader->programID, "albedoTexture"), 0); // Texture unit 0    
     }
 
-    glUseProgram(material->shader->programID);
     glUniform1f(glGetUniformLocation(material->shader->programID, "metallic"), material->metallic);
 
     // -----------------------------
