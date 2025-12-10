@@ -18,18 +18,17 @@ private:
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
-public:
     GLuint VAO = 0;
     GLuint VBO = 0;
     GLuint EBO = 0;
 
+public:
     MeshFilter(const std::vector<Vertex>& vertices,
         const std::vector<uint32_t>& indices);
     ~MeshFilter();
 
     const char* GetComponentName() const override;
 
-    // Optional: accessors
     const std::vector<Vertex>& GetVertices() const { return vertices; }
     const std::vector<uint32_t>& GetIndices() const { return indices; }
 

@@ -126,7 +126,7 @@ void MeshRenderer::Update()
     // -----------------------------
     MeshFilter& mesh = owner->GetComponent<MeshFilter>();
 
-    glBindVertexArray(mesh.VAO);
+    glBindVertexArray(mesh.GetVAO());
     glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
 }
 
