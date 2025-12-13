@@ -26,6 +26,8 @@
 #include "Importers/Texture2DImporter.h"
 #include "Lighting/PointLight.h"
 #include "Lighting/DirectionalLight.h"
+#include "Animations/Animator.h"
+#include "Animations/Animation.h"
 
 using namespace glm;
 using namespace std;
@@ -90,12 +92,13 @@ int main() {
     InspectorWindow inspectorWindow;
 
     // ---------------- Load model ----------------
-    shared_ptr<Entity> bomb =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Miner.fbx"), "Bomb");
+    shared_ptr<Entity> soldier =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Miner.fbx"), "Soldier");
     auto albedo = Resources::Load("Assets/Models/MinerTexture.png");
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
     //auto normal = Resources::Load("brick_normal.png");
-    auto bombMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
-    bomb->GetComponent<MeshRenderer>().material = bombMaterial;
+    auto soldierMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
+    soldier->GetComponent<MeshRenderer>().material = soldierMaterial;
+    soldier->AddComponent<Animator>();
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();

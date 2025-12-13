@@ -9,7 +9,8 @@ public:
     void Stop();
     void Update(float deltaTime);
 
+    const char* GetComponentName() const override;
+
 private:
     std::shared_ptr<Animation> currentAnimation;
-    float currentTime = 0.0f;
 };

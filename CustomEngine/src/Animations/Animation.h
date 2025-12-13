@@ -5,6 +5,12 @@
 
 class Animation : public Asset
 {
-public:
+private:
+	float speed = 1;
+	bool isPlaying = false;
+	float currentTime = 0.0f;
 
+public:
+	void Play();
+	void Stop();
 };
