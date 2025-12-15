@@ -10,9 +10,6 @@
 class ModelImporter : public IAssetImporter
 {
 public:
-    ModelImporter() = default;
-    ~ModelImporter() override = default;
-
     // IAssetImporter interface
     std::shared_ptr<Asset> Load(const std::string& path) override;
 
@@ -20,4 +17,11 @@ private:
     // Helpers for processing Assimp data
     std::vector<std::shared_ptr<MeshFilter>> ProcessScene(const aiScene* scene);
     std::shared_ptr<MeshFilter> ProcessMesh(aiMesh* mesh, const aiScene* scene);
+
+    std::shared_ptr<Skeleton> BuildSkeleton(const aiScene* scene);
+    void ExtractBoneWeights(const aiScene* scene, std::vector<std::shared_ptr<MeshFilter>>& meshes,
+        std::shared_ptr<Skeleton> skeleton);
+
+    void LoadSkeleton(const aiScene* scene, Model& model);
+    std::vector<std::shared_ptr<Animation>> LoadAnimations(const aiScene* scene, std::shared_ptr<Skeleton> skeleton);
 };

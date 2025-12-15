@@ -92,14 +92,17 @@ int main() {
     InspectorWindow inspectorWindow;
 
     // ---------------- Load model ----------------
-    shared_ptr<Entity> soldier =  ModelInstantiator::Instantiate(Resources::Load("Assets/Models/Miner.fbx"), "Soldier");
-    auto albedo = Resources::Load("Assets/Models/MinerTexture.png");
+    auto modelAsset = Resources::Load("Assets/Models/GeneralAnimated.fbx");
+    shared_ptr<Entity> soldier = ModelInstantiator::Instantiate(modelAsset, "GeneralAnimated");    
+    auto albedo = Resources::Load("Assets/Models/GeneralRed.png");
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
     //auto normal = Resources::Load("brick_normal.png");
     auto soldierMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
     soldier->GetComponent<MeshRenderer>().material = soldierMaterial;
-    soldier->AddComponent<Animator>();
 
+    auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
+    Animator animator = soldier->AddComponent<Animator>(modelPtr);
+    animator.Start();
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

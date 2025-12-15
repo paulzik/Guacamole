@@ -11,6 +11,9 @@ struct Vertex
     glm::vec3 color;
     glm::vec3 normal;
     glm::vec2 uv;
+
+    int boneIDs[4] = { 0 };       // max 4 bones per vertex
+    float boneWeights[4] = { 0 };
 };
 
 class MeshFilter : public Component {
@@ -31,6 +34,8 @@ public:
 
     const std::vector<Vertex>& GetVertices() const { return vertices; }
     const std::vector<uint32_t>& GetIndices() const { return indices; }
+
+    std::vector<Vertex>& GetVerticesRef() { return vertices; }
 
     GLuint GetVAO() const { return VAO; }
     void InitGPU();
