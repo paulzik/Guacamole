@@ -236,10 +236,17 @@ std::vector<std::shared_ptr<Animation>> ModelImporter::LoadAnimations(
         aiAnimation* aiAnim = scene->mAnimations[i];
 
         std::string animName = aiAnim->mName.C_Str();
-        double duration = aiAnim->mDuration;
-        double ticksPerSecond = aiAnim->mTicksPerSecond != 0.0 ? aiAnim->mTicksPerSecond : 25.0;
 
-        auto animation = std::make_shared<Animation>(animName, duration);
+        // Determine ticks per second
+        double ticksPerSecond = aiAnim->mTicksPerSecond != 0.0
+            ? aiAnim->mTicksPerSecond
+            : 25.0;
+
+        // Convert animation duration from ticks to seconds
+        float durationSeconds = static_cast<float>(aiAnim->mDuration / ticksPerSecond);
+
+        // Create animation asset
+        auto animation = std::make_shared<Animation>(animName, durationSeconds);
 
         // Iterate channels (each channel corresponds to a bone)
         for (unsigned int c = 0; c < aiAnim->mNumChannels; ++c)
@@ -247,30 +254,33 @@ std::vector<std::shared_ptr<Animation>> ModelImporter::LoadAnimations(
             aiNodeAnim* channel = aiAnim->mChannels[c];
             int boneIndex = skeleton->GetBoneIndex(channel->mNodeName.C_Str());
             if (boneIndex == -1)
-            {
-                // Bone not in skeleton, skip
-                continue;
-            }
+                continue; // Skip bones not in the skeleton
 
-            // Store position keyframes
+            // Store position keyframes (convert times to seconds)
             for (unsigned int k = 0; k < channel->mNumPositionKeys; ++k)
             {
                 const aiVectorKey& key = channel->mPositionKeys[k];
-                animation->AddPositionKey(boneIndex, (float)key.mTime, glm::vec3(key.mValue.x, key.mValue.y, key.mValue.z));
+                float timeSeconds = static_cast<float>(key.mTime / ticksPerSecond);
+                animation->AddPositionKey(boneIndex, timeSeconds,
+                    glm::vec3(key.mValue.x, key.mValue.y, key.mValue.z));
             }
 
-            // Store rotation keyframes
+            // Store rotation keyframes (convert times to seconds)
             for (unsigned int k = 0; k < channel->mNumRotationKeys; ++k)
             {
                 const aiQuatKey& key = channel->mRotationKeys[k];
-                animation->AddRotationKey(boneIndex, (float)key.mTime, glm::quat(key.mValue.w, key.mValue.x, key.mValue.y, key.mValue.z));
+                float timeSeconds = static_cast<float>(key.mTime / ticksPerSecond);
+                animation->AddRotationKey(boneIndex, timeSeconds,
+                    glm::quat(key.mValue.w, key.mValue.x, key.mValue.y, key.mValue.z));
             }
 
-            // Store scale keyframes
+            // Store scale keyframes (convert times to seconds)
             for (unsigned int k = 0; k < channel->mNumScalingKeys; ++k)
             {
                 const aiVectorKey& key = channel->mScalingKeys[k];
-                animation->AddScaleKey(boneIndex, (float)key.mTime, glm::vec3(key.mValue.x, key.mValue.y, key.mValue.z));
+                float timeSeconds = static_cast<float>(key.mTime / ticksPerSecond);
+                animation->AddScaleKey(boneIndex, timeSeconds,
+                    glm::vec3(key.mValue.x, key.mValue.y, key.mValue.z));
             }
         }
 
@@ -279,4 +289,3 @@ std::vector<std::shared_ptr<Animation>> ModelImporter::LoadAnimations(
 
     return animations;
 }
-

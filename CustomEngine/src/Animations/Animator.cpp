@@ -1,4 +1,4 @@
-#include "Animator.h"
+﻿#include "Animator.h"
 #include <memory>
 #include <iostream>
 #include <glm/glm.hpp>
@@ -9,15 +9,13 @@ void Animator::Start()
 {
     if (!model) return;
 
-    for (const auto& anim : model->animations) {
+    animations = model->animations;  // 🔴 REQUIRED
 
+    for (const auto& anim : animations)
         std::cout << anim->GetAnimationName() << std::endl;
-    }
 
-    if (model->animations.size() > 0) {
-        currentAnimation = model->animations[0];
-        Play(currentAnimation);
-    }
+    if (!animations.empty())
+        Play(animations[0]);
 }
 
 void Animator::Update()
@@ -28,12 +26,21 @@ void Animator::Update()
 
 void Animator::Update(float deltaTime)
 {
-    if (!model || animations.empty())
+    if (model == nullptr) {
+        std::cout << "MODEL" << std::endl;
+    }
+
+    if (currentAnimation == nullptr) {
+        std::cout << "ANIM" << std::endl;
+
+    }
+
+    if (!model || !currentAnimation)
         return;
 
     // Advance current animation time
     if (!currentAnimation) return;
-    currentAnimationTime += deltaTime * currentAnimation->GetSpeed();
+    currentAnimationTime += deltaTime;
 
     // Loop animation if needed
     float animationDuration = currentAnimation->GetDuration();
@@ -66,7 +73,6 @@ void Animator::Play(std::shared_ptr<Animation> animation)
 {
     currentAnimation = animation;
     currentAnimationTime = 0.0f;
-    animation->Play();
 }
 
 

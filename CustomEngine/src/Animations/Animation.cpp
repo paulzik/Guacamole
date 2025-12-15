@@ -1,10 +1,5 @@
 #include "Animation.h"
 
-
-void Animation::Play()
-{
-}
-
 void Animation::AddPositionKey(int boneIndex, float time, const glm::vec3& position)
 {
     if (boneIndex >= positions.size()) {
@@ -29,21 +24,6 @@ void  Animation::AddScaleKey(int boneIndex, float time, const glm::vec3& scale)
         scales.resize(boneIndex + 1);
     }
     scales[boneIndex].push_back({ time, scale });
-}
-
-std::string Animation::GetAnimationName()
-{
-    return name;
-}
-
-float Animation::GetSpeed()
-{
-    return speed;
-}
-
-float Animation::GetDuration()
-{
-    return 0.0f;
 }
 
 glm::vec3 Animation::GetInterpolatedPosition(int boneIndex, float time) const
@@ -126,4 +106,14 @@ glm::vec3 Animation::GetInterpolatedScale(int boneIndex, float time) const
     }
 
     return keys.back().second;
+}
+
+float Animation::GetDuration() const
+{
+    return duration;
+}
+
+const std::string& Animation::GetAnimationName() const
+{
+    return name;
 }

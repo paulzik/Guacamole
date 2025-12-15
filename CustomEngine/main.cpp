@@ -101,7 +101,7 @@ int main() {
     soldier->GetComponent<MeshRenderer>().material = soldierMaterial;
 
     auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
-    Animator animator = soldier->AddComponent<Animator>(modelPtr);
+    Animator& animator = soldier->AddComponent<Animator>(modelPtr);
     animator.Start();
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
