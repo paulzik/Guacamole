@@ -9,13 +9,13 @@ void Animator::Start()
 {
     if (!model) return;
 
-    animations = model->animations;  // 🔴 REQUIRED
+    animations = model->animations;
 
     for (const auto& anim : animations)
         std::cout << anim->GetAnimationName() << std::endl;
 
     if (!animations.empty())
-        Play(animations[0]);
+        PlayByIndex(0);
 }
 
 void Animator::Update()
@@ -44,8 +44,12 @@ void Animator::Update(float deltaTime)
 
     // Loop animation if needed
     float animationDuration = currentAnimation->GetDuration();
-    if (currentAnimationTime > animationDuration)
-        currentAnimationTime = fmod(currentAnimationTime, animationDuration);
+    if (currentAnimationTime > animationDuration) {
+        if (loop)
+            currentAnimationTime = fmod(currentAnimationTime, animationDuration);
+        else
+            currentAnimationTime = animationDuration;
+    }
 
     // Update all bones in the skeleton
     auto skeleton = model->skeleton;
@@ -67,6 +71,8 @@ void Animator::Update(float deltaTime)
 
     // After all bones are updated, compute final global transforms
     skeleton->ComputeGlobalTransforms();
+
+    currentNormalizedTime = currentAnimation ? (currentAnimationTime / currentAnimation->GetDuration()) : 0.0f;
 }
 
 void Animator::Play(std::shared_ptr<Animation> animation)
@@ -79,4 +85,65 @@ void Animator::Play(std::shared_ptr<Animation> animation)
 const char* Animator::GetComponentName() const
 {
     return "Animator";
+}
+
+float Animator::GetCurrentAnimationTime()
+{
+    return currentAnimationTime;
+}
+
+void Animator::SetCurrentAnimationTime(float time)
+{
+    currentAnimationTime = time;
+}
+
+const std::vector<std::shared_ptr<Animation>>& Animator::GetAnimations() const
+{
+    return animations;
+}
+
+int Animator::GetCurrentAnimationIndex() const
+{
+    return currentAnimationIndex;
+}
+
+void Animator::PlayByIndex(int index)
+{
+    if (index < 0 || index >= static_cast<int>(animations.size()))
+    {
+        std::cout << "Animator::PlayByIndex - invalid index: " << index << std::endl;
+        return;
+    }
+
+    currentAnimationIndex = index;
+    currentAnimation = animations[index];
+    currentAnimationTime = 0.0f;
+}
+
+void Animator::SetCurrentAnimationIndex(int index)
+{
+    if (index < 0 || index >= static_cast<int>(animations.size()))
+        return;
+
+    currentAnimationIndex = index;
+    currentAnimation = animations[index];
+    currentAnimationTime = 0.0f;
+}
+
+float Animator::GetCurrentAnimationDuration() const
+{
+    if (!currentAnimation)
+        return 0.0f;
+
+    return currentAnimation->GetDuration();
+}
+
+bool Animator::IsLooping() const
+{
+    return loop;
+}
+
+void Animator::SetLooping(bool _loop)
+{
+    loop = _loop;
 }
