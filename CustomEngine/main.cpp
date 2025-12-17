@@ -14,6 +14,7 @@
 #include "ECS/MeshFilter.h"
 #include "ECS/PrimitiveFactory.h"
 #include "ECS/MeshRenderer.h"
+#include "ECS/SkinnedMeshRenderer.h"
 #include "ECS/Transform.h"
 #include "ECS/Camera.h"
 #include "ScenegraphEditor/ScenegraphEditor.h"
@@ -61,6 +62,8 @@ int main() {
     auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
     auto standardMaterial = make_shared<Material>(standardShader);
 
+    auto skinnedShader = Shader::FromFiles("Assets/Shaders/SkinnedVertex.vert", "Assets/Shaders/BasicFragment.frag");
+
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
     camera.AddComponent<Camera>(vec3(0, 0, 0));
@@ -94,12 +97,12 @@ int main() {
     // ---------------- Load model ----------------
     auto modelAsset = Resources::Load("Assets/Models/GeneralAnimated.fbx");
     shared_ptr<Entity> soldier = ModelInstantiator::Instantiate(modelAsset, "GeneralAnimated");    
+    SkinnedMeshRenderer& soldierRenderer = soldier->AddComponent<SkinnedMeshRenderer>();
     auto albedo = Resources::Load("Assets/Models/GeneralRed.png");
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
-    //auto normal = Resources::Load("brick_normal.png");
-    auto soldierMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
-    soldier->GetComponent<MeshRenderer>().material = soldierMaterial;
-
+    auto soldierMaterial = make_shared<Material>(texture2D, nullptr, skinnedShader);
+    soldier->GetComponent<SkinnedMeshRenderer>().material = soldierMaterial;
+    soldierRenderer.Start();
     auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
     Animator& animator = soldier->AddComponent<Animator>(modelPtr);
     animator.Start();

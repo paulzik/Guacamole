@@ -5,6 +5,7 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <iostream>
 
 class Entity {
 
@@ -48,7 +49,9 @@ public:
             if (auto ptr = dynamic_cast<T*>(c.get()))
                 return *ptr; // returns lvalue
         }
-        throw std::runtime_error("Component not found");
+        std::cout << "Component " << typeid(T).name()<< " not found in entity " << GetName() << std::endl;
+
+       // throw std::runtime_error("Component not found");
     }
 
     template<typename T>

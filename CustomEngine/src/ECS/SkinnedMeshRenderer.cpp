@@ -1,4 +1,4 @@
-#include "MeshRenderer.h"
+#include "SkinnedMeshRenderer.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -13,37 +13,37 @@
 #include <Lighting/DirectionalLight.h>
 #include <Animations/Animator.h>
 
-MeshRenderer::MeshRenderer()
+SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
 }
 
 
-MeshRenderer::~MeshRenderer() {
+SkinnedMeshRenderer::~SkinnedMeshRenderer() {
 
 }
 
-void MeshRenderer::Start()
+void SkinnedMeshRenderer::Start()
 {
     if (material == nullptr) {
 
-        std::cerr << "MeshRenderer ERROR: No material assigned! in entity: " << owner->GetName() << std::endl;
+        std::cerr << "SkinnedMeshRenderer ERROR: No material assigned! in entity: " << owner->GetName() << std::endl;
         return;
     }
 
     if (material->shader == nullptr) {
-        std::cerr << "MeshRenderer ERROR: No shader assigned! in entity: " << owner->GetName() << std::endl;
+        std::cerr << "SkinnedMeshRenderer ERROR: No shader assigned! in entity: " << owner->GetName() << std::endl;
         return;
     }
 }
 
-void MeshRenderer::Update()
+void SkinnedMeshRenderer::Update()
 {
     if (!material) {
-        std::cerr << "MeshRenderer ERROR: No material assigned! in entity: " << owner->GetName() << std::endl;
+        std::cerr << "SkinnedMeshRenderer ERROR: No material assigned!\n";
         return;
     }
     if (material->shader->programID == 0) {
-        std::cerr << "MeshRenderer ERROR: Shader program not compiled!\n";
+        std::cerr << "SkinnedMeshRenderer ERROR: Shader program not compiled!\n";
         return;
     }
 
@@ -122,6 +122,27 @@ void MeshRenderer::Update()
 
     glUniform1f(glGetUniformLocation(material->shader->programID, "metallic"), material->metallic);
 
+    Animator& animator = owner->GetComponent<Animator>();
+    if (&animator && animator.GetModel() && animator.GetModel()->skeleton)
+    {
+        Skeleton* skeleton = animator.GetModel()->skeleton.get();
+        const int boneCount = skeleton->GetBoneCount();
+
+        for (int i = 0; i < boneCount; ++i)
+        {
+            std::string uniformName = "bones[" + std::to_string(i) + "]";
+
+            // FIX: Multiply Global Transform by the Offset Matrix (Inverse Bind Pose)
+            const Bone& bone = skeleton->GetBone(i);
+            glm::mat4 finalTransform = bone.globalTransform * bone.offsetMatrix;
+
+            glUniformMatrix4fv(
+                glGetUniformLocation(material->shader->programID, uniformName.c_str()),
+                1, GL_FALSE, glm::value_ptr(finalTransform)
+            );
+        }
+    }
+
     // -----------------------------
     // DRAW MESH
     // -----------------------------
@@ -131,6 +152,6 @@ void MeshRenderer::Update()
     glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
 }
 
-const char* MeshRenderer::GetComponentName() const  {
-	return "MeshRenderer";
+const char* SkinnedMeshRenderer::GetComponentName() const  {
+	return "SkinnedMeshRenderer";
 }

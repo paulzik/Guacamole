@@ -21,6 +21,7 @@ private:
     std::shared_ptr<Skeleton> BuildSkeleton(const aiScene* scene);
     void ExtractBoneWeights(const aiScene* scene, std::vector<std::shared_ptr<MeshFilter>>& meshes,
         std::shared_ptr<Skeleton> skeleton);
+    glm::mat4 AssimpToGLM(const aiMatrix4x4& from);
 
     void LoadSkeleton(const aiScene* scene, Model& model);
     std::vector<std::shared_ptr<Animation>> LoadAnimations(const aiScene* scene, std::shared_ptr<Skeleton> skeleton);

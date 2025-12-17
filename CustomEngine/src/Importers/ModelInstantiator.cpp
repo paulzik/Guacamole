@@ -21,9 +21,9 @@ std::unique_ptr<Entity> ModelInstantiator::Instantiate(const std::shared_ptr<Ass
 
     // Attach components ONCE
     MeshFilter& filter = entity->AddComponent<MeshFilter>(*mesh);
-    MeshRenderer& renderer = entity->AddComponent<MeshRenderer>();
+    //MeshRenderer& renderer = entity->AddComponent<MeshRenderer>();
 
-    renderer.Start();
+    //renderer.Start();
 
     return entity;
 }

@@ -27,6 +27,8 @@ public:
     bool  IsLooping() const;
     void  SetLooping(bool _loop);
 
+    std::shared_ptr<Model> GetModel();
+
     Animator(std::shared_ptr<Model> m) : model(m) {}
 private:
     std::shared_ptr<Model> model;

@@ -56,3 +56,8 @@ void Skeleton::ComputeGlobalTransforms()
         }
     }
 }
+
+const std::vector<Bone>& Skeleton::GetBones() const
+{
+    return bones;
+}

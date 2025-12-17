@@ -153,8 +153,9 @@ std::shared_ptr<Skeleton> ModelImporter::BuildSkeleton(const aiScene* scene)
     traverse = [&](aiNode* node, int parentIndex)
         {
             // Create a bone for this node
-            glm::mat4 offset = glm::transpose(glm::make_mat4(&node->mTransformation.a1)); // Assimp → glm
-            int boneIndex = skeleton->AddBone(node->mName.C_Str(), parentIndex, offset);
+// NEW
+            glm::mat4 localBindPose = AssimpToGLM(node->mTransformation);
+            int boneIndex = skeleton->AddBone(node->mName.C_Str(), parentIndex, localBindPose);
 
             // Recurse for children
             for (unsigned int i = 0; i < node->mNumChildren; ++i)
@@ -162,10 +163,19 @@ std::shared_ptr<Skeleton> ModelImporter::BuildSkeleton(const aiScene* scene)
                 traverse(node->mChildren[i], boneIndex);
             }
         };
-
     traverse(scene->mRootNode, -1);
 
     return skeleton;
+}
+
+glm::mat4 ModelImporter::AssimpToGLM(const aiMatrix4x4& from) {
+    glm::mat4 to;
+    // [col][row]
+    to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+    to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+    to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+    to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+    return to;
 }
 
 void ModelImporter::ExtractBoneWeights(
@@ -177,31 +187,31 @@ void ModelImporter::ExtractBoneWeights(
     {
         aiMesh* ai_mesh = scene->mMeshes[meshIndex];
         auto& meshFilter = meshes[meshIndex];
-        auto& vertices = meshFilter->GetVerticesRef(); // non-const getter
+        auto& vertices = meshFilter->GetVerticesRef();
 
-        // Initialize bone info
         for (unsigned int b = 0; b < ai_mesh->mNumBones; ++b)
         {
             aiBone* ai_bone = ai_mesh->mBones[b];
             int boneIndex = skeleton->GetBoneIndex(ai_bone->mName.C_Str());
-            if (boneIndex == -1)
-            {
-                // Bone not in skeleton, add it
-                glm::mat4 offset = glm::transpose(glm::make_mat4(&ai_bone->mOffsetMatrix.a1));
-                boneIndex = skeleton->AddBone(ai_bone->mName.C_Str(), -1, offset);
+
+            // 1. Correctly convert the Offset Matrix
+            glm::mat4 offsetMatrix = AssimpToGLM(ai_bone->mOffsetMatrix);
+
+            if (boneIndex == -1) {
+                // Should rarely happen if BuildSkeleton worked correctly
+                boneIndex = skeleton->AddBone(ai_bone->mName.C_Str(), -1, glm::mat4(1.0f));
             }
 
-            // Assign weights to vertices
-            for (unsigned int w = 0; w < ai_bone->mNumWeights; ++w)
-            {
+            // 2. STORE THE OFFSET MATRIX IN THE SKELETON
+            skeleton->SetBoneOffset(boneIndex, offsetMatrix);
+
+            // 3. Assign weights to vertices
+            for (unsigned int w = 0; w < ai_bone->mNumWeights; ++w) {
                 const aiVertexWeight& vw = ai_bone->mWeights[w];
                 Vertex& vertex = vertices[vw.mVertexId];
 
-                // find first empty slot
-                for (int i = 0; i < 4; ++i)
-                {
-                    if (vertex.boneWeights[i] == 0.0f)
-                    {
+                for (int i = 0; i < 4; ++i) {
+                    if (vertex.boneWeights[i] == 0.0f) {
                         vertex.boneIDs[i] = boneIndex;
                         vertex.boneWeights[i] = vw.mWeight;
                         break;
@@ -209,19 +219,7 @@ void ModelImporter::ExtractBoneWeights(
                 }
             }
         }
-
-        // Optional: normalize weights
-        for (Vertex& v : vertices)
-        {
-            float total = v.boneWeights[0] + v.boneWeights[1] + v.boneWeights[2] + v.boneWeights[3];
-            if (total > 0)
-            {
-                v.boneWeights[0] /= total;
-                v.boneWeights[1] /= total;
-                v.boneWeights[2] /= total;
-                v.boneWeights[3] /= total;
-            }
-        }
+        // ... (Optional: Normalize weights)
     }
 }
 

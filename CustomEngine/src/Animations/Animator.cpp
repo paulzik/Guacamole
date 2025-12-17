@@ -40,7 +40,7 @@ void Animator::Update(float deltaTime)
 
     // Advance current animation time
     if (!currentAnimation) return;
-    currentAnimationTime += deltaTime;
+    //currentAnimationTime += deltaTime;
 
     // Loop animation if needed
     float animationDuration = currentAnimation->GetDuration();
@@ -146,4 +146,9 @@ bool Animator::IsLooping() const
 void Animator::SetLooping(bool _loop)
 {
     loop = _loop;
+}
+
+std::shared_ptr<Model> Animator::GetModel()
+{
+    return model;
 }
