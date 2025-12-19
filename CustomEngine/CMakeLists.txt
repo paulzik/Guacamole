@@ -109,15 +109,6 @@ target_link_libraries(CustomEngine PRIVATE
     assimp
 )
 # ------------------------------
-# Copy shaders after build
-# ------------------------------
-add_custom_command(TARGET CustomEngine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_SOURCE_DIR}/src/Shaders"
-        "${CMAKE_BINARY_DIR}/Shaders"
-    COMMENT "Copying shaders to build directory"
-)
-# ------------------------------
 # Copy DLLs after build
 # ------------------------------
 add_custom_command(TARGET CustomEngine POST_BUILD

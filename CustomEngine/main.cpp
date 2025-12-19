@@ -29,6 +29,8 @@
 #include "Lighting/DirectionalLight.h"
 #include "Animations/Animator.h"
 #include "Animations/Animation.h"
+#include "Utilities/Debug/Debug.h"
+#include "Editor/ConsoleWindow/ConsoleWindow.h"
 
 using namespace glm;
 using namespace std;
@@ -93,6 +95,7 @@ int main() {
     // ---------------- Scenegraph Editor / Inspector ----------------
     ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
     InspectorWindow inspectorWindow;
+    ConsoleWindow consoleWindow;
 
     // ---------------- Load model ----------------
     auto modelAsset = Resources::Load("Assets/Models/GeneralAnimated.fbx");
@@ -128,6 +131,7 @@ int main() {
 
         sceneEditor.Draw();
         inspectorWindow.Draw();
+        consoleWindow.Draw();
 
         ImGui::Render();
 
