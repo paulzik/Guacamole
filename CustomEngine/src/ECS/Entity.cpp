@@ -76,3 +76,8 @@ void Entity::Update()
         comp->Update();
     }
 }
+
+EntityID Entity::GetID() const
+{
+    return entityID;
+}

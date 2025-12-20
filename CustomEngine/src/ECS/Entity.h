@@ -6,12 +6,13 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+#include <Utilities/ObjectSelection.h>
 
 class Entity {
 
 private:
     std::vector<std::unique_ptr<Component>> components;
-    int EntityID;
+    EntityID entityID;
     const char* name;
     Entity* parent = nullptr;
     std::vector<Entity*> children;
@@ -32,6 +33,8 @@ public:
     std::vector<Entity*> GetChildren();
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
+
+    EntityID GetID() const;
 
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)
