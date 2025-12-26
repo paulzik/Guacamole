@@ -31,6 +31,8 @@
 #include "Animations/Animation.h"
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
+#include <AL/al.h>
+#include <AL/alc.h>
 
 using namespace glm;
 using namespace std;
