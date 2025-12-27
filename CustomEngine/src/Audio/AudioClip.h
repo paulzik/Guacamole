@@ -5,10 +5,10 @@
 
 class AudioClip : public Asset {
 public:
-    AudioClip(const std::string& path);  // loads the file (MP3/WAV)
+    AudioClip(const std::string& path);
     ~AudioClip();
 
-    ALuint getBuffer() const { return buffer; }
+    ALuint GetBuffer() const;
 
 private:
     ALuint buffer = 0;

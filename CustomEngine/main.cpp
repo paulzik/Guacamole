@@ -25,12 +25,14 @@
 #include "Importers/ModelInstantiator.h"
 #include "Importers/ShaderImporter.h"
 #include "Importers/Texture2DImporter.h"
+#include "Importers/AudioClipImporter.h"
 #include "Lighting/PointLight.h"
 #include "Lighting/DirectionalLight.h"
 #include "Animations/Animator.h"
 #include "Animations/Animation.h"
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
+#include "Audio/AudioSource.h"
 
 using namespace glm;
 using namespace std;
@@ -54,11 +56,10 @@ int main() {
     // ---------------- Asset Importers ----------------
     AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
     AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
-
     AssetImporterRegistry::RegisterImporter(".vert", new ShaderImporter());
     AssetImporterRegistry::RegisterImporter(".frag", new ShaderImporter());
-
     AssetImporterRegistry::RegisterImporter(".png", new Texture2DImporter());
+    AssetImporterRegistry::RegisterImporter(".mp3", new AudioClipImporter());
 
     //Shaders
     auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
@@ -116,6 +117,11 @@ int main() {
     ImGui_ImplSDL3_InitForOpenGL(window, glContext);
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
+
+    auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
+    AudioSource& audioSource = cube1.AddComponent<AudioSource>();
+    audioSource.SetClip(audioClip);
+    audioSource.Play();
 
     bool running = true;
     while (running) {

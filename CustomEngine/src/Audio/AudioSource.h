@@ -16,11 +16,11 @@ public:
     void Play();
     void Stop();
     void Pause();
-    void SetLoop(bool loop);
-    void SetVolume(float volume);
-    void SetPosition(glm::vec3 position);
-    void SetPitch(float pitch);
-    void SetClip(std::shared_ptr<AudioClip> clip);
+    void SetLoop(bool _loop);
+    void SetVolume(float _volume);
+    void SetPosition(glm::vec3 _position);
+    void SetPitch(float _pitch);
+    void SetClip(std::shared_ptr<AudioClip> _clip);
 
     glm::vec3 GetPosition();
     float GetPitch();
@@ -28,6 +28,8 @@ public:
     float GetVolume();
 
     bool IsPlaying() const;
+
+    const char* GetComponentName() const override;
 
 private:
     ALuint source = 0;
