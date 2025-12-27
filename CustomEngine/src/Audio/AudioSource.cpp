@@ -36,6 +36,7 @@ const char* AudioSource::GetComponentName() const
 
 void AudioSource::Play()
 {
+
 }
 
 void AudioSource::Stop()

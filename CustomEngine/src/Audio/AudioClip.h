@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Assets/Asset.h"
-#include <string>
+#include <vector>
 #include <AL/al.h>
 
 class AudioClip : public Asset {
@@ -12,4 +12,7 @@ public:
 
 private:
     ALuint buffer = 0;
+    std::vector<char> audioData;
+    ALenum format = 0;
+    ALsizei freq = 0;
 };
