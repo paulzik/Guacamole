@@ -6,6 +6,7 @@
 
 std::shared_ptr<Asset> AudioClipImporter::Load(const std::string& path)
 {
+
     auto clip = std::make_shared<AudioClip>(path);
 
     return clip;

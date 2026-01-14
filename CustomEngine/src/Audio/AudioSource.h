@@ -26,6 +26,7 @@ public:
     float GetPitch();
     bool GetLoop();
     float GetVolume();
+    std::shared_ptr<AudioClip> GetAudioClip();
 
     bool IsPlaying() const;
 

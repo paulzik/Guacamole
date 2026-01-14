@@ -9,6 +9,11 @@ void AudioSourceEditor::Draw(Component* component) {
     //if (ImGui::DragFloat3("Position", glm::value_ptr(pos), 0.1f, 0.0f, 0.0f)) {
    //     audioSource->SetPosition(pos);
    // }
+   // 
+   
+    //HERE ADD THE NAME OF THE CURRENT AUDIO CLIP
+    //ImGui::LabelText("AudioClip:", audioSource->GetAudioClip());
+
 
 }
 

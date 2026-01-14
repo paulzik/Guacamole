@@ -24,6 +24,11 @@ float AudioSource::GetVolume()
 	return volume;
 }
 
+std::shared_ptr<AudioClip> AudioSource::GetAudioClip()
+{
+	return clip;
+}
+
 bool AudioSource::IsPlaying() const
 {
 	return false;

@@ -13,8 +13,10 @@ AudioClip::AudioClip(const std::string& path)
     mp3dec_t mp3d;
     mp3dec_file_info_t info;
 
-    if (mp3dec_load(&mp3d, path.c_str(), &info, NULL, NULL)) {
+    // Load MP3 file
+    if (mp3dec_load(&mp3d, path.c_str(), &info, nullptr, nullptr)) {
         std::cerr << "Failed to load mp3: " << path << std::endl;
+        buffer = 0;
         return;
     }
 
@@ -23,7 +25,7 @@ AudioClip::AudioClip(const std::string& path)
     else if (info.channels == 2) format = AL_FORMAT_STEREO16;
     else {
         std::cerr << "Unsupported channel count: " << info.channels << std::endl;
-        free(info.buffer);  // free memory allocated by mp3dec_load
+        buffer = 0;
         return;
     }
 
@@ -36,9 +38,9 @@ AudioClip::AudioClip(const std::string& path)
     // Generate OpenAL buffer
     alGenBuffers(1, &buffer);
     alBufferData(buffer, format, audioData.data(), static_cast<ALsizei>(audioData.size()), freq);
-
-    free(info.buffer);
 }
+
+
 
 AudioClip::~AudioClip()
 {

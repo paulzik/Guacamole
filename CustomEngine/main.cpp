@@ -33,6 +33,7 @@
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Audio/AudioSource.h"
+#include "Audio/GuacAudio.h"
 
 using namespace glm;
 using namespace std;
@@ -118,6 +119,9 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
 
+    //Init AudioEngine
+    if (!GuacAudio::Init()) return -1;
+
     auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
     AudioSource& audioSource = cube1.AddComponent<AudioSource>();
     audioSource.SetClip(audioClip);
@@ -149,6 +153,8 @@ int main() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
     }
+
+    GuacAudio::Shutdown();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
