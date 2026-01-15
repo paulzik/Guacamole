@@ -1,5 +1,7 @@
 #include "AudioSource.h"
 #include "Utilities/Debug/Debug.h"
+#include "ECS/Transform.h"
+#include "ECS/Entity.h"
 
 AudioSource::AudioSource()
 {
@@ -7,24 +9,26 @@ AudioSource::AudioSource()
 
 AudioSource::~AudioSource()
 {
+	if (source != 0)
+		alDeleteSources(1, &source);
 }
 
-bool AudioSource::GetLoop()
+bool AudioSource::GetLoop() const
 {
 	return loop;
 }
 
-float AudioSource::GetPitch()
+float AudioSource::GetPitch() const
 {
 	return pitch;
 }
 
-float AudioSource::GetVolume()
+float AudioSource::GetVolume() const
 {
 	return volume;
 }
 
-std::shared_ptr<AudioClip> AudioSource::GetAudioClip()
+std::shared_ptr<AudioClip> AudioSource::GetAudioClip() const
 {
 	return clip;
 }
@@ -38,6 +42,37 @@ const char* AudioSource::GetComponentName() const
 {
 	return "AudioSource";
 }
+
+void AudioSource::Start()
+{
+	std::cout << "STARTED" << std::endl;
+}
+
+void AudioSource::Update()
+{
+	if (!owner || source == 0)
+		return;
+
+	if (!transform)
+	{
+		transform = &owner->GetComponent<Transform>();
+		if (!transform)
+		{
+			std::cerr << "AudioSource: Owner has no Transform!" << std::endl;
+			return;
+		}
+	}
+
+	currentPosition = transform->GetPosition();
+
+	if (currentPosition != prevPosition)
+	{
+		std::cout << "UPDATED" << std::endl;
+		alSource3f(source, AL_POSITION, currentPosition.x, currentPosition.y, currentPosition.z);
+		prevPosition = currentPosition;
+	}
+}
+
 
 void AudioSource::Play()
 {
@@ -54,16 +89,28 @@ void AudioSource::Play()
 	alSourcef(source, AL_GAIN, volume);
 	alSourcef(source, AL_PITCH, pitch);
 	alSourcei(source, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+	
+	alSource3f(source, AL_POSITION, currentPosition.x, currentPosition.y, currentPosition.z);
+
+	alSourcef(source, AL_REFERENCE_DISTANCE, 1.0f);
+	alSourcef(source, AL_MAX_DISTANCE, 50.0f);
+	alSourcef(source, AL_ROLLOFF_FACTOR, 1.0f);
 
 	alSourcePlay(source);
 }
 
 void AudioSource::Stop()
 {
+	if (source != 0) {
+		alSourceStop(source);
+	}
 }
 
 void AudioSource::Pause()
 {
+	if (source != 0) {
+		alSourcePause(source);
+	}
 }
 
 void AudioSource::SetLoop(bool _loop)

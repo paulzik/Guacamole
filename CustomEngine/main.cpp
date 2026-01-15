@@ -125,7 +125,7 @@ int main() {
     auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
     AudioSource& audioSource = cube1.AddComponent<AudioSource>();
     audioSource.SetClip(audioClip);
-    audioSource.Play();
+    //audioSource.Play();
 
     bool running = true;
     while (running) {

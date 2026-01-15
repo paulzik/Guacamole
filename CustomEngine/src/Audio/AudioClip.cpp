@@ -2,8 +2,9 @@
 #include <iostream>
 #include <AL/al.h>
 #include <AL/alc.h>
-
+#include <string>
 #include "minimp3_ex.h"
+#include <filesystem>
 
 AudioClip::AudioClip(const std::string& path)
 {
@@ -25,12 +26,18 @@ AudioClip::AudioClip(const std::string& path)
         info.samples * sizeof(mp3d_sample_t),
         info.hz
     );
-
+    audioPath = path;
+    audioName = std::filesystem::path(audioPath).filename().string();
 }
 
 AudioClip::~AudioClip()
 {
     if (buffer != 0) alDeleteBuffers(1, &buffer);
+}
+
+const std::string AudioClip::GetAudioName()
+{
+    return audioName;
 }
 
 ALuint AudioClip::GetBuffer() const
