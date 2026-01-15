@@ -52,6 +52,7 @@ file(GLOB_RECURSE EDITOR_SOURCES
 add_executable(CustomEngine "${CMAKE_SOURCE_DIR}/main.cpp"
     ${ENGINE_SOURCES}
     ${EDITOR_SOURCES}
+    "${MINIMP3_DIR}/minimp3_impl.cpp"
 )
 
 # ------------------------------

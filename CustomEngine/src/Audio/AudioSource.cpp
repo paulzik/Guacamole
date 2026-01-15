@@ -41,7 +41,21 @@ const char* AudioSource::GetComponentName() const
 
 void AudioSource::Play()
 {
+	if (!clip) {
+		Debug::LogError("AudioSource: No AudioClip set");
+		return;
+	}
 
+	if (source == 0) {
+		alGenSources(1, &source);
+	}
+
+	alSourcei(source, AL_BUFFER, clip->GetBuffer());
+	alSourcef(source, AL_GAIN, volume);
+	alSourcef(source, AL_PITCH, pitch);
+	alSourcei(source, AL_LOOPING, loop ? AL_TRUE : AL_FALSE);
+
+	alSourcePlay(source);
 }
 
 void AudioSource::Stop()
