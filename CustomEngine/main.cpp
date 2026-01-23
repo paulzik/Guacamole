@@ -35,6 +35,7 @@
 #include "Audio/AudioSource.h"
 #include "Audio/GuacAudio.h"
 #include "Audio/AudioListener.h"
+#include "Utilities/PickingSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -127,6 +128,8 @@ int main() {
 
     Scene::Get().Start();
 
+    PickingSystem pickingSystem;
+
     bool running = true;
     while (running) {
         SDL_Event e;
@@ -148,6 +151,7 @@ int main() {
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        //pickingSystem.Render(Scene::Get());
         Scene::Get().Update();
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

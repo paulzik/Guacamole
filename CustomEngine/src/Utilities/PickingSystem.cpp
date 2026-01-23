@@ -12,7 +12,7 @@ void PickingSystem::Render(Scene& scene)
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_PickingShader.Bind();
+    m_PickingShader->Bind();
 
     for (Entity* entity : scene.GetRenderableEntities())
     {
@@ -22,7 +22,7 @@ void PickingSystem::Render(Scene& scene)
         if (entity->HasComponent<MeshRenderer>())
         {
             auto& mr = entity->GetComponent<MeshRenderer>();
-            mr.Draw(&m_PickingShader, entity->GetID());
+            mr.Draw(m_PickingShader.get(), entity->GetID());
         }
     }
 
@@ -54,3 +54,11 @@ EntityID PickingSystem::Pick(uint32_t x, uint32_t y)
     return pixel;
 }
 
+void PickingSystem::Init(uint32_t width, uint32_t height)
+{
+    m_PickingFramebuffer.Init(width, height);
+    m_PickingShader = Shader::FromFiles(
+        "Assets/Shaders/Picking.vert",
+        "Assets/Shaders/Picking.frag"
+    );
+}
