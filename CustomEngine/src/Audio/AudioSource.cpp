@@ -50,7 +50,7 @@ void AudioSource::Start()
 
 void AudioSource::Update()
 {
-	if (!owner || source == 0)
+	if (!owner)
 		return;
 
 	if (!transform)
@@ -67,11 +67,19 @@ void AudioSource::Update()
 
 	if (currentPosition != prevPosition)
 	{
-		std::cout << "UPDATED" << std::endl;
-		alSource3f(source, AL_POSITION, currentPosition.x, currentPosition.y, currentPosition.z);
+		// Only update OpenAL if source exists
+		if (source != 0)
+		{
+			alSource3f(source, AL_POSITION,
+				currentPosition.x,
+				currentPosition.y,
+				currentPosition.z);
+		}
+
 		prevPosition = currentPosition;
 	}
 }
+
 
 
 void AudioSource::Play()
@@ -82,6 +90,7 @@ void AudioSource::Play()
 	}
 
 	if (source == 0) {
+		std::cout << "HERE" << std::endl;
 		alGenSources(1, &source);
 	}
 

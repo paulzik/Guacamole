@@ -18,7 +18,7 @@ bool GuacAudio::Init() {
         alcCloseDevice(sDevice);
         return false;
     }
-
+    alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
     return true;
 }
 

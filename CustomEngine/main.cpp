@@ -34,6 +34,7 @@
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Audio/AudioSource.h"
 #include "Audio/GuacAudio.h"
+#include "Audio/AudioListener.h"
 
 using namespace glm;
 using namespace std;
@@ -71,6 +72,7 @@ int main() {
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
     camera.AddComponent<Camera>(vec3(0, 0, 0));
+    camera.AddComponent<AudioListener>();
 
     // ---------------- Scene primitives ----------------
     Entity cube1("Cube1", vec3(-1.2f, 0, 0));

@@ -12,16 +12,19 @@ private:
 	glm::quat rotation = glm::quat();
 	glm::vec3 scale = glm::vec3(1,1,1);
 
+	glm::vec3 up = glm::vec3(0, 0, -1);
+
 public:
 	Transform(glm::vec3 pos);
 	~Transform();
 
-	glm::vec3 GetPosition();
-	glm::quat GetRotationQuat();
-	glm::vec3 GetRotationEuler();
-	glm::vec3 GetScale();
+	glm::vec3 GetPosition() const;
+	glm::quat GetRotationQuat() const;
+	glm::vec3 GetRotationEuler() const;
+	glm::vec3 GetScale() const;
 
 	glm::vec3 GetForward() const;
+	glm::vec3 GetUp() const;
 
 	const char* GetComponentName() const override;
 
