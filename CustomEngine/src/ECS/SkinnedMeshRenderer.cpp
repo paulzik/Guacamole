@@ -36,7 +36,7 @@ void SkinnedMeshRenderer::Start()
     }
 
     if (owner != nullptr) {
-        Scene::Get().AddRenderableEntity(*owner);
+        //Scene::Get().AddRenderableEntity(*owner);
     }
 }
 

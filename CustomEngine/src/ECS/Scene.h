@@ -13,7 +13,7 @@ private:
 	Camera* sceneCamera;
 	std::vector<Light*> lights;
 
-	std::vector<Entity> renderableEntities;
+	std::vector<Entity*> m_RenderableEntities;
 
 public:
 	Scene();
@@ -31,8 +31,9 @@ public:
 	void AddLight(Light* light);
 	std::vector<Light*> GetLights();
 
-	std::vector<Entity>& GetRenderableEntities();
-	void AddRenderableEntity(const Entity& entity);
+	std::vector<Entity*>& GetRenderableEntities();
+	void AddRenderableEntity(Entity* entity);
+	void RemoveRenderableEntity(Entity* entity);
 
 	void Update();
 	void Start();

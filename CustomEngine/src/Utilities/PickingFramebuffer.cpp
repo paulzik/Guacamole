@@ -50,3 +50,13 @@ void PickingFramebuffer::Init(uint32_t width, uint32_t height)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void PickingFramebuffer::Bind()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+}
+
+void PickingFramebuffer::Unbind()
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}

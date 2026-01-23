@@ -10,8 +10,6 @@ public:
     void Bind();
     void Unbind();
 
-    EntityID ReadPixel(uint32_t x, uint32_t y) const;
-
 private:
     uint32_t m_FBO = 0;
     uint32_t m_ColorAttachment = 0;

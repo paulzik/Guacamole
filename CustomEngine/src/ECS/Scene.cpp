@@ -55,16 +55,6 @@ std::vector<Light*> Scene::GetLights()
 	return lights;
 }
 
-std::vector<Entity>& Scene::GetRenderableEntities()
-{
-	return renderableEntities;
-}
-
-void Scene::AddRenderableEntity(const Entity& entity)
-{
-	renderableEntities.push_back(entity);
-}
-
 Scenegraph& Scene::GetScenegraph()
 {
 	return scenegraph;
@@ -107,7 +97,32 @@ void Scene::Start()
 	}
 }
 
-
 void Scene::PrintEntities() {
 	scenegraph.PrintEntities();
+}
+
+std::vector<Entity*>& Scene::GetRenderableEntities()
+{
+	return m_RenderableEntities;
+}
+
+void Scene::AddRenderableEntity(Entity* entity)
+{
+	if (!entity)
+		return;
+
+	if (std::find(m_RenderableEntities.begin(), m_RenderableEntities.end(), entity)
+		== m_RenderableEntities.end())
+	{
+		m_RenderableEntities.push_back(entity);
+	}
+}
+
+void Scene::RemoveRenderableEntity(Entity* entity)
+{
+	auto it = std::find(m_RenderableEntities.begin(), m_RenderableEntities.end(), entity);
+	if (it != m_RenderableEntities.end())
+	{
+		m_RenderableEntities.erase(it);
+	}
 }
