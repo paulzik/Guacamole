@@ -1,0 +1,3 @@
+﻿#define MINIMP3_IMPLEMENTATION
+#define MINIMP3_EX_IMPLEMENTATION
+#include "minimp3_ex.h"

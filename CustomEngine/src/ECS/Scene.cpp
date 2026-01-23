@@ -55,6 +55,16 @@ std::vector<Light*> Scene::GetLights()
 	return lights;
 }
 
+std::vector<Entity>& Scene::GetRenderableEntities()
+{
+	return renderableEntities;
+}
+
+void Scene::AddRenderableEntity(const Entity& entity)
+{
+	renderableEntities.push_back(entity);
+}
+
 Scenegraph& Scene::GetScenegraph()
 {
 	return scenegraph;
@@ -86,6 +96,14 @@ void Scene::Update()
 	for (Entity* e : entities)
 	{
 		e->Update();
+	}
+}
+
+void Scene::Start() 
+{
+	for (Entity* e : entities)
+	{
+		e->Start();
 	}
 }
 

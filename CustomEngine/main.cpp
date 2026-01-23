@@ -25,12 +25,16 @@
 #include "Importers/ModelInstantiator.h"
 #include "Importers/ShaderImporter.h"
 #include "Importers/Texture2DImporter.h"
+#include "Importers/AudioClipImporter.h"
 #include "Lighting/PointLight.h"
 #include "Lighting/DirectionalLight.h"
 #include "Animations/Animator.h"
 #include "Animations/Animation.h"
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
+#include "Audio/AudioSource.h"
+#include "Audio/GuacAudio.h"
+#include "Audio/AudioListener.h"
 
 using namespace glm;
 using namespace std;
@@ -54,11 +58,10 @@ int main() {
     // ---------------- Asset Importers ----------------
     AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
     AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
-
     AssetImporterRegistry::RegisterImporter(".vert", new ShaderImporter());
     AssetImporterRegistry::RegisterImporter(".frag", new ShaderImporter());
-
     AssetImporterRegistry::RegisterImporter(".png", new Texture2DImporter());
+    AssetImporterRegistry::RegisterImporter(".mp3", new AudioClipImporter());
 
     //Shaders
     auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
@@ -69,22 +72,19 @@ int main() {
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
     camera.AddComponent<Camera>(vec3(0, 0, 0));
+    camera.AddComponent<AudioListener>();
 
     // ---------------- Scene primitives ----------------
     Entity cube1("Cube1", vec3(-1.2f, 0, 0));
     MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
-    cubeMesh.InitGPU();
-    cubeRenderer.Start();
+
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
     MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
     MeshRenderer& sphereRenderer = sphere1.AddComponent<MeshRenderer>();
     sphereRenderer.material = standardMaterial;
-
-    sphereMesh.InitGPU();
-    sphereRenderer.Start();
 
     Entity light1("Light1", vec3(-5, 0, 0));
     light1.AddComponent<PointLight>(vec3(1, 1, 1), 1.0f);
@@ -105,10 +105,10 @@ int main() {
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
     auto soldierMaterial = make_shared<Material>(texture2D, nullptr, skinnedShader);
     soldier->GetComponent<SkinnedMeshRenderer>().material = soldierMaterial;
-    soldierRenderer.Start();
+
     auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
     Animator& animator = soldier->AddComponent<Animator>(modelPtr);
-    animator.Start();
+
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -116,6 +116,16 @@ int main() {
     ImGui_ImplSDL3_InitForOpenGL(window, glContext);
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
+
+    //Init AudioEngine
+    if (!GuacAudio::Init()) return -1;
+
+    auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
+    AudioSource& audioSource = cube1.AddComponent<AudioSource>();
+    audioSource.SetClip(audioClip);
+    //audioSource.Play();
+
+    Scene::Get().Start();
 
     bool running = true;
     while (running) {
@@ -143,6 +153,8 @@ int main() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         SDL_GL_SwapWindow(window);
     }
+
+    GuacAudio::Shutdown();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();

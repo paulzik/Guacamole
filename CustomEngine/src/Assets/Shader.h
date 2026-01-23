@@ -4,6 +4,8 @@
 #include <GL/glew.h>
 #include "Asset.h"
 #include "ShaderSource.h"
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 
 class Shader : public Asset {
 public:
@@ -19,6 +21,12 @@ public:
 
     const std::shared_ptr<ShaderSource> GetVertexShader();
     const std::shared_ptr<ShaderSource> GetFragmentShader();
+
+    void SetUInt(const std::string& name, unsigned int value) const;
+    void SetInt(const std::string& name, int value) const;
+    void SetFloat(const std::string& name, float value) const;
+    void SetVec3(const std::string& name, const glm::vec3& value) const;
+    void SetMat4(const std::string& name, const glm::mat4& value) const;
 
 private:
     GLuint compileShader(GLenum type, const char* src);

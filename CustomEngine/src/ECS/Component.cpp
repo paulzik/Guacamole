@@ -17,6 +17,10 @@ void Component::Update() {
     // default empty implementation
 }
 
+void Component::Destroy() {
+    // default empty implementation
+}
+
 void Component::setOwner(Entity* _owner)
 {
     owner = _owner;

@@ -36,99 +36,77 @@ void MeshRenderer::Start()
     }
 }
 
-void MeshRenderer::Update()
+void MeshRenderer::Draw(Shader* overrideShader, unsigned int entityID)
 {
-    if (!material) {
-        std::cerr << "MeshRenderer ERROR: No material assigned! in entity: " << owner->GetName() << std::endl;
-        return;
-    }
-    if (material->shader->programID == 0) {
-        std::cerr << "MeshRenderer ERROR: Shader program not compiled!\n";
-        return;
-    }
+    if (!owner) return;
+
+    Shader* shaderToUse = overrideShader ? overrideShader : material->shader.get();
+    shaderToUse->Bind();
 
     Transform& transform = owner->GetComponent<Transform>();
 
-    glUseProgram(material->shader->programID);
+    // -----------------------------
+    // MODEL MATRIX
+    // -----------------------------
+    shaderToUse->SetMat4("model", transform.GetModelMatrix());
 
     // -----------------------------
-    // SET UNIFORMS
+    // ENTITY ID (for picking)
     // -----------------------------
-    glUniformMatrix4fv(
-        glGetUniformLocation(material->shader->programID, "model"),
-        1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix())
-    );
-
-    glUniformMatrix4fv(
-        glGetUniformLocation(material->shader->programID, "view"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetViewMatrix())
-    );
-
-    glUniformMatrix4fv(
-        glGetUniformLocation(material->shader->programID, "projection"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetProjectionMatrix())
-    );
-
-    // -----------------------------
-    // Camera
-    // -----------------------------
-    glUniform3fv(
-        glGetUniformLocation(material->shader->programID, "viewPos"),
-        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().GetPosition())
-    );
-
-    // -----------------------------
-    // Lights
-    // -----------------------------
-    const auto& lights = Scene::Get().GetLights();
-    int lightCount = static_cast<int>(lights.size());
-
-    glUniform1i(glGetUniformLocation(material->shader->programID, "lightCount"), lightCount);
-
-    for (int i = 0; i < lightCount; i++)
-    {
-        Light* light = lights[i];
-        Transform& tr = light->getOwner()->GetComponent<Transform>();
-
-        std::string base = "lights[" + std::to_string(i) + "]";
-
-        glUniform1i(glGetUniformLocation(material->shader->programID, (base + ".type").c_str()), light->GetType());
-        glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
-        glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
-
-        if (light->GetType() == LightType::POINT)
-        {
-            auto* pointLight = static_cast<PointLight*>(light);
-            glm::vec3 pos = tr.GetPosition();
-            glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(pos));
-            glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".radius").c_str()), pointLight->GetRadius());
-
-        }
-        else if (light->GetType() == LightType::DIRECTIONAL)
-        {
-            auto* directionalLight = static_cast<DirectionalLight*>(light);
-            glm::vec3 dir = tr.GetForward();
-            glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".direction").c_str()), 1, glm::value_ptr(dir));
-        }
+    if (overrideShader) {
+        shaderToUse->SetUInt("u_EntityID", entityID);
     }
+    else {
+        // Normal rendering uniforms
+        shaderToUse->SetMat4("view", Scene::Get().GetCamera()->GetViewMatrix());
+        shaderToUse->SetMat4("projection", Scene::Get().GetCamera()->GetProjectionMatrix());
+        shaderToUse->SetVec3("viewPos", Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().GetPosition());
 
-    glUniform1i(glGetUniformLocation(material->shader->programID, "useTexture"), material->albedo != nullptr);
+        // Lights
+        const auto& lights = Scene::Get().GetLights();
+        shaderToUse->SetInt("lightCount", static_cast<int>(lights.size()));
+        for (int i = 0; i < lights.size(); i++) {
+            Light* light = lights[i];
+            Transform& tr = light->getOwner()->GetComponent<Transform>();
+            std::string base = "lights[" + std::to_string(i) + "]";
+            shaderToUse->SetInt(base + ".type", light->GetType());
+            shaderToUse->SetVec3(base + ".color", light->GetColor());
+            shaderToUse->SetFloat(base + ".intensity", light->GetIntensity());
 
-    if (material->albedo) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, material->albedo->ID); // Bind your texture
-        glUniform1i(glGetUniformLocation(material->shader->programID, "albedoTexture"), 0); // Texture unit 0    
+            if (light->GetType() == LightType::POINT) {
+                PointLight* pl = static_cast<PointLight*>(light);
+                shaderToUse->SetVec3(base + ".position", tr.GetPosition());
+                shaderToUse->SetFloat(base + ".radius", pl->GetRadius());
+            }
+            else if (light->GetType() == LightType::DIRECTIONAL) {
+                DirectionalLight* dl = static_cast<DirectionalLight*>(light);
+                shaderToUse->SetVec3(base + ".direction", tr.GetForward());
+            }
+        }
+
+        // Material / textures
+        shaderToUse->SetInt("useTexture", material->albedo != nullptr);
+        if (material->albedo) {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, material->albedo->ID);
+            shaderToUse->SetInt("albedoTexture", 0);
+        }
+        shaderToUse->SetFloat("metallic", material->metallic);
     }
-
-    glUniform1f(glGetUniformLocation(material->shader->programID, "metallic"), material->metallic);
 
     // -----------------------------
     // DRAW MESH
     // -----------------------------
     MeshFilter& mesh = owner->GetComponent<MeshFilter>();
-
     glBindVertexArray(mesh.GetVAO());
     glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+
+void MeshRenderer::Update()
+{
+    Draw();
 }
 
 const char* MeshRenderer::GetComponentName() const  {

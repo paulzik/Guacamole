@@ -7,7 +7,7 @@ MeshFilter::MeshFilter(const std::vector<Vertex>& _vertices, const std::vector<u
 {
 }
 
-void MeshFilter::InitGPU() {
+void MeshFilter::Start() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

@@ -10,30 +10,35 @@ Transform::~Transform() {
 
 }
 
-glm::vec3 Transform::GetPosition() 
+glm::vec3 Transform::GetPosition() const
 {
 	return position;
 }
 
-glm::quat Transform::GetRotationQuat() 
+glm::quat Transform::GetRotationQuat() const
 {
 	return rotation;
 }
 
-glm::vec3 Transform::GetRotationEuler()
+glm::vec3 Transform::GetRotationEuler() const
 {
 	return glm::eulerAngles(rotation);
 }
 
 
-glm::vec3 Transform::GetScale()
+glm::vec3 Transform::GetScale() const
 {
 	return scale;
 }
 
 glm::vec3 Transform::GetForward() const
 {
-	return glm::normalize(rotation * glm::vec3(0, 0, -1));
+	return glm::normalize(rotation * up);
+}
+
+glm::vec3 Transform::GetUp() const
+{
+	return up;
 }
 
 void Transform::SetPosition(glm::vec3 pos)

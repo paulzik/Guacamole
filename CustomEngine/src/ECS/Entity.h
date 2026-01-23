@@ -9,7 +9,6 @@
 #include <Utilities/ObjectSelection.h>
 
 class Entity {
-
 private:
     std::vector<std::unique_ptr<Component>> components;
     EntityID entityID;
@@ -22,10 +21,19 @@ public:
     Entity(const char* name, glm::vec3 entityPosition);
     ~Entity();
 
+    // Disable copying
+    Entity(const Entity&) = delete;
+    Entity& operator=(const Entity&) = delete;
+
+    // Enable moving
+    Entity(Entity&&) noexcept = default;
+    Entity& operator=(Entity&&) noexcept = default;
+
     const char* GetName();
     void PrintComponents();
 
     void Update();
+    void Start();
 
     void SetParent(Entity* parent);
     Entity* GetParent();
@@ -45,16 +53,14 @@ public:
         return *static_cast<T*>(components.back().get());
     }
 
-    //Gets the first component of type T it gets in the components
     template<typename T>
     T& GetComponent() {
         for (auto& c : components) {
             if (auto ptr = dynamic_cast<T*>(c.get()))
                 return *ptr; // returns lvalue
         }
-        std::cout << "Component " << typeid(T).name()<< " not found in entity " << GetName() << std::endl;
-
-       // throw std::runtime_error("Component not found");
+        std::cout << "Component " << typeid(T).name() << " not found in entity " << GetName() << std::endl;
+        throw std::runtime_error("Component not found");
     }
 
     template<typename T>
@@ -72,5 +78,4 @@ public:
 
         return componentsList;
     }
-
 };

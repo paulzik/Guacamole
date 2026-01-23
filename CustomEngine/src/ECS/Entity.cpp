@@ -81,3 +81,11 @@ EntityID Entity::GetID() const
 {
     return entityID;
 }
+
+void Entity::Start()
+{
+    for (auto& comp : components)
+    {
+        comp->Start();
+    }
+}

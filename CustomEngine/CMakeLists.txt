@@ -3,14 +3,17 @@ project(CustomEngine LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # ------------------------------
 # Third-party library paths
 # ------------------------------
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/ThirdParty")
 set(SDL3_DIR "${THIRDPARTY_DIR}/SDL3")
+set(MINIMP3_DIR "${THIRDPARTY_DIR}/minimp3")
 set(GLEW_DIR "${THIRDPARTY_DIR}/glew")
 set(GLM_DIR  "${THIRDPARTY_DIR}/glm")
 set(IMGUI_DIR "${THIRDPARTY_DIR}/imgui")
+set(OPENAL_DIR "${THIRDPARTY_DIR}/OpenAL")
 
 # ------------------------------
 # Include directories
@@ -20,7 +23,9 @@ include_directories(
     "${GLEW_DIR}/include"
     "${GLM_DIR}"
     "${IMGUI_DIR}"
+    "${MINIMP3_DIR}"
     "${IMGUI_DIR}/backends"
+    "${OPENAL_DIR}/include"
     "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/Editor"
 )
@@ -47,6 +52,7 @@ file(GLOB_RECURSE EDITOR_SOURCES
 add_executable(CustomEngine "${CMAKE_SOURCE_DIR}/main.cpp"
     ${ENGINE_SOURCES}
     ${EDITOR_SOURCES}
+    "${MINIMP3_DIR}/minimp3_impl.cpp"
 )
 
 # ------------------------------
@@ -80,12 +86,18 @@ target_include_directories(ImGui PUBLIC
 set_target_properties(ImGui PROPERTIES FOLDER "ThirdParty")
 source_group(TREE "${IMGUI_DIR}" PREFIX "ThirdParty/ImGui" FILES ${IMGUI_SOURCES})
 
+set(OPENAL_DIR "${THIRDPARTY_DIR}/OpenAL")
+
+# Include OpenAL headers
+include_directories("${OPENAL_DIR}/include")
+
 # ------------------------------
-# Link directories for SDL and GLEW
+# Link directories for SDL, GLEW, OpenAL
 # ------------------------------
 link_directories(
     "${SDL3_DIR}/lib/x64"
     "${GLEW_DIR}/lib/Release/x64"
+    "${OPENAL_DIR}/lib"
 )
 
 # --- Assimp options ---
@@ -93,7 +105,7 @@ set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)     # avoid DLLs
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(ASSIMP_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(ThirdParty/assimp EXCLUDE_FROM_ALL)
@@ -105,24 +117,33 @@ target_link_libraries(CustomEngine PRIVATE
     ImGui
     "${SDL3_DIR}/lib/x64/SDL3.lib"
     "${GLEW_DIR}/lib/Release/x64/glew32.lib"
+    "${OPENAL_DIR}/lib/OpenAL32.lib"
     opengl32
     assimp
 )
+
 # ------------------------------
 # Copy DLLs after build
 # ------------------------------
-add_custom_command(TARGET CustomEngine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${SDL3_DIR}/lib/x64/SDL3.dll"
-        $<TARGET_FILE_DIR:CustomEngine>
+# Copy DLLs after build safely
+# ------------------------------
+set(DLLS_TO_COPY
+    "${SDL3_DIR}/lib/x64/SDL3.dll"
+    "${GLEW_DIR}/bin/Release/x64/glew32.dll"
+    "${OPENAL_DIR}/bin/OpenAL32.dll"
 )
 
-add_custom_command(TARGET CustomEngine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${GLEW_DIR}/bin/Release/x64/glew32.dll"
-        $<TARGET_FILE_DIR:CustomEngine>
-)
-
+foreach(dll ${DLLS_TO_COPY})
+    if(EXISTS ${dll})
+        add_custom_command(TARGET CustomEngine POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${dll}"
+                $<TARGET_FILE_DIR:CustomEngine>
+        )
+    else()
+        message(WARNING "DLL not found, skipping copy: ${dll}")
+    endif()
+endforeach()
 # ------------------------------
 # Set working directory for VS debugger
 # ------------------------------

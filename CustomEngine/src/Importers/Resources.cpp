@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 
+
 std::shared_ptr<Asset> Resources::Load(const std::string& path)
 {
     std::filesystem::path fullPath = s_BasePath / path;

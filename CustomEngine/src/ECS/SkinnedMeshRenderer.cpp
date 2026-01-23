@@ -34,6 +34,10 @@ void SkinnedMeshRenderer::Start()
         std::cerr << "SkinnedMeshRenderer ERROR: No shader assigned! in entity: " << owner->GetName() << std::endl;
         return;
     }
+
+    if (owner != nullptr) {
+        Scene::Get().AddRenderableEntity(*owner);
+    }
 }
 
 void SkinnedMeshRenderer::Update()

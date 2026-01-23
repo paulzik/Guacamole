@@ -1,5 +1,6 @@
 #include "PickingSystem.h"
 #include <GL/glew.h>
+#include "ECS/MeshRenderer.h"
 
 void PickingSystem::Render(Scene& scene)
 {
@@ -12,7 +13,7 @@ void PickingSystem::Render(Scene& scene)
     for (auto entity : scene.GetRenderableEntities())
     {
         m_PickingShader.SetUInt("u_EntityID", entity.GetID());
-        entity.GetMesh().Draw();
+       // entity.GetComponent<MeshRenderer>().
     }
 
     m_PickingFramebuffer.Unbind();

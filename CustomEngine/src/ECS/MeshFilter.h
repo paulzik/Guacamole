@@ -38,7 +38,7 @@ public:
     std::vector<Vertex>& GetVerticesRef() { return vertices; }
 
     GLuint GetVAO() const { return VAO; }
-    void InitGPU();
+    void Start() override;
 
     GLsizei GetIndexCount();
 

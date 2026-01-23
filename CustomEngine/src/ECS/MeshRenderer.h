@@ -11,6 +11,8 @@ public:
     MeshRenderer();
     ~MeshRenderer();
 
+    void Draw(Shader* overrideShader = nullptr, unsigned int entityID = 0);
+
     void Start() override;
     void Update() override;
 

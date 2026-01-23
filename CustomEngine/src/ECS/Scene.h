@@ -13,6 +13,8 @@ private:
 	Camera* sceneCamera;
 	std::vector<Light*> lights;
 
+	std::vector<Entity> renderableEntities;
+
 public:
 	Scene();
 	~Scene();
@@ -29,7 +31,11 @@ public:
 	void AddLight(Light* light);
 	std::vector<Light*> GetLights();
 
+	std::vector<Entity>& GetRenderableEntities();
+	void AddRenderableEntity(const Entity& entity);
+
 	void Update();
+	void Start();
 
 	Scenegraph& GetScenegraph();
 };
