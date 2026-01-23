@@ -12,6 +12,7 @@ public:
 
     virtual void Start();
     virtual void Update();
+    virtual void Destroy();
 
     virtual const char* GetComponentName() const = 0;
 

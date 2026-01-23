@@ -30,6 +30,7 @@ public:
 	std::vector<Light*> GetLights();
 
 	void Update();
+	void Start();
 
 	Scenegraph& GetScenegraph();
 };

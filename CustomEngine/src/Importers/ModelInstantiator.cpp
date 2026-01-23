@@ -17,7 +17,6 @@ std::unique_ptr<Entity> ModelInstantiator::Instantiate(const std::shared_ptr<Ass
 
     // --------- Only use the FIRST mesh ---------
     auto& mesh = model->meshes[0];
-    mesh->InitGPU();
 
     // Attach components ONCE
     MeshFilter& filter = entity->AddComponent<MeshFilter>(*mesh);

@@ -89,6 +89,14 @@ void Scene::Update()
 	}
 }
 
+void Scene::Start() 
+{
+	for (Entity* e : entities)
+	{
+		e->Start();
+	}
+}
+
 
 void Scene::PrintEntities() {
 	scenegraph.PrintEntities();

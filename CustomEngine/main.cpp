@@ -79,16 +79,12 @@ int main() {
     MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
-    cubeMesh.InitGPU();
-    cubeRenderer.Start();
+
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
     MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
     MeshRenderer& sphereRenderer = sphere1.AddComponent<MeshRenderer>();
     sphereRenderer.material = standardMaterial;
-
-    sphereMesh.InitGPU();
-    sphereRenderer.Start();
 
     Entity light1("Light1", vec3(-5, 0, 0));
     light1.AddComponent<PointLight>(vec3(1, 1, 1), 1.0f);
@@ -109,10 +105,10 @@ int main() {
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
     auto soldierMaterial = make_shared<Material>(texture2D, nullptr, skinnedShader);
     soldier->GetComponent<SkinnedMeshRenderer>().material = soldierMaterial;
-    soldierRenderer.Start();
+
     auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
     Animator& animator = soldier->AddComponent<Animator>(modelPtr);
-    animator.Start();
+
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -128,6 +124,8 @@ int main() {
     AudioSource& audioSource = cube1.AddComponent<AudioSource>();
     audioSource.SetClip(audioClip);
     //audioSource.Play();
+
+    Scene::Get().Start();
 
     bool running = true;
     while (running) {

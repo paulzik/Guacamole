@@ -76,3 +76,11 @@ void Entity::Update()
         comp->Update();
     }
 }
+
+void Entity::Start()
+{
+    for (auto& comp : components)
+    {
+        comp->Start();
+    }
+}

@@ -25,6 +25,7 @@ public:
     void PrintComponents();
 
     void Update();
+    void Start();
 
     void SetParent(Entity* parent);
     Entity* GetParent();
