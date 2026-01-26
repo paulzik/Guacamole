@@ -35,6 +35,8 @@
 #include "Audio/AudioSource.h"
 #include "Audio/GuacAudio.h"
 #include "Audio/AudioListener.h"
+#include "Physics/Collider.h"
+#include "Physics/RigidBody.h"
 
 using namespace glm;
 using namespace std;
@@ -79,6 +81,8 @@ int main() {
     MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
+    cube1.AddComponent<RigidBody>(1.0f);
+    cube1.AddComponent<Collider>(false);
 
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
