@@ -1,3 +1,6 @@
 [submodule "CustomEngine/ThirdParty/assimp"]
 	path = CustomEngine/ThirdParty/assimp
 	url = https://github.com/assimp/assimp
+[submodule "CustomEngine/ThirdParty/bullet3"]
+	path = CustomEngine/ThirdParty/bullet3
+	url = https://github.com/bulletphysics/bullet3

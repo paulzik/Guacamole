@@ -88,6 +88,24 @@ source_group(TREE "${IMGUI_DIR}" PREFIX "ThirdParty/ImGui" FILES ${IMGUI_SOURCES
 
 set(OPENAL_DIR "${THIRDPARTY_DIR}/OpenAL")
 
+# ------------------------------
+# Bullet Physics options
+# ------------------------------
+set(BUILD_BULLET2_DEMOS OFF CACHE BOOL "" FORCE)
+set(BUILD_BULLET3 OFF CACHE BOOL "" FORCE)
+set(BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
+set(BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+set(BUILD_CPU_DEMOS OFF CACHE BOOL "" FORCE)
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(USE_DOUBLE_PRECISION OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(ThirdParty/bullet3 EXCLUDE_FROM_ALL)
+
+include_directories(
+    "${THIRDPARTY_DIR}/bullet3/src"
+)
+
 # Include OpenAL headers
 include_directories("${OPENAL_DIR}/include")
 
@@ -110,6 +128,7 @@ set(ASSIMP_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(ThirdParty/assimp EXCLUDE_FROM_ALL)
 
+
 # ------------------------------
 # Linking
 # ------------------------------
@@ -121,6 +140,23 @@ target_link_libraries(CustomEngine PRIVATE
     opengl32
     assimp
 )
+
+target_link_libraries(CustomEngine PRIVATE
+    ImGui
+    "${SDL3_DIR}/lib/x64/SDL3.lib"
+    "${GLEW_DIR}/lib/Release/x64/glew32.lib"
+    "${OPENAL_DIR}/lib/OpenAL32.lib"
+    opengl32
+    assimp
+
+    BulletDynamics
+    BulletCollision
+    LinearMath
+)
+
+set_target_properties(BulletCollision PROPERTIES FOLDER "ThirdParty/Bullet")
+set_target_properties(BulletDynamics PROPERTIES FOLDER "ThirdParty/Bullet")
+set_target_properties(LinearMath PROPERTIES FOLDER "ThirdParty/Bullet")
 
 # ------------------------------
 # Copy DLLs after build
