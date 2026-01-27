@@ -38,6 +38,7 @@
 #include "Physics/Collider.h"
 #include "Physics/RigidBody.h"
 #include "Physics/PhysicsSystem.h"
+#include "Time/Time.h"
 
 using namespace glm;
 using namespace std;
@@ -57,6 +58,8 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
+
+    Time::Init();
 
     // ---------------- Asset Importers ----------------
     AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
@@ -136,8 +139,6 @@ int main() {
 
     Scene::Get().Start();
 
-
-
     bool running = true;
     while (running) {
         SDL_Event e;
@@ -145,6 +146,8 @@ int main() {
             ImGui_ImplSDL3_ProcessEvent(&e);
             if (e.type == SDL_EVENT_QUIT) running = false;
         }
+
+        Time::Update();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
