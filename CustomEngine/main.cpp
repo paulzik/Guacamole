@@ -39,6 +39,7 @@
 #include "Physics/RigidBody.h"
 #include "Physics/PhysicsSystem.h"
 #include "Time/Time.h"
+#include "Systems/SystemManager.h"
 
 using namespace glm;
 using namespace std;
@@ -59,6 +60,12 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
+    SystemManager hub;
+
+    //Physics
+    hub.AddSystem(std::make_unique<PhysicsSystem>());
+
+
     Time::Init();
 
     // ---------------- Asset Importers ----------------
@@ -74,10 +81,6 @@ int main() {
     auto standardMaterial = make_shared<Material>(standardShader);
 
     auto skinnedShader = Shader::FromFiles("Assets/Shaders/SkinnedVertex.vert", "Assets/Shaders/BasicFragment.frag");
-
-    //Physics
-    PhysicsSystem physicsSystem;
-    physicsSystem.Init();
 
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
@@ -148,6 +151,7 @@ int main() {
         }
 
         Time::Update();
+        hub.UpdateAllSystems();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
@@ -168,6 +172,7 @@ int main() {
         SDL_GL_SwapWindow(window);
     }
 
+    hub.ShutdownAllSystems();
     GuacAudio::Shutdown();
 
     ImGui_ImplOpenGL3_Shutdown();

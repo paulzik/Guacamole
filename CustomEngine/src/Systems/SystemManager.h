@@ -18,16 +18,14 @@ public:
 			systems.end()
 		);
 	}
-	
-	void InitSystem(std::unique_ptr<System> system);
-	void InitAllSystems();
-	
-	void ShutdownSystem(std::unique_ptr<System> system);
-	void SutdownAllSystems();
 
-	void UpdateSystem(std::unique_ptr<System> system);
+	void ShutdownSystem(System* system);
+	void ShutdownAllSystems();
+
 	void UpdateAllSystems();
 
 private:
 	std::vector<std::unique_ptr<System>> systems;
+
+	System* FindSystem(System* system);
 };

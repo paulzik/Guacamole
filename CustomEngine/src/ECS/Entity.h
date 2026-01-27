@@ -51,8 +51,6 @@ public:
                 return *ptr; // returns lvalue
         }
         std::cout << "Component " << typeid(T).name()<< " not found in entity " << GetName() << std::endl;
-
-       // throw std::runtime_error("Component not found");
     }
 
     template<typename T>

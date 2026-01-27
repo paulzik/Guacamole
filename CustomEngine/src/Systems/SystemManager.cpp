@@ -2,26 +2,50 @@
 
 void SystemManager::AddSystem(std::unique_ptr<System> system)
 {
-	systems.push_back(system);
+    system->Init();
+    systems.push_back(std::move(system));
 }
 
-void SystemManager::InitSystem(std::unique_ptr<System> system)
+void SystemManager::UpdateAllSystems()
 {
-	if(system)
-		system->Init();
+    for (auto& s : systems)
+        s->Update();
 }
 
-void SystemManager::InitAllSystems()
+void SystemManager::ShutdownAllSystems()
 {
-	for (auto& s : systems) {
-		s->Init();
-	}
+    for (auto& s : systems)
+        s->Shutdown();
+
+    systems.clear();
 }
 
-void SystemManager::ShutdownSystem(std::unique_ptr<System> system)
+System* SystemManager::FindSystem(System* system)
 {
-	//HEREEEEE!!!
+    auto it = std::find_if(
+        systems.begin(), systems.end(),
+        [system](const std::unique_ptr<System>& s)
+        {
+            return s.get() == system;
+        });
+
+    return (it != systems.end()) ? it->get() : nullptr;
 }
 
-
-
+void SystemManager::ShutdownSystem(System* system)
+{
+    systems.erase(
+        std::remove_if(
+            systems.begin(), systems.end(),
+            [system](std::unique_ptr<System>& s)
+            {
+                if (s.get() == system)
+                {
+                    s->Shutdown();
+                    return true;
+                }
+                return false;
+            }),
+        systems.end()
+    );
+}
