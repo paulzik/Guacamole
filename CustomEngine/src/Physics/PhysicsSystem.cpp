@@ -3,6 +3,7 @@
 #include "ECS/Entity.h"
 #include "Collider.h"
 #include "glm/vec3.hpp"
+#include "Time/Time.h"
 
 bool PhysicsSystem::Init() {
     collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -19,6 +20,10 @@ bool PhysicsSystem::Init() {
 
     world->setGravity(btVector3(0, -9.81f, 0));
     return true;
+}
+
+void PhysicsSystem::Update() {
+    Step(Time::DeltaTime());
 }
 
 void PhysicsSystem::Step(float deltaTime) {

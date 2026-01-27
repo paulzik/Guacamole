@@ -1,11 +1,13 @@
 ﻿#pragma once
 #include <btBulletDynamicsCommon.h>
 #include "RigidBody.h"
+#include "Systems/System.h"
 
-class PhysicsSystem {
+class PhysicsSystem : public System{
 public:
-    bool Init();
-    void Shutdown();
+    bool Init() override;
+    void Update() override;
+    void Shutdown() override;
 
     void Step(float dt);
     void SyncTransforms();
