@@ -24,4 +24,5 @@ public:
 
 private:
     void* m_InternalBody;
+    friend class PhysicsSystem;
 };

@@ -37,6 +37,7 @@
 #include "Audio/AudioListener.h"
 #include "Physics/Collider.h"
 #include "Physics/RigidBody.h"
+#include "Physics/PhysicsSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -70,6 +71,10 @@ int main() {
     auto standardMaterial = make_shared<Material>(standardShader);
 
     auto skinnedShader = Shader::FromFiles("Assets/Shaders/SkinnedVertex.vert", "Assets/Shaders/BasicFragment.frag");
+
+    //Physics
+    PhysicsSystem physicsSystem;
+    physicsSystem.Init();
 
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
@@ -130,6 +135,8 @@ int main() {
     //audioSource.Play();
 
     Scene::Get().Start();
+
+
 
     bool running = true;
     while (running) {

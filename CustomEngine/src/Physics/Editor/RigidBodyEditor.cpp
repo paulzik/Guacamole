@@ -5,8 +5,8 @@
 void RigidBodyEditor::Draw(Component* component) {
     RigidBody* rb = static_cast<RigidBody*>(component);
 
-    bool mass = rb->mass;
-    if (ImGui::Checkbox("Mass", &mass))
+    float mass = rb->mass;
+    if (ImGui::InputFloat("Mass", &mass))
     {
         rb->mass = mass;
     }
