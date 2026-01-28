@@ -74,7 +74,7 @@ void PhysicsSystem::RegisterBody(RigidBody* body)
 {
     //Get the Collider shape from the component here
     Collider& collider = body->owner->GetComponent<Collider>();
-    btCollisionShape* colShape = new btSphereShape(btScalar(1.));
+    btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
     collisionShapes.push_back(colShape);
 
     /// Create Dynamic Objects
@@ -101,9 +101,12 @@ void PhysicsSystem::RegisterBody(RigidBody* body)
     btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
     btRigidBody* btBody = new btRigidBody(rbInfo);
 
+    btBody->setUserPointer(body);
+
     world->addRigidBody(btBody);
 
     body->m_InternalBody = btBody;
+
 }
 
 void PhysicsSystem::RemoveBody(RigidBody* body)
