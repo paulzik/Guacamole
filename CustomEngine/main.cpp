@@ -60,11 +60,8 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
-    SystemManager hub;
-
     //Physics
-    hub.AddSystem(std::make_unique<PhysicsSystem>());
-
+    SystemManager::AddSystem(std::make_unique<PhysicsSystem>());
 
     Time::Init();
 
@@ -151,7 +148,7 @@ int main() {
         }
 
         Time::Update();
-        hub.UpdateAllSystems();
+        SystemManager::UpdateAllSystems();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
@@ -172,7 +169,7 @@ int main() {
         SDL_GL_SwapWindow(window);
     }
 
-    hub.ShutdownAllSystems();
+    SystemManager::ShutdownAllSystems();
     GuacAudio::Shutdown();
 
     ImGui_ImplOpenGL3_Shutdown();

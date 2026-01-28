@@ -5,7 +5,13 @@
 
 class SystemManager{
 public:
-	void AddSystem(std::unique_ptr<System> system);
+
+	static SystemManager& GetInstance() {
+		static SystemManager instance;
+		return instance;
+	}
+
+	static void AddSystem(std::unique_ptr<System> system);
 	
 	template<typename T>
 	void RemoveSystem()
@@ -19,13 +25,24 @@ public:
 		);
 	}
 
-	void ShutdownSystem(System* system);
-	void ShutdownAllSystems();
+	template<typename T>
+	static T& Get() {
+		static_assert(std::is_base_of<System, T>::value, "T must inherit from System");
 
-	void UpdateAllSystems();
+		for (auto& sys : GetInstance().systems) {
+			if (auto ptr = dynamic_cast<T*>(sys.get()))
+				return *ptr;
+		}
+		//FIXXX
+		//std::cout << "System not found" << std::endl;
+		//throw std::runtime_error("System not found");
+	}
+
+	void ShutdownSystem(System* system);
+	static void ShutdownAllSystems();
+
+	static void UpdateAllSystems();
 
 private:
-	std::vector<std::unique_ptr<System>> systems;
-
-	System* FindSystem(System* system);
+	static inline std::vector<std::unique_ptr<System>> systems;
 };

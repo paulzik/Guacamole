@@ -19,6 +19,10 @@ public:
     bool useGravity;
     bool isKinematic;
 
+    void Start() override;
+    void Update() override;
+    void Destroy() override;
+
     void AddForce(const glm::vec3& force);
     const char* GetComponentName() const override;
 

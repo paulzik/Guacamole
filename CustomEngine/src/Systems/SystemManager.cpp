@@ -19,19 +19,6 @@ void SystemManager::ShutdownAllSystems()
 
     systems.clear();
 }
-
-System* SystemManager::FindSystem(System* system)
-{
-    auto it = std::find_if(
-        systems.begin(), systems.end(),
-        [system](const std::unique_ptr<System>& s)
-        {
-            return s.get() == system;
-        });
-
-    return (it != systems.end()) ? it->get() : nullptr;
-}
-
 void SystemManager::ShutdownSystem(System* system)
 {
     systems.erase(

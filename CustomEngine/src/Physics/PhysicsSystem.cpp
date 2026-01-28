@@ -120,12 +120,39 @@ void PhysicsSystem::RemoveBody(RigidBody* body)
     body->m_InternalBody = nullptr;
 }
 
-void PhysicsSystem::Shutdown() {
-    delete collisionConfiguration;
-    delete dispatcher;
-    delete broadphase;
-    delete solver;
-    delete world;
+void PhysicsSystem::Shutdown()
+{
+    if (!world) return;
+
+    // 1. Remove and delete rigid bodies
+    for (int i = 0; i < world->getNonStaticRigidBodies().size(); ++i)
+    {
+        btRigidBody* body = world->getNonStaticRigidBodies()[i];
+        world->removeRigidBody(body);
+
+        delete body->getMotionState();
+        delete body;
+    }
+    world->getNonStaticRigidBodies().clear();
+
+    // 2. Delete collision shapes
+    for (int i = 0; i < collisionShapes.size(); ++i)
+    {
+        delete collisionShapes[i];
+    }
 
     collisionShapes.clear();
+
+    delete world;
+    world = nullptr;
+
+    delete solver;
+    delete broadphase;
+    delete dispatcher;
+    delete collisionConfiguration;
+
+    solver = nullptr;
+    broadphase = nullptr;
+    dispatcher = nullptr;
+    collisionConfiguration = nullptr;
 }
