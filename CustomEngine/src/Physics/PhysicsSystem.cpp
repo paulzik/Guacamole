@@ -4,6 +4,8 @@
 #include "Collider.h"
 #include "glm/vec3.hpp"
 #include "Time/Time.h"
+#include "Utilities/Debug/Debug.h"
+#include "Collider.h"
 
 bool PhysicsSystem::Init() {
     collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -74,7 +76,8 @@ void PhysicsSystem::RegisterBody(RigidBody* body)
 {
     //Get the Collider shape from the component here
     Collider& collider = body->owner->GetComponent<Collider>();
-    btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
+
+    btCollisionShape* colShape = CreateBulletShape(collider.GetColliderDescription());
     collisionShapes.push_back(colShape);
 
     /// Create Dynamic Objects
@@ -107,6 +110,23 @@ void PhysicsSystem::RegisterBody(RigidBody* body)
 
     body->m_InternalBody = btBody;
 
+}
+
+btCollisionShape* PhysicsSystem::CreateBulletShape(const ColliderDescription& desc) {
+    switch (desc.type)
+    {
+    case ColliderType::Box:
+        return new btBoxShape(btVector3(desc.halfExtend.x, desc.halfExtend.y, desc.halfExtend.z));
+    case ColliderType::Sphere:
+        return new btSphereShape(desc.radius);
+    case ColliderType::Capsule:
+        return new btCapsuleShape(desc.radius, desc.height);
+    case ColliderType::Mesh:
+        Debug::LogError("MeshCollider not yet implemented");
+        return nullptr;
+    default:
+        return nullptr;
+    }
 }
 
 void PhysicsSystem::RemoveBody(RigidBody* body)

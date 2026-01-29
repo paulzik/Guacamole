@@ -12,6 +12,8 @@ public:
         // cleanup Bullet shape if owned here
     }
 
+    ColliderDescription GetColliderDescription() const override;
+
 private:
     float m_radius;
 };

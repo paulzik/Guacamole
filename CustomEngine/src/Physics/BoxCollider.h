@@ -1,12 +1,13 @@
 ﻿#pragma once
 #include "Collider.h"
+#include <glm/vec3.hpp>
 
 class BoxCollider : public Collider {
 public:
 
-    BoxCollider(bool trigger, float size) : Collider(trigger) 
+    BoxCollider(bool trigger, glm::vec3 halfExtends) : Collider(trigger) 
     {
-        m_size = size;
+        m_halfExtends = halfExtends;
     }
 
     ~BoxCollider() override
@@ -14,6 +15,8 @@ public:
         // cleanup Bullet shape if owned here
     }
 
+    ColliderDescription GetColliderDescription() const override;
+
 private:
-    float m_size;
+    glm::vec3 m_halfExtends;
 };

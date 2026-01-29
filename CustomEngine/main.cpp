@@ -91,14 +91,14 @@ int main() {
     MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
     cube1.AddComponent<RigidBody>(1.0f);
-    cube1.AddComponent<BoxCollider>(false, 1.0f);
+    cube1.AddComponent<BoxCollider>(false, glm::vec3(0.5f));
 
     Entity cube2("Cube2Static", vec3(-1.2f, -3, 0));
     MeshFilter& cubeMesh2 = cube2.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
     MeshRenderer& cubeRenderer2 = cube2.AddComponent<MeshRenderer>();
     cubeRenderer2.material = standardMaterial;
     cube2.AddComponent<RigidBody>(0);
-    cube2.AddComponent<SphereCollider>(false, 1.0f);
+    cube2.AddComponent<SphereCollider>(false, 0.5f);
 
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
