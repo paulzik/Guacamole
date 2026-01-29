@@ -35,6 +35,11 @@ void MeshRendererEditor::Draw(Component* component) {
     if (ImGui::SliderFloat("Metallic", &metallic, 0.0f, 1.0f)) {
         material->metallic = metallic;
     }
+
+    bool wireframe = meshRenderer->wireframe;
+    if (ImGui::Checkbox("Wireframe", &wireframe)) {
+        meshRenderer->wireframe = wireframe;
+    }
 }
 
 CUSTOM_EDITOR(MeshRenderer, MeshRendererEditor);

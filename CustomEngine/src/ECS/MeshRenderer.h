@@ -7,6 +7,7 @@
 class MeshRenderer : public Component {
 public:
     std::shared_ptr<Material> material = nullptr;
+    bool wireframe = false;
 
     MeshRenderer();
     ~MeshRenderer();
@@ -15,7 +16,5 @@ public:
     void Update() override;
 
     const char* GetComponentName() const override;
-
-private:
 
 };

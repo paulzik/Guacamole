@@ -93,13 +93,12 @@ int main() {
     cube1.AddComponent<RigidBody>(1.0f);
     cube1.AddComponent<BoxCollider>(false, glm::vec3(0.5f));
 
-    Entity cube2("Cube2Static", vec3(-1.2f, -3, 0));
-    MeshFilter& cubeMesh2 = cube2.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
-    MeshRenderer& cubeRenderer2 = cube2.AddComponent<MeshRenderer>();
-    cubeRenderer2.material = standardMaterial;
-    cube2.AddComponent<RigidBody>(0);
-    cube2.AddComponent<SphereCollider>(false, 0.5f);
-
+    Entity sphereStatic("SphereStatic", vec3(-1.2f, -3, 0));
+    MeshFilter& sphereStaticMesh = sphereStatic.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.5f));
+    MeshRenderer& sphereStaticRenderer = sphereStatic.AddComponent<MeshRenderer>();
+    sphereStaticRenderer.material = standardMaterial;
+    sphereStatic.AddComponent<RigidBody>(0);
+    sphereStatic.AddComponent<SphereCollider>(false, 0.5f);
 
     Entity sphere1("Sphere1", vec3(1, 1, -1));
     MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
@@ -118,16 +117,16 @@ int main() {
     ConsoleWindow consoleWindow;
 
     // ---------------- Load model ----------------
-    auto modelAsset = Resources::Load("Assets/Models/GeneralAnimated.fbx");
-    shared_ptr<Entity> soldier = ModelInstantiator::Instantiate(modelAsset, "GeneralAnimated");    
-    SkinnedMeshRenderer& soldierRenderer = soldier->AddComponent<SkinnedMeshRenderer>();
-    auto albedo = Resources::Load("Assets/Models/GeneralRed.png");
+    auto modelAsset = Resources::Load("Assets/Models/Miner.fbx");
+    shared_ptr<Entity> soldier = ModelInstantiator::Instantiate(modelAsset, "Miner");    
+    MeshRenderer& soldierRenderer = soldier->AddComponent<MeshRenderer>();
+    auto albedo = Resources::Load("Assets/Models/MinerTexture.png");
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
-    auto soldierMaterial = make_shared<Material>(texture2D, nullptr, skinnedShader);
-    soldier->GetComponent<SkinnedMeshRenderer>().material = soldierMaterial;
+    auto soldierMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
+    soldier->GetComponent<MeshRenderer>().material = soldierMaterial;
 
-    auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
-    Animator& animator = soldier->AddComponent<Animator>(modelPtr);
+    //auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
+    //Animator& animator = soldier->AddComponent<Animator>(modelPtr);
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();
