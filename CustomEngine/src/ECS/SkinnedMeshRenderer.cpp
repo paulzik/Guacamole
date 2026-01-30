@@ -62,12 +62,12 @@ void SkinnedMeshRenderer::Update()
 
     glUniformMatrix4fv(
         glGetUniformLocation(material->shader->programID, "view"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetViewMatrix())
+        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->viewMatrix)
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(material->shader->programID, "projection"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->GetProjectionMatrix())
+        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->projectionMatrix)
     );
 
     // -----------------------------

@@ -42,6 +42,7 @@
 #include "Time/Time.h"
 #include "Systems/SystemManager.h"
 #include "ECS/TransformSystem.h"
+#include "ECS/CameraSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -62,9 +63,10 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
-    //Physics
+    //Systems
     SystemManager::AddSystem(std::make_unique<TransformSystem>());
     SystemManager::AddSystem(std::make_unique<PhysicsSystem>());
+    SystemManager::AddSystem(std::make_unique<CameraSystem>());
 
     Time::Init();
 
@@ -84,7 +86,8 @@ int main() {
 
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 3));
-    camera.AddComponent<Camera>(vec3(0, 0, 0));
+    Camera& cameraComp = camera.AddComponent<Camera>();
+    Scene::Get().AddCamera(&cameraComp);
     camera.AddComponent<AudioListener>();
 
     // ---------------- Scene primitives ----------------

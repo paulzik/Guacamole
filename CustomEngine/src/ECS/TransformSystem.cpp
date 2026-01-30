@@ -27,5 +27,5 @@ void TransformSystem::Update()
 
 void TransformSystem::Shutdown()
 {
-	transforms.clear();
+
 }
