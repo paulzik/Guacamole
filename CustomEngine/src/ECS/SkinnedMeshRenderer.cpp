@@ -149,8 +149,8 @@ void SkinnedMeshRenderer::Update()
     // -----------------------------
     MeshFilter& mesh = owner->GetComponent<MeshFilter>();
 
-    glBindVertexArray(mesh.GetVAO());
-    glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(mesh.VAO);
+    glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 const char* SkinnedMeshRenderer::GetComponentName() const  {

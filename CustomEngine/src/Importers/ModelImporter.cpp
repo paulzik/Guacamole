@@ -187,7 +187,7 @@ void ModelImporter::ExtractBoneWeights(
     {
         aiMesh* ai_mesh = scene->mMeshes[meshIndex];
         auto& meshFilter = meshes[meshIndex];
-        auto& vertices = meshFilter->GetVerticesRef();
+        auto& vertices = meshFilter->vertices;
 
         for (unsigned int b = 0; b < ai_mesh->mNumBones; ++b)
         {

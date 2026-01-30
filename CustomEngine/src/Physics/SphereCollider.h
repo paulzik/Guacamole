@@ -1,19 +1,13 @@
 ﻿#pragma once
 #include "Collider.h"
 
-class SphereCollider : public Collider {
-public:
+struct SphereCollider : public Collider {
+
     SphereCollider(bool trigger, float radius) : Collider(trigger)
     {
-        m_radius = radius;
-    }
-    ~SphereCollider() override
-    {
-        // cleanup Bullet shape if owned here
+        colliderDescriptor.type = ColliderType::Sphere;
+        colliderDescriptor.radius = radius;
     }
 
-    ColliderDescription GetColliderDescription() const override;
-
-private:
-    float m_radius;
+    COMPONENT_NAME(SphereCollider);
 };

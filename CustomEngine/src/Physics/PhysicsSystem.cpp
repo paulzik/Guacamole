@@ -77,7 +77,7 @@ void PhysicsSystem::RegisterBody(RigidBody* body)
     //Get the Collider shape from the component here
     Collider& collider = body->owner->GetComponent<Collider>();
 
-    btCollisionShape* colShape = CreateBulletShape(collider.GetColliderDescription());
+    btCollisionShape* colShape = CreateBulletShape(collider.colliderDescriptor);
     collisionShapes.push_back(colShape);
 
     /// Create Dynamic Objects

@@ -128,13 +128,13 @@ void MeshRenderer::Update()
     // -----------------------------
     MeshFilter& mesh = owner->GetComponent<MeshFilter>();
 
-    glBindVertexArray(mesh.GetVAO());
+    glBindVertexArray(mesh.VAO);
     if (wireframe)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    glDrawElements(GL_TRIANGLES, mesh.GetIndexCount(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
 }
 
 const char* MeshRenderer::GetComponentName() const  {

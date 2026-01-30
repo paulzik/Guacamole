@@ -18,17 +18,8 @@ struct ColliderDescription {
     float height;     // capsule
 };
 
-class Collider : public Component{
-public:
+struct Collider : public Component{
 	Collider(bool trigger) :isTrigger(trigger) {};
-	virtual ~Collider() = default;
 	bool isTrigger;
-	void Start() override;
-	void Update() override;
-
-	virtual ColliderDescription GetColliderDescription() const = 0;
-
-	const char* GetComponentName() const override;
-private:
-
+    ColliderDescription colliderDescriptor;
 };

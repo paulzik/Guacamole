@@ -55,21 +55,3 @@ void MeshFilter::Start() {
 
     glBindVertexArray(0);
 }
-
-
-MeshFilter::~MeshFilter() {
-
-}
-
-GLsizei MeshFilter::GetIndexCount() {
-    return indices.size();
-}
-
-int MeshFilter::GetTrianglesCount()
-{
-    return GetIndexCount()/3;
-}
-
-const char* MeshFilter::GetComponentName() const  {
-	return "MeshFilter";
-}

@@ -16,8 +16,7 @@ struct Vertex
     float boneWeights[4] = { 0 };
 };
 
-class MeshFilter : public Component {
-private:
+struct MeshFilter : public Component {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
 
@@ -25,22 +24,8 @@ private:
     GLuint VBO = 0;
     GLuint EBO = 0;
 
-public:
-    MeshFilter(const std::vector<Vertex>& vertices,
-        const std::vector<uint32_t>& indices);
-    ~MeshFilter();
+    MeshFilter(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 
-    const char* GetComponentName() const override;
-
-    const std::vector<Vertex>& GetVertices() const { return vertices; }
-    const std::vector<uint32_t>& GetIndices() const { return indices; }
-
-    std::vector<Vertex>& GetVerticesRef() { return vertices; }
-
-    GLuint GetVAO() const { return VAO; }
     void Start() override;
-
-    GLsizei GetIndexCount();
-
-    int GetTrianglesCount();
+    COMPONENT_NAME(MeshFilter);
 };
