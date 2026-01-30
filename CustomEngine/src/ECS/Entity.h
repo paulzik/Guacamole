@@ -54,6 +54,17 @@ public:
     }
 
     template<typename T>
+    T* TryGetComponent()
+    {
+        for (auto& c : components)
+        {
+            if (auto ptr = dynamic_cast<T*>(c.get()))
+                return ptr;
+        }
+        return nullptr;
+    }
+
+    template<typename T>
     std::vector<T*> GetComponents() {
         static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
 

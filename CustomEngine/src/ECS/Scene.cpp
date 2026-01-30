@@ -55,6 +55,11 @@ std::vector<Light*> Scene::GetLights()
 	return lights;
 }
 
+const std::vector<Entity*>& Scene::GetEntities() const
+{
+	return entities;
+}
+
 Scenegraph& Scene::GetScenegraph()
 {
 	return scenegraph;

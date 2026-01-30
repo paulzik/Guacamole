@@ -29,6 +29,8 @@ public:
 	void AddLight(Light* light);
 	std::vector<Light*> GetLights();
 
+	const std::vector<Entity*>& GetEntities() const;
+
 	void Update();
 	void Start();
 

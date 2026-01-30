@@ -8,7 +8,7 @@ struct Component {
     Entity* owner = nullptr;
 
     Component();
-    virtual ~Component();
+    virtual ~Component() = default;
 
     virtual void Start();
     virtual void Update();
@@ -19,3 +19,4 @@ struct Component {
     void setOwner(Entity* _owner);
     Entity* getOwner();
 };
+

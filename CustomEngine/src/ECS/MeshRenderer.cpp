@@ -57,7 +57,7 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniformMatrix4fv(
         glGetUniformLocation(material->shader->programID, "model"),
-        1, GL_FALSE, glm::value_ptr(GetModelMatrix(transform))
+        1, GL_FALSE, glm::value_ptr(transform.modelMatrix)
     );
 
     glUniformMatrix4fv(

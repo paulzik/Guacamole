@@ -5,10 +5,6 @@ Component::Component() {
     owner = nullptr;
 }
 
-Component::~Component() {
-
-}
-
 void Component::Start() {
     // default empty implementation
 }
