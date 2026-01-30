@@ -12,6 +12,7 @@
 #include <Lighting/PointLight.h>
 #include <Lighting/DirectionalLight.h>
 #include <Animations/Animator.h>
+#include "ECS/TransformUtils.h"
 
 MeshRenderer::MeshRenderer()
 {
@@ -56,7 +57,7 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniformMatrix4fv(
         glGetUniformLocation(material->shader->programID, "model"),
-        1, GL_FALSE, glm::value_ptr(transform.GetModelMatrix())
+        1, GL_FALSE, glm::value_ptr(GetModelMatrix(transform))
     );
 
     glUniformMatrix4fv(
@@ -74,7 +75,7 @@ void MeshRenderer::Update()
     // -----------------------------
     glUniform3fv(
         glGetUniformLocation(material->shader->programID, "viewPos"),
-        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().GetPosition())
+        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().position)
     );
 
     // -----------------------------
@@ -99,7 +100,7 @@ void MeshRenderer::Update()
         if (light->GetType() == LightType::POINT)
         {
             auto* pointLight = static_cast<PointLight*>(light);
-            glm::vec3 pos = tr.GetPosition();
+            glm::vec3 pos = tr.position;
             glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(pos));
             glUniform1f(glGetUniformLocation(material->shader->programID, (base + ".radius").c_str()), pointLight->GetRadius());
 
@@ -107,7 +108,7 @@ void MeshRenderer::Update()
         else if (light->GetType() == LightType::DIRECTIONAL)
         {
             auto* directionalLight = static_cast<DirectionalLight*>(light);
-            glm::vec3 dir = tr.GetForward();
+            glm::vec3 dir = GetForward(tr);
             glUniform3fv(glGetUniformLocation(material->shader->programID, (base + ".direction").c_str()), 1, glm::value_ptr(dir));
         }
     }

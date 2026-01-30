@@ -1,5 +1,6 @@
 ﻿#include "AudioListener.h"
 #include "ECS/Transform.h"
+#include "ECS/TransformUtils.h"
 #include "ECS/Entity.h"
 
 void AudioListener::Update()
@@ -10,12 +11,12 @@ void AudioListener::Update()
     Transform& transform = owner->GetComponent<Transform>();
 
     // Position
-    glm::vec3 pos = transform.GetPosition();
+    glm::vec3 pos = transform.position;
     alListener3f(AL_POSITION, pos.x, pos.y, pos.z);
 
     // Orientation (forward + up)
-    glm::vec3 forward = transform.GetForward();
-    glm::vec3 up = transform.GetUp();
+    glm::vec3 forward = GetForward(transform);
+    glm::vec3 up = transform.up;
 
     float orientation[6] = {
         forward.x, forward.y, forward.z,

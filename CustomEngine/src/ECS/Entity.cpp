@@ -6,14 +6,20 @@
 Entity::Entity(const char* _name, glm::vec3 entityPosition, Entity* parent)
     : name(_name)
 {
-    components.push_back(std::make_unique<Transform>(entityPosition));
+    auto transform = std::make_unique<Transform>(); // default constructor
+    transform->position = entityPosition;          // assign manually
+    components.push_back(std::move(transform));
+
     Scene::Get().AddEntity(this, parent);
 }
 
 Entity::Entity(const char* _name, glm::vec3 entityPosition)
     : name(_name)
 {
-    components.push_back(std::make_unique<Transform>(entityPosition));
+    auto transform = std::make_unique<Transform>(); // default constructor
+    transform->position = entityPosition;          // assign manually
+    components.push_back(std::move(transform));
+
     Scene::Get().AddEntity(this, nullptr);
 }
 

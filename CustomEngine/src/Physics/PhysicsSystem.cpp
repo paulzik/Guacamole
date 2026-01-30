@@ -58,7 +58,7 @@ void PhysicsSystem::SyncTransforms()
         glm::vec3 newPosition = glm::vec3(btTrans.getOrigin().getX(),
                                           btTrans.getOrigin().getY(),
                                           btTrans.getOrigin().getZ());
-        transform.SetPosition(newPosition);
+        transform.position = newPosition;
 
         //Rotation
         btQuaternion btRotation = btTrans.getRotation();
@@ -68,7 +68,7 @@ void PhysicsSystem::SyncTransforms()
                                           btRotation.getY(), 
                                           btRotation.getZ());
 
-        transform.SetRotation(newRotation);
+        transform.rotation = newRotation;
     }
 }
 
@@ -85,7 +85,7 @@ void PhysicsSystem::RegisterBody(RigidBody* body)
     startTransform.setIdentity();
 
     Transform& transform = body->owner->GetComponent<Transform>();
-    glm::vec3 globalPosition = transform.GetPosition();
+    glm::vec3 globalPosition = transform.position;
     startTransform.setOrigin(btVector3(globalPosition.x, globalPosition.y, globalPosition.z));
 
     btScalar mass(body->mass);

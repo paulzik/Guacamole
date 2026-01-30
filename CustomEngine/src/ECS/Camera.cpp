@@ -20,7 +20,7 @@ const char* Camera::GetComponentName() const {
 glm::mat4 Camera::GetViewMatrix()
 {
 	viewMatrix = glm::lookAt(
-        owner->GetComponent<Transform>().GetPosition(),              // camera position
+        owner->GetComponent<Transform>().position,              // camera position
         lookAtVector,                                                // look at
         upVector                                                    // up
     );
@@ -77,7 +77,7 @@ void Camera::SetFarPlane(float fp)
 
 glm::vec3 Camera::GetLookAt() const
 {
-    return  owner->GetComponent<Transform>().GetPosition() + forward;
+    return  owner->GetComponent<Transform>().position + forward;
 }
 
 void Camera::SetForward(glm::vec3 dir)
@@ -87,16 +87,16 @@ void Camera::SetForward(glm::vec3 dir)
 
 void Camera::Move(glm::vec3 delta)
 {
-    glm::vec3 pos = owner->GetComponent<Transform>().GetPosition();
+    glm::vec3 pos = owner->GetComponent<Transform>().position;
     pos += delta;
-    owner->GetComponent<Transform>().SetPosition(pos);
+    owner->GetComponent<Transform>().position = pos;
 
     lookAtVector = pos + forward;
 }
 
 void Camera::Update()
 {
-    glm::vec3 position = owner->GetComponent<Transform>().GetPosition();
+    glm::vec3 position = owner->GetComponent<Transform>().position;
 
     forward = GetForwardFromRotation();
 
@@ -105,7 +105,7 @@ void Camera::Update()
 
 glm::vec3 Camera::GetForwardFromRotation()
 {
-    glm::quat q = owner->GetComponent<Transform>().GetRotationQuat();
+    glm::quat q = owner->GetComponent<Transform>().rotation;
 
     return glm::normalize(q * glm::vec3(0, 0, -1));
 }

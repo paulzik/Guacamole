@@ -41,6 +41,7 @@
 #include "Physics/PhysicsSystem.h"
 #include "Time/Time.h"
 #include "Systems/SystemManager.h"
+#include "ECS/TransformSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -62,6 +63,7 @@ int main() {
     glFrontFace(GL_CCW);
 
     //Physics
+    SystemManager::AddSystem(std::make_unique<TransformSystem>());
     SystemManager::AddSystem(std::make_unique<PhysicsSystem>());
 
     Time::Init();

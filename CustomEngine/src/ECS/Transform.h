@@ -4,35 +4,13 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/quaternion.hpp"
 
-class Transform : public Component {
-private:
+struct Transform : public Component {
 	glm::mat4 modelMatrix;
-
 	glm::vec3 position = glm::vec3(0, 0, 0);
 	glm::quat rotation = glm::quat();
 	glm::vec3 scale = glm::vec3(1,1,1);
 
 	glm::vec3 up = glm::vec3(0, 0, -1);
 
-public:
-	Transform(glm::vec3 pos);
-	~Transform();
-
-	glm::vec3 GetPosition() const;
-	glm::quat GetRotationQuat() const;
-	glm::vec3 GetRotationEuler() const;
-	glm::vec3 GetScale() const;
-
-	glm::vec3 GetForward() const;
-	glm::vec3 GetUp() const;
-
-	const char* GetComponentName() const override;
-
-	void SetPosition(glm::vec3 pos);
-	void SetRotation(float angle, glm::vec3 axis);
-	void SetRotation(glm::quat quat);
-	void SetRotation(glm::vec3 euler);
-	void SetScale(glm::vec3 sc);
-	
-	glm::mat4 GetModelMatrix();
+	COMPONENT_NAME(Transform);
 };

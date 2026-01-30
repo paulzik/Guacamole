@@ -1,12 +1,12 @@
 #pragma once
+#include "ComponentMacros.h"
+
 class Entity;
 
-class Component {
-protected:
+struct Component {
     int componentID;
     Entity* owner = nullptr;
 
-public:
     Component();
     virtual ~Component();
 

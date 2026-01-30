@@ -63,7 +63,7 @@ void AudioSource::Update()
 		}
 	}
 
-	currentPosition = transform->GetPosition();
+	currentPosition = transform->position;
 
 	if (currentPosition != prevPosition)
 	{
