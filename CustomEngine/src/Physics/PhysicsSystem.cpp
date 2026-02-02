@@ -5,7 +5,36 @@
 #include "glm/vec3.hpp"
 #include "Time/Time.h"
 #include "Utilities/Debug/Debug.h"
-#include "Collider.h"
+
+void PhysicsSystem::TryRegister(Component* c)
+{
+    auto* body = dynamic_cast<RigidBody*>(c);
+    if (!body)
+        return;
+
+    // Avoid double-registration
+    if (body->m_InternalBody)
+        return;
+
+    Entity* owner = body->owner;
+    if (!owner)
+        return;
+
+    // Physics requires these components
+    //TO DOOO!!!!!!!
+    /*
+    if (!owner->HasComponent<Transform>() || !owner->HasComponent<Collider>())
+    {
+        Debug::LogError(
+            "RigidBody added without Transform or Collider on entity: " +
+            owner->GetName()
+        );
+        return;
+    }
+    */
+    RegisterBody(body);
+}
+
 
 bool PhysicsSystem::Init() {
     collisionConfiguration = new btDefaultCollisionConfiguration();

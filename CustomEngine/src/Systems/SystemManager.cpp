@@ -1,38 +1,43 @@
 #include "SystemManager.h"
-
-void SystemManager::AddSystem(std::unique_ptr<System> system)
-{
-    system->Init();
-    systems.push_back(std::move(system));
-}
+#include <ECS/MeshRenderer.h>
+#include <ECS/SkinnedMeshRenderer.h>
 
 void SystemManager::UpdateAllSystems()
 {
-    for (auto& s : systems)
-        s->Update();
+    for (auto& [_, system] : systems)
+        system->Update();
 }
 
 void SystemManager::ShutdownAllSystems()
 {
-    for (auto& s : systems)
-        s->Shutdown();
+    for (auto& [_,system] : systems)
+        system->Shutdown();
 
     systems.clear();
 }
+
+void SystemManager::OnComponentAdded(Component* c)
+{
+    for (auto& [_, system] : systems)
+        system->TryRegister(c);
+}
+
 void SystemManager::ShutdownSystem(System* system)
 {
-    systems.erase(
-        std::remove_if(
-            systems.begin(), systems.end(),
-            [system](std::unique_ptr<System>& s)
-            {
-                if (s.get() == system)
-                {
-                    s->Shutdown();
-                    return true;
-                }
-                return false;
-            }),
-        systems.end()
+    auto it = std::find_if(
+        systems.begin(), systems.end(),
+        [system](auto& pair) { return pair.second.get() == system; }
     );
+
+    if (it != systems.end())
+    {
+        it->second->Shutdown();
+        systems.erase(it);
+    }
+}
+
+void SystemManager::InitAllSystems()
+{
+    for (auto& [_, system] : systems)
+        system->Init();
 }

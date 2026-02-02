@@ -15,8 +15,5 @@ struct Component {
     virtual void Destroy();
 
     virtual const char* GetComponentName() const = 0;
-
-    void setOwner(Entity* _owner);
-    Entity* getOwner();
 };
 

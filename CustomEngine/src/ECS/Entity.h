@@ -6,6 +6,9 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+#include "Systems/SystemManager.h"
+#include <unordered_map>
+#include <typeindex>
 
 class Entity {
 
@@ -37,10 +40,18 @@ public:
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)
     {
+        static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");
+
         auto comp = std::make_unique<T>(std::forward<Args>(args)...);
-        comp->setOwner(this); // set the owner pointer
+        comp->owner = this;
+
+        T& ref = *comp;
         components.push_back(std::move(comp));
-        return *static_cast<T*>(components.back().get());
+
+        // Notify the system manager
+        SystemManager::OnComponentAdded(&ref);
+
+        return ref;
     }
 
     //Gets the first component of type T it gets in the components

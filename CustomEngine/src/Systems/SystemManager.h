@@ -1,7 +1,10 @@
 #pragma once
 #include "System.h"
+#include "ECS/Component.h"
 #include <vector>
 #include <memory>
+#include <typeindex>
+#include <unordered_map>
 
 class SystemManager{
 public:
@@ -11,38 +14,29 @@ public:
 		return instance;
 	}
 
-	static void AddSystem(std::unique_ptr<System> system);
-	
-	template<typename T>
-	void RemoveSystem()
-	{
-		systems.erase(
-			std::remove_if(systems.begin(), systems.end(),
-				[](const std::unique_ptr<System>& s) {
-					return dynamic_cast<T*>(s.get()) != nullptr;
-				}),
-			systems.end()
-		);
-	}
+    template<typename T, typename... Args>
+    static T& AddSystem(Args&&... args) {
+        auto system = std::make_unique<T>(std::forward<Args>(args)...);
+        T* ptr = system.get();
+        systems[typeid(T)] = std::move(system);
+        return *ptr;
+    }
 
-	template<typename T>
-	static T& Get() {
-		static_assert(std::is_base_of<System, T>::value, "T must inherit from System");
+    template<typename T>
+    static T* GetSystem()
+    {
+        auto it = systems.find(typeid(T));
+        if (it != systems.end())
+            return static_cast<T*>(it->second.get());
+        return nullptr;
+    }
 
-		for (auto& sys : GetInstance().systems) {
-			if (auto ptr = dynamic_cast<T*>(sys.get()))
-				return *ptr;
-		}
-		//FIXXX
-		//std::cout << "System not found" << std::endl;
-		//throw std::runtime_error("System not found");
-	}
-
+	static void OnComponentAdded(Component* c);
 	void ShutdownSystem(System* system);
+
 	static void ShutdownAllSystems();
-
 	static void UpdateAllSystems();
-
+    static void InitAllSystems();
 private:
-	static inline std::vector<std::unique_ptr<System>> systems;
+	static inline std::unordered_map<std::type_index, std::unique_ptr<System>> systems;
 };

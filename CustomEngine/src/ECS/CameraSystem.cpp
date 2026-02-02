@@ -2,30 +2,39 @@
 #include "Scene.h"
 #include "Transform.h"
 
+void CameraSystem::TryRegister(Component* c)
+{
+    if (!mainCamera)
+        if (auto cam = dynamic_cast<Camera*>(c))
+            mainCamera = cam;
+}
+
 bool CameraSystem::Init()
 {
-	return false;
+	return true;
 }
 
 void CameraSystem::Update()
 {
-    Camera* camera = Scene::Get().GetCamera();
-    const auto transformComp = camera->owner->GetComponent<Transform>();
+    if (!mainCamera)
+        return;
+
+    Transform& transformComp = mainCamera->owner->GetComponent<Transform>();
 
     glm::quat q = transformComp.rotation;
     glm::vec3 cameraFwd = glm::normalize(q * glm::vec3(0, 0, -1));
-    camera->forward = cameraFwd;
+    mainCamera->forward = cameraFwd;
     
     glm::vec3 cameraPos = transformComp.position;
-    camera->lookAtVector = cameraPos + camera->forward;
+    mainCamera->lookAtVector = cameraPos + mainCamera->forward;
 
-    camera->viewMatrix = glm::lookAt(
+    mainCamera->viewMatrix = glm::lookAt(
         cameraPos,
-        camera->lookAtVector,
-        camera->upVector
+        mainCamera->lookAtVector,
+        mainCamera->upVector
     );
 
-    camera->projectionMatrix = glm::perspective(camera->fov, camera->aspect, camera->nearPlane, camera->farPlane);
+    mainCamera->projectionMatrix = glm::perspective(mainCamera->fov, mainCamera->aspect, mainCamera->nearPlane, mainCamera->farPlane);
 }
 
 void CameraSystem::Shutdown()

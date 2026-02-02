@@ -4,8 +4,9 @@
 
 void RigidBody::Start()
 {
-    PhysicsSystem& physics = SystemManager::Get<PhysicsSystem>();
-    physics.RegisterBody(this);
+    PhysicsSystem* physics = SystemManager::GetSystem<PhysicsSystem>();
+    if(physics)
+        physics->RegisterBody(this);
 }
 
 void RigidBody::Update()

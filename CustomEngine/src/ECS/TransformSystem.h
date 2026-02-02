@@ -3,7 +3,7 @@
 #include "ECS/Transform.h"
 #include <vector>
 
-class TransformSystem : public System {
+class TransformSystem : public System {    
     bool Init() override;
     void Update() override;
     void Shutdown() override;

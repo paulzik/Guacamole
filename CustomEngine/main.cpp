@@ -1,4 +1,4 @@
-#include <SDL3/SDL.h>
+﻿#include <SDL3/SDL.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -43,6 +43,7 @@
 #include "Systems/SystemManager.h"
 #include "ECS/TransformSystem.h"
 #include "ECS/CameraSystem.h"
+#include "ECS/RenderSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -64,9 +65,11 @@ int main() {
     glFrontFace(GL_CCW);
 
     //Systems
-    SystemManager::AddSystem(std::make_unique<TransformSystem>());
-    SystemManager::AddSystem(std::make_unique<PhysicsSystem>());
-    SystemManager::AddSystem(std::make_unique<CameraSystem>());
+    SystemManager::AddSystem<TransformSystem>();
+    SystemManager::AddSystem<PhysicsSystem>();
+    SystemManager::AddSystem<CameraSystem>();
+    SystemManager::AddSystem<RenderSystem>();
+    SystemManager::InitAllSystems();
 
     Time::Init();
 
@@ -160,7 +163,12 @@ int main() {
         }
 
         Time::Update();
-        SystemManager::UpdateAllSystems();
+
+        glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        SystemManager::UpdateAllSystems();   // ✅ Render happens AFTER clear
+        Scene::Get().Update();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
@@ -171,15 +179,11 @@ int main() {
         consoleWindow.Draw();
 
         ImGui::Render();
-
-        glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        Scene::Get().Update();
-
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         SDL_GL_SwapWindow(window);
     }
+
 
     SystemManager::ShutdownAllSystems();
     GuacAudio::Shutdown();

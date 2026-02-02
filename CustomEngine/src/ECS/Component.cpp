@@ -16,13 +16,3 @@ void Component::Update() {
 void Component::Destroy() {
     // default empty implementation
 }
-
-void Component::setOwner(Entity* _owner)
-{
-    owner = _owner;
-}
-
-Entity* Component::getOwner()
-{
-    return owner;
-}

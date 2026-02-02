@@ -75,7 +75,7 @@ void SkinnedMeshRenderer::Update()
     // -----------------------------
     glUniform3fv(
         glGetUniformLocation(material->shader->programID, "viewPos"),
-        1, glm::value_ptr(Scene::Get().GetCamera()->getOwner()->GetComponent<Transform>().position)
+        1, glm::value_ptr(Scene::Get().GetCamera()->owner->GetComponent<Transform>().position)
     );
 
     // -----------------------------
@@ -89,7 +89,7 @@ void SkinnedMeshRenderer::Update()
     for (int i = 0; i < lightCount; i++)
     {
         Light* light = lights[i];
-        Transform& tr = light->getOwner()->GetComponent<Transform>();
+        Transform& tr = light->owner->GetComponent<Transform>();
 
         std::string base = "lights[" + std::to_string(i) + "]";
 

@@ -4,6 +4,9 @@
 #include <vector>
 
 class CameraSystem : public System {
+    Camera* mainCamera;
+
+    void TryRegister(Component* c) override;
 
     bool Init() override;
     void Update() override;

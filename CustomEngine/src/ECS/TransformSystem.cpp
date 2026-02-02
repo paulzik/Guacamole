@@ -3,7 +3,7 @@
 
 bool TransformSystem::Init()
 {
-	return false;
+	return true;
 }
 
 void TransformSystem::Update()
