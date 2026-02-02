@@ -33,7 +33,6 @@
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Audio/AudioSource.h"
-#include "Audio/GuacAudio.h"
 #include "Audio/AudioListener.h"
 #include "Physics/BoxCollider.h"
 #include "Physics/SphereCollider.h"
@@ -44,6 +43,7 @@
 #include "ECS/TransformSystem.h"
 #include "ECS/CameraSystem.h"
 #include "ECS/RenderSystem.h"
+#include "Audio/AudioSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -69,6 +69,7 @@ int main() {
     SystemManager::AddSystem<PhysicsSystem>();
     SystemManager::AddSystem<CameraSystem>();
     SystemManager::AddSystem<RenderSystem>();
+    SystemManager::AddSystem<AudioSystem>();
     SystemManager::InitAllSystems();
 
     Time::Init();
@@ -144,13 +145,10 @@ int main() {
     ImGui_ImplOpenGL3_Init("#version 330");
     ImGui::StyleColorsDark();
 
-    //Init AudioEngine
-    if (!GuacAudio::Init()) return -1;
-
     auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
     AudioSource& audioSource = cube1.AddComponent<AudioSource>();
-    audioSource.SetClip(audioClip);
-    //audioSource.Play();
+    audioSource.clip = audioClip;
+    audioSource.Play();
 
     Scene::Get().Start();
 
@@ -186,7 +184,6 @@ int main() {
 
 
     SystemManager::ShutdownAllSystems();
-    GuacAudio::Shutdown();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();

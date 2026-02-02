@@ -3,84 +3,6 @@
 #include "ECS/Transform.h"
 #include "ECS/Entity.h"
 
-AudioSource::AudioSource()
-{
-}
-
-AudioSource::~AudioSource()
-{
-	if (source != 0)
-		alDeleteSources(1, &source);
-}
-
-bool AudioSource::GetLoop() const
-{
-	return loop;
-}
-
-float AudioSource::GetPitch() const
-{
-	return pitch;
-}
-
-float AudioSource::GetVolume() const
-{
-	return volume;
-}
-
-std::shared_ptr<AudioClip> AudioSource::GetAudioClip() const
-{
-	return clip;
-}
-
-bool AudioSource::IsPlaying() const
-{
-	return false;
-}
-
-const char* AudioSource::GetComponentName() const
-{
-	return "AudioSource";
-}
-
-void AudioSource::Start()
-{
-	std::cout << "STARTED" << std::endl;
-}
-
-void AudioSource::Update()
-{
-	if (!owner)
-		return;
-
-	if (!transform)
-	{
-		transform = &owner->GetComponent<Transform>();
-		if (!transform)
-		{
-			std::cerr << "AudioSource: Owner has no Transform!" << std::endl;
-			return;
-		}
-	}
-
-	currentPosition = transform->position;
-
-	if (currentPosition != prevPosition)
-	{
-		// Only update OpenAL if source exists
-		if (source != 0)
-		{
-			alSource3f(source, AL_POSITION,
-				currentPosition.x,
-				currentPosition.y,
-				currentPosition.z);
-		}
-
-		prevPosition = currentPosition;
-	}
-}
-
-
 
 void AudioSource::Play()
 {
@@ -90,7 +12,6 @@ void AudioSource::Play()
 	}
 
 	if (source == 0) {
-		std::cout << "HERE" << std::endl;
 		alGenSources(1, &source);
 	}
 
@@ -121,32 +42,3 @@ void AudioSource::Pause()
 		alSourcePause(source);
 	}
 }
-
-void AudioSource::SetLoop(bool _loop)
-{
-	loop = _loop;
-}
-
-void AudioSource::SetClip(std::shared_ptr<AudioClip> _clip)
-{
-	if (_clip == nullptr) {
-		Debug::LogError("The clip is null");
-		return;
-	}
-
-	clip = _clip;
-}
-
-void AudioSource::SetVolume(float _volume)
-{
-	if(_volume > 0)
-		volume = _volume;
-}
-
-void AudioSource::SetPitch(float _pitch)
-{
-	if(_pitch > 0)
-		pitch = _pitch;
-}
-
-

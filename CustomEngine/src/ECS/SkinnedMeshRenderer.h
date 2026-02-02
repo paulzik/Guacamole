@@ -4,18 +4,10 @@
 #include "Assets/Shader.h"
 #include <memory>
 
-class SkinnedMeshRenderer : public Component {
-public:
+struct SkinnedMeshRenderer : public Component {
     std::shared_ptr<Material> material = nullptr;
 
-    SkinnedMeshRenderer();
-    ~SkinnedMeshRenderer();
+    bool wireframe = false;
 
-    void Start() override;
-    void Update() override;
-
-    const char* GetComponentName() const override;
-
-private:
-
+    COMPONENT_NAME(SkinnedMeshRenderer);
 };

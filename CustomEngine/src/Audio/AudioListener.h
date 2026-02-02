@@ -3,8 +3,8 @@
 #include "ECS/Component.h"
 
 
-class AudioListener : public Component {
-public:
-	void Update() override;
-	const char* GetComponentName() const override;
+struct AudioListener : public Component {
+
+
+	COMPONENT_NAME(AudioListener);
 };

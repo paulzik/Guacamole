@@ -15,4 +15,5 @@ private:
     std::vector<SkinnedMeshRenderer*> skinnedRenderers;
 
     void UpdateMeshRenderers(MeshRenderer* meshRenderer);
+    void UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRenderer);
 };

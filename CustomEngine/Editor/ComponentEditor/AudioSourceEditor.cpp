@@ -4,22 +4,22 @@
 
 void AudioSourceEditor::Draw(Component* component) {
     AudioSource* audioSource = static_cast<AudioSource*>(component);
-    ImGui::LabelText("AudioClip", audioSource->GetAudioClip()->GetAudioName().c_str());
+    ImGui::LabelText("AudioClip", audioSource->clip->GetAudioName().c_str());
 
     ImGui::SeparatorText("Controlls");
-    float volume = audioSource->GetVolume();
+    float volume = audioSource->volume;
     if (ImGui::SliderFloat("Volume", &volume, 0.0f, 1.0f)) {
-        audioSource->SetVolume(volume);
+        audioSource->volume = volume;
     }
 
-    float pitch = audioSource->GetPitch();
+    float pitch = audioSource->pitch;
     if (ImGui::SliderFloat("Pitch", &pitch, 0.5f, 4.0f)) {
-        audioSource->SetPitch(pitch);
+        audioSource->pitch = pitch;
     }
 
-    bool loop = audioSource->GetLoop();
+    bool loop = audioSource->loop;
     if (ImGui::Checkbox("Loop", &loop)) {
-        audioSource->SetLoop(loop);
+        audioSource->loop = loop;
     }
 
     ImGui::SeparatorText("Live");
