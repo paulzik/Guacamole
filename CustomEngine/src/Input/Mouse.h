@@ -1,21 +1,21 @@
 #pragma once
-#include "IInputDevice.h"
 #include <glm/vec2.hpp>
+#include "IInputDevice.h"
+#include "ButtonControll.h"
+#include "AxisControll.h"
 
 class Mouse : public IInputDevice {
 public:
 	void Init() override;
 	void Update() override;
 
-	glm::vec2 GetPosition();
-
-private:
-	bool left = false;
-	bool middle = false;
-	bool right = false;
-	int scrollX = 0;
-	int scrollY = 0;
-
+	void ProcessEvent(const SDL_Event& e) override;
+	void UpdateButtonState(const SDL_MouseButtonEvent& btn);
 	glm::vec2 position;
-	glm::vec2 prevPosition;
+
+	ButtonControll leftButton;
+	ButtonControll rightButton;
+	ButtonControll middleButton;
+
+	AxisControll scrollWheel;
 };

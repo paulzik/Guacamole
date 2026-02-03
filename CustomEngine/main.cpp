@@ -170,14 +170,17 @@ int main() {
         while (SDL_PollEvent(&e)) {
             ImGui_ImplSDL3_ProcessEvent(&e);
             if (e.type == SDL_EVENT_QUIT) running = false;
+            //Input::ProcessEvent(e);
         }
 
         Time::Update();
         Input::Update();
 
-        cout << Input::GetPointerPosition().x << "  " << Input::GetPointerPosition().y << endl;
+        //cout << Input::GetPointerPosition().x << "  " << Input::GetPointerPosition().y << endl;
         
-        //Input::GetInputDevice<Mouse>().position.x
+    
+           cout << Input::GetDevice<Mouse>()->scrollWheel.up << endl;
+       
         //Input::GetInputDevice<Mouse>().rightButton.wasPressedAtThisFrame
         //Input::GetInputDevice<Keyboard>().xkey.wasPressednAtThisFrame
         

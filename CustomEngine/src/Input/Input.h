@@ -5,6 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include <typeindex>
+#include <SDL3/SDL_events.h>
 
 class Input {
 public:
@@ -28,11 +29,6 @@ public:
     static void Init();
     static void Update();
 
-    static glm::vec2 GetPointerPosition();
-    static glm::vec2 GetPointerDelta();
-
-    static void SetPointerPosition(glm::vec2 position);
-    static void SetPointerDelta(glm::vec2 delta);
 private:
     static inline std::unordered_map<std::type_index, std::unique_ptr<IInputDevice>> devices;
 
