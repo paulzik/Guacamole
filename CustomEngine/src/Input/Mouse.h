@@ -2,16 +2,20 @@
 #include "IInputDevice.h"
 #include <glm/vec2.hpp>
 
-class MouseInputDevice : public IInputDevice {
+class Mouse : public IInputDevice {
 public:
-
 	void Init() override;
 	void Update() override;
 
 	glm::vec2 GetPosition();
 
 private:
-	glm::vec2 position;
+	bool left = false;
+	bool middle = false;
+	bool right = false;
+	int scrollX = 0;
+	int scrollY = 0;
 
+	glm::vec2 position;
 	glm::vec2 prevPosition;
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "IInputDevice.h"
 
-class KeyboardInputDevice : public IInputDevice {
+class Keyboard : public IInputDevice {
 public:
     void Init() override;
     void Update() override;

@@ -46,9 +46,8 @@
 #include "Audio/AudioSystem.h"
 #include "Animations/AnimationSystem.h"
 #include "Input/Input.h"
-#include "Input/MouseInputDevice.h"
-#include "Input/KeyboardInputDevice.h"
-#include "Input/InputManager.h"
+#include "Input/Mouse.h"
+#include "Input/Keyboard.h"
 
 using namespace glm;
 using namespace std;
@@ -82,8 +81,10 @@ int main() {
     SystemManager::InitAllSystems();
 
     Time::Init();
-    InputManager inputManager;
-    inputManager.Init();
+
+    Input::AddDevice<Mouse>();
+    Input::AddDevice<Keyboard>();
+    Input::Init();
 
     // ---------------- Asset Importers ----------------
     AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
@@ -172,10 +173,14 @@ int main() {
         }
 
         Time::Update();
-        inputManager.Update();
+        Input::Update();
 
-        cout << Input::GetPointerPosition().x << "  " << Input::GetPointerPosition().y << endl;;
-
+        cout << Input::GetPointerPosition().x << "  " << Input::GetPointerPosition().y << endl;
+        
+        //Input::GetInputDevice<Mouse>().position.x
+        //Input::GetInputDevice<Mouse>().rightButton.wasPressedAtThisFrame
+        //Input::GetInputDevice<Keyboard>().xkey.wasPressednAtThisFrame
+        
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
