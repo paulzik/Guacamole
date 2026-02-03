@@ -232,9 +232,9 @@ void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRe
     glUniform1f(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, "metallic"), skinnedMeshRenderer->material->metallic);
 
     Animator& animator = skinnedMeshRenderer->owner->GetComponent<Animator>();
-    if (&animator && animator.GetModel() && animator.GetModel()->skeleton)
+    if (&animator && animator.model && animator.model->skeleton)
     {
-        Skeleton* skeleton = animator.GetModel()->skeleton.get();
+        Skeleton* skeleton = animator.model->skeleton.get();
         const int boneCount = skeleton->GetBoneCount();
 
         for (int i = 0; i < boneCount; ++i)

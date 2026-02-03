@@ -44,6 +44,7 @@
 #include "ECS/CameraSystem.h"
 #include "ECS/RenderSystem.h"
 #include "Audio/AudioSystem.h"
+#include "Animations/AnimationSystem.h"
 
 using namespace glm;
 using namespace std;
@@ -68,8 +69,9 @@ int main() {
     SystemManager::AddSystem<TransformSystem>();
     SystemManager::AddSystem<PhysicsSystem>();
     SystemManager::AddSystem<CameraSystem>();
-    SystemManager::AddSystem<RenderSystem>();
+    SystemManager::AddSystem<AnimationSystem>();
     SystemManager::AddSystem<AudioSystem>();
+    SystemManager::AddSystem<RenderSystem>();
     SystemManager::InitAllSystems();
 
     Time::Init();
@@ -148,7 +150,7 @@ int main() {
     auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
     AudioSource& audioSource = cube1.AddComponent<AudioSource>();
     audioSource.clip = audioClip;
-    audioSource.Play();
+    //audioSource.Play();
 
     Scene::Get().Start();
 
@@ -165,7 +167,7 @@ int main() {
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        SystemManager::UpdateAllSystems();   // ✅ Render happens AFTER clear
+        SystemManager::UpdateAllSystems();
         Scene::Get().Update();
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -181,7 +183,6 @@ int main() {
 
         SDL_GL_SwapWindow(window);
     }
-
 
     SystemManager::ShutdownAllSystems();
 

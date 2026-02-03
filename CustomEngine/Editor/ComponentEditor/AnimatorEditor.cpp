@@ -13,7 +13,7 @@ void AnimatorEditor::Draw(Component* component)
     if (!ImGui::TreeNode(("Animations##" + uniqueID).c_str()))
         return;
 
-    const auto& animations = animator->GetAnimations();
+    const auto& animations = animator->animations;
 
     if (animations.empty())
     {
@@ -23,7 +23,7 @@ void AnimatorEditor::Draw(Component* component)
     }
 
     // ---------- Animation Combo ----------
-    int currentIndex = animator->GetCurrentAnimationIndex();
+    int currentIndex = animator->currentAnimationIndex;
     const char* preview =
         (currentIndex >= 0 && currentIndex < animations.size())
         ? animations[currentIndex]->GetAnimationName().c_str()
@@ -49,22 +49,22 @@ void AnimatorEditor::Draw(Component* component)
     ImGui::SeparatorText("Playback");
 
     // ---------- Time Slider ----------
-    float time = animator->GetCurrentAnimationTime();
-    float duration = animator->GetCurrentAnimationDuration();
+    float time = animator->currentAnimationTime;
+    float duration = animator->currentAnimation->GetDuration();
 
     if (duration > 0.0f)
     {
         if (ImGui::SliderFloat(("Time##" + uniqueID).c_str(), &time, 0.0f, duration))
         {
-            animator->SetCurrentAnimationTime(time);
+            animator->currentAnimationTime = time;
         }
     }
 
     // ---------- Loop Checkbox (outside combo) ----------
-    bool loop = animator->IsLooping();
+    bool loop = animator->loop;
     if (ImGui::Checkbox(("Loop##" + uniqueID).c_str(), &loop))
     {
-        animator->SetLooping(loop);
+        animator->loop = loop;
     }
     ImGui::TreePop();
 

@@ -20,18 +20,16 @@ void PhysicsSystem::TryRegister(Component* c)
     if (!owner)
         return;
 
-    // Physics requires these components
-    //TO DOOO!!!!!!!
-    /*
+    // Physics requires these component
     if (!owner->HasComponent<Transform>() || !owner->HasComponent<Collider>())
     {
         Debug::LogError(
-            "RigidBody added without Transform or Collider on entity: " +
-            owner->GetName()
+            std::string("RigidBody added without Transform or Collider on entity: ")
+            + owner->GetName()
         );
         return;
     }
-    */
+
     RegisterBody(body);
 }
 
