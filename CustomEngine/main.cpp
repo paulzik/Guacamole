@@ -45,6 +45,10 @@
 #include "ECS/RenderSystem.h"
 #include "Audio/AudioSystem.h"
 #include "Animations/AnimationSystem.h"
+#include "Input/Input.h"
+#include "Input/MouseInputDevice.h"
+#include "Input/KeyboardInputDevice.h"
+#include "Input/InputManager.h"
 
 using namespace glm;
 using namespace std;
@@ -78,6 +82,8 @@ int main() {
     SystemManager::InitAllSystems();
 
     Time::Init();
+    InputManager inputManager;
+    inputManager.Init();
 
     // ---------------- Asset Importers ----------------
     AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
@@ -166,6 +172,9 @@ int main() {
         }
 
         Time::Update();
+        inputManager.Update();
+
+        cout << Input::GetPointerPosition().x << "  " << Input::GetPointerPosition().y << endl;;
 
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
