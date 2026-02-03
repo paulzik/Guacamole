@@ -8,14 +8,14 @@
 void DirectionalLightEditor::Draw(Component* component) {
     Light* light = static_cast<Light*>(component);
 
-    float intensity = light->GetIntensity();
+    float intensity = light->intensity;
     if(ImGui::SliderFloat("Intensity", &intensity, 0.0f, 1.0f)) {
-        light->SetIntensity(intensity);
+        light->intensity = intensity;
     }
 
-    glm::vec3 color = light->GetColor();
+    glm::vec3 color = light->color;
     if (ImGui::ColorEdit3("Color", glm::value_ptr(color))) {
-        light->SetColor(color);
+        light->color = color;
     }
 }
 

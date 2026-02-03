@@ -8,19 +8,19 @@
 void PointLightEditor::Draw(Component* component) {
     PointLight* pointLight = dynamic_cast<PointLight*>(component);
 
-    float intensity = pointLight->GetIntensity();
+    float intensity = pointLight->intensity;
     if(ImGui::SliderFloat("Intensity", &intensity, 0.0f, 1.0f)) {
-        pointLight->SetIntensity(intensity);
+        pointLight->intensity = intensity;
     }
 
-    glm::vec3 color = pointLight->GetColor();
+    glm::vec3 color = pointLight->color;
     if (ImGui::ColorEdit3("Color", glm::value_ptr(color))) {
-        pointLight->SetColor(color);
+        pointLight->color = color;
     }
 
-    float radius = pointLight->GetRadius();
+    float radius = pointLight->radius;
     if (ImGui::SliderFloat("Radius", &radius, 0.0f, 100.0f)) {
-        pointLight->SetRadius(radius);
+        pointLight->radius = radius;
     }
 }
 

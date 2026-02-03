@@ -101,19 +101,19 @@ void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
 
         std::string base = "lights[" + std::to_string(i) + "]";
 
-        glUniform1i(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".type").c_str()), light->GetType());
-        glUniform3fv(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
-        glUniform1f(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
+        glUniform1i(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".type").c_str()), light->lightType);
+        glUniform3fv(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->color));
+        glUniform1f(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".intensity").c_str()), light->intensity);
 
-        if (light->GetType() == LightType::POINT)
+        if (light->lightType == LightType::POINT)
         {
             auto* pointLight = static_cast<PointLight*>(light);
             glm::vec3 pos = tr.position;
             glUniform3fv(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(pos));
-            glUniform1f(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".radius").c_str()), pointLight->GetRadius());
+            glUniform1f(glGetUniformLocation(meshRenderer->material->shader->programID, (base + ".radius").c_str()), pointLight->radius);
 
         }
-        else if (light->GetType() == LightType::DIRECTIONAL)
+        else if (light->lightType == LightType::DIRECTIONAL)
         {
             auto* directionalLight = static_cast<DirectionalLight*>(light);
             glm::vec3 dir = GetForward(tr);
@@ -201,19 +201,19 @@ void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRe
 
         std::string base = "lights[" + std::to_string(i) + "]";
 
-        glUniform1i(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".type").c_str()), light->GetType());
-        glUniform3fv(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->GetColor()));
-        glUniform1f(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".intensity").c_str()), light->GetIntensity());
+        glUniform1i(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".type").c_str()), light->lightType);
+        glUniform3fv(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".color").c_str()), 1, glm::value_ptr(light->color));
+        glUniform1f(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".intensity").c_str()), light->intensity);
 
-        if (light->GetType() == LightType::POINT)
+        if (light->lightType == LightType::POINT)
         {
             auto* pointLight = static_cast<PointLight*>(light);
             glm::vec3 pos = tr.position;
             glUniform3fv(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".position").c_str()), 1, glm::value_ptr(pos));
-            glUniform1f(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".radius").c_str()), pointLight->GetRadius());
+            glUniform1f(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, (base + ".radius").c_str()), pointLight->radius);
 
         }
-        else if (light->GetType() == LightType::DIRECTIONAL)
+        else if (light->lightType == LightType::DIRECTIONAL)
         {
             auto* directionalLight = static_cast<DirectionalLight*>(light);
             glm::vec3 dir = GetForward(tr);

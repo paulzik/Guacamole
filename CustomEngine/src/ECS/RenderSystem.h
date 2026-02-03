@@ -5,6 +5,7 @@
 
 
 class RenderSystem : public System {
+public:
     void TryRegister(Component* c) override;
     bool Init() override;
     void Update() override;

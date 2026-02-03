@@ -66,12 +66,15 @@ int main() {
     glFrontFace(GL_CCW);
 
     //Systems
+    //SystemManager::AddSystem<InputSystem>();
     SystemManager::AddSystem<TransformSystem>();
+    SystemManager::AddSystem<AnimationSystem>();
     SystemManager::AddSystem<PhysicsSystem>();
     SystemManager::AddSystem<CameraSystem>();
-    SystemManager::AddSystem<AnimationSystem>();
+    //SystemManager::AddSystem<ScriptingSystem>();
     SystemManager::AddSystem<AudioSystem>();
     SystemManager::AddSystem<RenderSystem>();
+    //SystemManager::AddSystem<UISystem>();
     SystemManager::InitAllSystems();
 
     Time::Init();

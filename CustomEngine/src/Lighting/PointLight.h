@@ -5,19 +5,13 @@
 #include "ECS/Component.h"
 #include <glm/ext/matrix_transform.hpp>
 
-class PointLight : public Light {
-private:
+struct PointLight : public Light {
     float radius = 5.0f;
 
-public:
-    PointLight(glm::vec3 _color, float _intencity, float _radius = 20.0f);
-    ~PointLight();
+    PointLight(glm::vec3 _color, float _intencity, float _radius = 20.0f)
+        : Light(POINT, _color, _intencity), radius(_radius)
+    {
+    }
 
-    void SetRadius(float r);
-    float GetRadius();
-
-    const char* GetComponentName() const override;
-
-    LightType GetType() const override;
-
+    COMPONENT_NAME(PointLight);
 };

@@ -1,22 +1,14 @@
 #pragma once
-#include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include "Light.h"
-#include <glm/ext/matrix_transform.hpp>
 
-class DirectionalLight : public Light {
-private:
+struct DirectionalLight : public Light {
     glm::vec3 direction;
 
-public:
-
-    DirectionalLight(glm::vec3 _color, float _intencity);
-    ~DirectionalLight();
-
-    glm::vec3 GetDirection();
-    void SetDirection(glm::vec3 d);
-
-    virtual LightType GetType() const;
-
-    const char* GetComponentName() const override;
+    DirectionalLight(const glm::vec3& _color = glm::vec3(1.0f),
+        float _intensity = 1.0f,
+        const glm::vec3& _direction = glm::vec3(0.0f, -1.0f, 0.0f))
+        : Light(DIRECTIONAL, _color, _intensity), direction(_direction) {
+    }
+    COMPONENT_NAME(DirectionalLight);
 };
