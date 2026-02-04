@@ -28,10 +28,10 @@ public:
 
     static void Init();
     static void Update();
+    static bool SDL3_ProcessEvent(const SDL_Event* event);
 
 private:
     static inline std::unordered_map<std::type_index, std::unique_ptr<IInputDevice>> devices;
-
     static inline glm::vec2 pointerPosition;
     static inline glm::vec2 pointerDelta;
 };

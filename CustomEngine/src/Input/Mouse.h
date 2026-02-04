@@ -9,8 +9,7 @@ public:
 	void Init() override;
 	void Update() override;
 
-	void ProcessEvent(const SDL_Event& e) override;
-	void UpdateButtonState(const SDL_MouseButtonEvent& btn);
+	void ProcessEvent(const SDL_Event* e) override;
 	glm::vec2 position;
 
 	ButtonControll leftButton;

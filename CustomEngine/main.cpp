@@ -167,22 +167,15 @@ int main() {
     bool running = true;
     while (running) {
         SDL_Event e;
+        Input::Update();
+
         while (SDL_PollEvent(&e)) {
             ImGui_ImplSDL3_ProcessEvent(&e);
             if (e.type == SDL_EVENT_QUIT) running = false;
-            //Input::ProcessEvent(e);
+            Input::SDL3_ProcessEvent(&e);
         }
 
         Time::Update();
-        Input::Update();
-
-        //cout << Input::GetPointerPosition().x << "  " << Input::GetPointerPosition().y << endl;
-        
-    
-           cout << Input::GetDevice<Mouse>()->scrollWheel.up << endl;
-       
-        //Input::GetInputDevice<Mouse>().rightButton.wasPressedAtThisFrame
-        //Input::GetInputDevice<Keyboard>().xkey.wasPressednAtThisFrame
         
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

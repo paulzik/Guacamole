@@ -8,6 +8,6 @@ void Keyboard::Update()
 {
 }
 
-void Keyboard::ProcessEvent(const SDL_Event& e)
+void Keyboard::ProcessEvent(const SDL_Event* e)
 {
 }

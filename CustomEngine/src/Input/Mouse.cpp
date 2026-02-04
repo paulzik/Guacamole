@@ -13,50 +13,49 @@ void Mouse::Init()
 
 void Mouse::Update()
 {
-    // Poll SDL events
-    scrollWheel.prevValue = scrollWheel.value;  // save previous frame
-    scrollWheel.value = glm::vec2(0.0f);   // reset for this frame
+    auto updateButton = [](ButtonControll& b) 
+        {
+            b.wasPressedThisFrame = (!b.prevIsDown && b.isDown);
+            b.wasReleasedThisFrame = (b.prevIsDown && !b.isDown);
 
-    // compute delta
-    scrollWheel.delta = scrollWheel.value - scrollWheel.prevValue;
+            b.prevIsDown = b.isDown;
+        };
 
-    // compute digital directions
-    scrollWheel.up = scrollWheel.value.y > 0;
-    scrollWheel.down = scrollWheel.value.y < 0;
-    scrollWheel.left = scrollWheel.value.x < 0;
-    scrollWheel.right = scrollWheel.value.x > 0;
-
-    // per-frame movement flag
-    scrollWheel.wasMovedThisFrame = scrollWheel.delta != glm::vec2(0.0f);
-
-    // save previous states
-    leftButton.prevIsPressed = leftButton.isPressed;
-    rightButton.prevIsPressed = rightButton.isPressed;
-    middleButton.prevIsPressed = middleButton.isPressed;
-
-    // Get current mouse state
-    Uint32 buttons = SDL_GetMouseState(&position.x, &position.y);
-    leftButton.isPressed = buttons & SDL_BUTTON_MASK(SDL_BUTTON_LEFT);
-    middleButton.isPressed = buttons & SDL_BUTTON_MASK(SDL_BUTTON_MIDDLE);
-    rightButton.isPressed = buttons & SDL_BUTTON_MASK(SDL_BUTTON_RIGHT);
-
-    leftButton.wasPressedThisFrame = leftButton.isPressed && !leftButton.prevIsPressed;
-    leftButton.wasReleasedThisFrame = !leftButton.isPressed && leftButton.prevIsPressed;
-
-    middleButton.wasPressedThisFrame = middleButton.isPressed && !middleButton.prevIsPressed;
-    middleButton.wasReleasedThisFrame = !middleButton.isPressed && middleButton.prevIsPressed;
-
-    rightButton.wasPressedThisFrame = rightButton.isPressed && !rightButton.prevIsPressed;
-    rightButton.wasReleasedThisFrame = !rightButton.isPressed && rightButton.prevIsPressed;
-
-    leftButton.isReleased = !leftButton.isPressed;
-    middleButton.isReleased = !middleButton.isPressed;
-    rightButton.isReleased = !rightButton.isPressed;
+    updateButton(leftButton);
+    updateButton(rightButton);
+    updateButton(middleButton);
 }
 
-void Mouse::ProcessEvent(const SDL_Event& e) {
-    if (e.type == SDL_EVENT_MOUSE_WHEEL) {
-        scrollWheel.value.x = static_cast<float>(e.wheel.x);
-        scrollWheel.value.y = static_cast<float>(e.wheel.y);
+void Mouse::ProcessEvent(const SDL_Event* e) {
+    if (e->type == SDL_EVENT_MOUSE_WHEEL) {
+        //std::cout << "MOUSE WHEEL" << std::endl;
+        scrollWheel.value.x = static_cast<float>(e->wheel.x);
+        scrollWheel.value.y = static_cast<float>(e->wheel.y);
+
+        scrollWheel.up = scrollWheel.value.y > 0;
+        scrollWheel.down = scrollWheel.value.y < 0;
+        scrollWheel.left = scrollWheel.value.x < 0;
+        scrollWheel.right = scrollWheel.value.x > 0;
+
+    }
+    else if (e->type == SDL_EVENT_MOUSE_MOTION) {
+        position.x = e->motion.x;
+        position.y = e->motion.y;
+    }
+    else if (e->type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        const SDL_MouseButtonEvent& btn = e->button;
+
+        if (btn.button == SDL_BUTTON_LEFT)   leftButton.isDown = true;
+        if (btn.button == SDL_BUTTON_RIGHT)  rightButton.isDown = true;
+        if (btn.button == SDL_BUTTON_MIDDLE) middleButton.isDown = true;
+    }
+    else if (e->type == SDL_EVENT_MOUSE_BUTTON_UP)
+    {
+        const SDL_MouseButtonEvent& btn = e->button;
+
+        if (btn.button == SDL_BUTTON_LEFT)   leftButton.isDown = false;
+        if (btn.button == SDL_BUTTON_RIGHT)  rightButton.isDown = false;
+        if (btn.button == SDL_BUTTON_MIDDLE) middleButton.isDown = false;
     }
 }

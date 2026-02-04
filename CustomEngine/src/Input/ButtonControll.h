@@ -2,11 +2,9 @@
 
 class ButtonControll{
 public:
-	bool isPressed = false;
-	bool isReleased = false;
+    bool isDown = false;        // current state
+    bool prevIsDown = false;    // previous frame
 
-	bool wasPressedThisFrame = false;
-	bool wasReleasedThisFrame = false;
-
-	bool prevIsPressed = false;
+    bool wasPressedThisFrame = false;
+    bool wasReleasedThisFrame = false;
 };
