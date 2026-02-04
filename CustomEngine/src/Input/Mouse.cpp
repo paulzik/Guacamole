@@ -1,10 +1,9 @@
-#include "Mouse.h"
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_mouse.h>
-#include "Input.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_oldnames.h>
-#include <iostream>
+#include "Mouse.h"
+#include "Input.h"
 
 void Mouse::Init()
 {

@@ -167,14 +167,13 @@ int main() {
     bool running = true;
     while (running) {
         SDL_Event e;
-        Input::Update();
 
         while (SDL_PollEvent(&e)) {
             ImGui_ImplSDL3_ProcessEvent(&e);
             if (e.type == SDL_EVENT_QUIT) running = false;
             Input::SDL3_ProcessEvent(&e);
         }
-
+        Input::Update();
         Time::Update();
         
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
