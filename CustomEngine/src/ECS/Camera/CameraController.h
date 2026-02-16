@@ -11,6 +11,7 @@ public:
 
     void Start() override;
     void Update() override;
+    void Destroy() override;
 
 private:
     float pitch = 0.0f;

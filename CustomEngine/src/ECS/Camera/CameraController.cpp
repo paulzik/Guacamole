@@ -64,3 +64,10 @@ void CameraController::Update()
     */
 }
 
+void CameraController::Destroy()
+{
+    delete mouse;
+    delete keyboard;
+    delete transformComp;
+}
+
