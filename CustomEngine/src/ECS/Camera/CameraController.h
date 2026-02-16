@@ -1,5 +1,4 @@
 #pragma once
-#include "ECS/Camera/Camera.h"
 #include "Input/Mouse.h"
 #include "Input/Keyboard.h"
 #include <ECS/Transform.h>
@@ -8,6 +7,7 @@ class CameraController : public Component
 {
 public:
     float sensitivity = 0.1f;
+    float moveSpeed = 2.0f;
 
     void Start() override;
     void Update() override;

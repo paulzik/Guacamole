@@ -8,7 +8,7 @@ void Keyboard::Init()
     sdlMapping[SDLK_C] = Key::C;
     sdlMapping[SDLK_D] = Key::D;
     sdlMapping[SDLK_E] = Key::E;
-    sdlMapping[SDLK_D] = Key::F;
+    sdlMapping[SDLK_F] = Key::F;
     sdlMapping[SDLK_G] = Key::G;
     sdlMapping[SDLK_H] = Key::H;
     sdlMapping[SDLK_I] = Key::I;
