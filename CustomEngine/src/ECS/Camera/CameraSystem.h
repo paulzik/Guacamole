@@ -1,6 +1,6 @@
 #pragma once
 #include "Systems/System.h"
-#include "ECS/Camera.h"
+#include "ECS/Camera/Camera.h"
 #include <vector>
 
 class CameraSystem : public System {

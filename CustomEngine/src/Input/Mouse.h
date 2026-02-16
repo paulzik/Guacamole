@@ -10,7 +10,10 @@ public:
 	void Update() override;
 
 	void ProcessEvent(const SDL_Event* e) override;
+
 	glm::vec2 position;
+	glm::vec2 prevPosition;
+	glm::vec2 mouseDelta;
 
 	ButtonControll leftButton;
 	ButtonControll rightButton;

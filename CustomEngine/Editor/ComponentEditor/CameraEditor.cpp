@@ -1,6 +1,6 @@
 #include "CameraEditor.h"
 #include "EditorMacro.h"
-#include "ECS/Camera.h"
+#include "ECS/Camera/Camera.h"
 #include <glm/gtc/type_ptr.hpp>
 
 void CameraEditor::Draw(Component* component) {

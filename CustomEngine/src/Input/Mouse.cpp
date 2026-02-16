@@ -12,6 +12,9 @@ void Mouse::Init()
 
 void Mouse::Update()
 {
+    mouseDelta = position - prevPosition;
+    prevPosition = position;
+
     auto updateButton = [](ButtonControll& b) 
         {
             b.wasPressedThisFrame = (!b.prevIsDown && b.isDown);

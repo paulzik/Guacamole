@@ -1,6 +1,6 @@
 #include "CameraSystem.h"
-#include "Scene.h"
-#include "Transform.h"
+#include "ECS/Scene.h"
+#include "ECS/Transform.h"
 
 void CameraSystem::TryRegister(Component* c)
 {

@@ -16,7 +16,8 @@
 #include "ECS/MeshRenderer.h"
 #include "ECS/SkinnedMeshRenderer.h"
 #include "ECS/Transform.h"
-#include "ECS/Camera.h"
+#include "ECS/Camera/Camera.h"
+#include "ECS/Camera/CameraController.h"
 #include "ScenegraphEditor/ScenegraphEditor.h"
 #include <InspectorWindow/InspectorWindow.h>
 #include "Importers/Resources.h"
@@ -41,7 +42,7 @@
 #include "Time/Time.h"
 #include "Systems/SystemManager.h"
 #include "ECS/TransformSystem.h"
-#include "ECS/CameraSystem.h"
+#include "ECS/Camera/CameraSystem.h"
 #include "ECS/RenderSystem.h"
 #include "Audio/AudioSystem.h"
 #include "Animations/AnimationSystem.h"
@@ -105,6 +106,7 @@ int main() {
     Camera& cameraComp = camera.AddComponent<Camera>();
     Scene::Get().AddCamera(&cameraComp);
     camera.AddComponent<AudioListener>();
+    camera.AddComponent<CameraController>();
 
     // ---------------- Scene primitives ----------------
     Entity cube1("Cube1", vec3(-1.2f, 0, 0));

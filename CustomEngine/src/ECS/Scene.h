@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "Entity.h"
-#include "ECS/Camera.h"
+#include "ECS/Camera/Camera.h"
 #include "Lighting/Light.h"
 #include "Scenegraph/Scenegraph.h"
 
