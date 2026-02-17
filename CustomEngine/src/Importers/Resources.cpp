@@ -20,7 +20,7 @@ std::shared_ptr<Asset> Resources::Load(const std::string& path)
 
     if (!importer)
     {
-        std::cout << "No importer found for extension: " << extension << std::endl;
+        std::cout << "No importer found for extension: " << extension << " for path: " << path << std::endl;
         return nullptr;
     }
 

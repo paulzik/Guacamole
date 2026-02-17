@@ -11,5 +11,5 @@ public:
 private:
     unsigned int vao;
     unsigned int vbo;
-    Shader* gizmoShader;
+    std::shared_ptr<Shader> gizmoShader;
 };

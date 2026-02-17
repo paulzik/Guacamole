@@ -44,6 +44,8 @@
 #include "ECS/TransformSystem.h"
 #include "ECS/Camera/CameraSystem.h"
 #include "ECS/RenderSystem.h"
+#include "Gizmos/GizmoRendererSystem.h"
+#include "Gizmos/Gizmos.h"
 #include "Audio/AudioSystem.h"
 #include "Animations/AnimationSystem.h"
 #include "Input/Input.h"
@@ -69,6 +71,14 @@ int main() {
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
 
+    // ---------------- Asset Importers ----------------
+    AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
+    AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
+    AssetImporterRegistry::RegisterImporter(".vert", new ShaderImporter());
+    AssetImporterRegistry::RegisterImporter(".frag", new ShaderImporter());
+    AssetImporterRegistry::RegisterImporter(".png", new Texture2DImporter());
+    AssetImporterRegistry::RegisterImporter(".mp3", new AudioClipImporter());
+
     //Systems
     //SystemManager::AddSystem<InputSystem>();
     SystemManager::AddSystem<TransformSystem>();
@@ -78,6 +88,7 @@ int main() {
     //SystemManager::AddSystem<ScriptingSystem>();
     SystemManager::AddSystem<AudioSystem>();
     SystemManager::AddSystem<RenderSystem>();
+    SystemManager::AddSystem<GizmoRendererSystem>();
     //SystemManager::AddSystem<UISystem>();
     SystemManager::InitAllSystems();
 
@@ -87,13 +98,7 @@ int main() {
     Input::AddDevice<Keyboard>();
     Input::Init();
 
-    // ---------------- Asset Importers ----------------
-    AssetImporterRegistry::RegisterImporter(".fbx", new ModelImporter());
-    AssetImporterRegistry::RegisterImporter(".obj", new ModelImporter());
-    AssetImporterRegistry::RegisterImporter(".vert", new ShaderImporter());
-    AssetImporterRegistry::RegisterImporter(".frag", new ShaderImporter());
-    AssetImporterRegistry::RegisterImporter(".png", new Texture2DImporter());
-    AssetImporterRegistry::RegisterImporter(".mp3", new AudioClipImporter());
+
 
     //Shaders
     auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
@@ -177,6 +182,8 @@ int main() {
         }
         Input::Update();
         Time::Update();
+
+        Gizmos::DrawLine(vec3(0, 0, 0), vec3(50, 50, 50), vec3(1, 0, 0));
         
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

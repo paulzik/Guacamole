@@ -26,5 +26,5 @@ public:
     static void Clear();
 
 private:
-    static std::vector<GizmoLine> lines;
+    static inline std::vector<GizmoLine> lines;
 };
