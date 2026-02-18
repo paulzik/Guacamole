@@ -1,4 +1,5 @@
-﻿#include "Systems/System.h"
+﻿#pragma once
+#include "Systems/System.h"
 #include <Assets/Shader.h>
 
 class GizmoRendererSystem : public System

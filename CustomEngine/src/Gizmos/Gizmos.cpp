@@ -1,20 +1,64 @@
 ﻿#include "Gizmos.h"
 #include <glm/geometric.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/trigonometric.hpp>
 
 void Gizmos::DrawLine(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color) {
 	lines.push_back(GizmoLine(start, end, color));
 }
 
-void Gizmos::DrawArrow(const glm::vec3& start, const glm::vec3& direction, float length, const glm::vec3& color) {
-	
+void Gizmos::DrawAxes(const glm::vec3& start)
+{
+    //Y axis
+    lines.push_back(GizmoLine(glm::vec3(start.x , start.y, start.z), glm::vec3(start.x , start.y + 0.5f , start.z), glm::vec3(0.467, 0.855, 0.278)));
+    DrawSphere(glm::vec3(start.x, start.y + 0.5f, start.z), 0.02f, glm::vec3(0.467, 0.855, 0.278));
+    //X axis
+    lines.push_back(GizmoLine(glm::vec3(start.x , start.y, start.z), glm::vec3(start.x + 0.5f, start.y , start.z), glm::vec3(0.733, 0.263, 0.239)));
+    DrawSphere(glm::vec3(start.x + 0.5f, start.y, start.z), 0.02f, glm::vec3(0.733, 0.263, 0.239));
+    //Z axis
+    lines.push_back(GizmoLine(glm::vec3(start.x , start.y, start.z), glm::vec3(start.x , start.y , start.z + 0.5f), glm::vec3(0.271, 0.365, 0.882)));
+    DrawSphere(glm::vec3(start.x, start.y, start.z + 0.5f), 0.02f, glm::vec3(0.271, 0.365, 0.882));
 }
 
-void Gizmos::DrawCircle(
-    const glm::vec3& center,
-    const glm::vec3& normal,
-    float radius,
-    const glm::vec3& color)
+void Gizmos::DrawArrow(const glm::vec3& start, const glm::vec3& end, const glm::vec3& color)
+{
+    DrawLine(start, end, color);
+    glm::vec3 dir = glm::normalize(end - start);
+    DrawCone(end, dir, 0.1f, 0.03f, color, 12);
+}
+
+void Gizmos::DrawCone(const glm::vec3& tip, const glm::vec3& direction, float height, float radius, const glm::vec3& color, int segments)
+{
+    glm::vec3 dir = glm::normalize(direction);
+
+    // Choose arbitrary vector not parallel to dir
+    glm::vec3 up = glm::vec3(0, 1, 0);
+    if (glm::abs(glm::dot(dir, up)) > 0.99f)
+        up = glm::vec3(1, 0, 0);
+
+    glm::vec3 right = glm::normalize(glm::cross(up, dir));
+    glm::vec3 forward = glm::normalize(glm::cross(dir, right));
+
+    glm::vec3 baseCenter = tip - dir * height;
+
+    // Draw circle base
+    std::vector<glm::vec3> basePoints;
+    for (int i = 0; i < segments; ++i)
+    {
+        float theta = (float)i / segments * glm::two_pi<float>();
+        glm::vec3 point = baseCenter + (glm::cos(theta) * right + glm::sin(theta) * forward) * radius;
+        basePoints.push_back(point);
+    }
+
+    // Connect circle edges
+    for (int i = 0; i < segments; ++i)
+    {
+        DrawLine(basePoints[i], basePoints[(i + 1) % segments], color);
+        DrawLine(basePoints[i], tip, color);
+    }
+}
+
+void Gizmos::DrawCircle(const glm::vec3& center, const glm::vec3& normal, float radius, const glm::vec3& color)
 {
     const int segments = 32;
 
@@ -48,10 +92,7 @@ void Gizmos::DrawCircle(
     }
 }
 
-void Gizmos::DrawSphere(
-    const glm::vec3& center,
-    float radius,
-    const glm::vec3& color)
+void Gizmos::DrawSphere(const glm::vec3& center, float radius, const glm::vec3& color)
 {
     // XY plane
     DrawCircle(center, glm::vec3(0, 0, 1), radius, color);
@@ -83,11 +124,7 @@ void Gizmos::DrawBox(const glm::vec3& center, const glm::vec3& size, const glm::
 	lines.push_back(GizmoLine(glm::vec3(center.x + size.x / 2, center.y - size.y / 2, center.z + size.z / 2), glm::vec3(center.x + size.x / 2, center.y + size.y / 2, center.z + size.z / 2), color));
 }
 
-void Gizmos::DrawHemisphere(
-    const glm::vec3& center,
-    const glm::vec3& up,
-    float radius,
-    const glm::vec3& color)
+void Gizmos::DrawHemisphere(const glm::vec3& center, const glm::vec3& up, float radius, const glm::vec3& color)
 {
     const int segments = 32;
 
@@ -128,11 +165,7 @@ void Gizmos::DrawHemisphere(
 }
 
 
-void Gizmos::DrawCapsule(
-    const glm::vec3& center,
-    float height,
-    float radius,
-    const glm::vec3& color)
+void Gizmos::DrawCapsule(const glm::vec3& center, float height, float radius, const glm::vec3& color)
 {
     glm::vec3 up = glm::vec3(0, 1, 0);
 
