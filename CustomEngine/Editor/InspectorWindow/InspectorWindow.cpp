@@ -2,7 +2,7 @@
 #include "ECS/Entity.h"
 #include "EditorRegistry.h"
 #include "imgui.h"
-#include "SelectedEntity.h"
+#include <ECS/Scene.h>
 
 InspectorWindow::InspectorWindow()
     : EditorWindow("Inspector")
@@ -12,7 +12,7 @@ InspectorWindow::InspectorWindow()
 void InspectorWindow::Draw() {
     ImGui::Begin(windowName);
 
-    Entity* entity = SelectedEntity::Get();
+    Entity* entity = Scene::Get().selectedEntity;
     if (!entity) {
         ImGui::Text("No entity selected.");
         ImGui::End();

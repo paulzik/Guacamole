@@ -35,4 +35,5 @@ public:
 	void Start();
 
 	Scenegraph& GetScenegraph();
+	Entity* selectedEntity;
 };

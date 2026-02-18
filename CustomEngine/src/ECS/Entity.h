@@ -86,6 +86,16 @@ public:
         return false;
     }
 
+    bool HasComponent(std::type_index type)
+    {
+        for (auto& c : components)
+        {
+            if (std::type_index(typeid(*c)) == type)
+                return true;
+        }
+        return false;
+    }
+
     template<typename T>
     std::vector<T*> GetComponents() {
         static_assert(std::is_base_of_v<Component, T>, "T must derive from Component");

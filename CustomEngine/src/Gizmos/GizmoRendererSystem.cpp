@@ -5,7 +5,8 @@
 #include "Assets/Shader.h"
 #include "Gizmos.h"
 #include "ECS/Scene.h"
-
+#include "GizmoDrawerRegistry.h"
+#include "../Editor/SelectedEntity.h"
 
 bool GizmoRendererSystem::Init()
 {
@@ -45,8 +46,22 @@ bool GizmoRendererSystem::Init()
 
 void GizmoRendererSystem::Update()
 {
-    const auto& lines = Gizmos::GetLines();
+    Gizmos::Clear();
 
+    Entity* selectedEntity = Scene::Get().selectedEntity;
+    if (!selectedEntity)
+        return;
+
+    auto& registry = GizmoDrawerRegistry::GetRegistry();
+    for (auto& [type, drawer] : registry)
+    {
+        if (selectedEntity->HasComponent(type))
+        {
+            drawer->DrawGizmos(selectedEntity);
+        }
+    }
+
+    const auto& lines = Gizmos::GetLines();
 
     if (lines.empty())
         return;

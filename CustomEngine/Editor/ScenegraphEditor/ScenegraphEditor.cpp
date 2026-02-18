@@ -1,7 +1,7 @@
 #include "ScenegraphEditor.h"
 #include <iostream>
 #include <imgui.h>
-#include "SelectedEntity.h"
+#include "ECS/Scene.h"
 
 ScenegraphEditor::ScenegraphEditor(Scenegraph* _scenegraph)
 	:EditorWindow("Scenegraph"), scenegraph(_scenegraph)
@@ -28,7 +28,7 @@ void ScenegraphEditor::Draw()
 
             if (ImGui::IsItemClicked())
             {
-                SelectedEntity::Set(entity);
+                Scene::Get().selectedEntity = entity;
             }
 
             if (node_open)
