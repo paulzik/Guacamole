@@ -6,7 +6,6 @@
 #include "Gizmos.h"
 #include "ECS/Scene.h"
 #include "GizmoDrawerRegistry.h"
-#include "../Editor/SelectedEntity.h"
 
 bool GizmoRendererSystem::Init()
 {

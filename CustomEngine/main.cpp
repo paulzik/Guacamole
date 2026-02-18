@@ -182,8 +182,6 @@ int main() {
         }
         Input::Update();
         Time::Update();
-
-        //Gizmos::DrawArrow(glm::vec3(0, 1, 0), glm::vec3(0, 2, 0), glm::vec3(1, 0, 0));
         
         glClearColor(0.1f, 0.15f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

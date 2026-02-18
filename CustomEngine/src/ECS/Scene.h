@@ -5,6 +5,11 @@
 #include "Lighting/Light.h"
 #include "Scenegraph/Scenegraph.h"
 
+enum AxisSystem
+{
+	Local, Global
+};
+
 class Scene {
 private:
 	Scenegraph scenegraph;
@@ -36,4 +41,5 @@ public:
 
 	Scenegraph& GetScenegraph();
 	Entity* selectedEntity;
+	AxisSystem axisSystem = Local;
 };

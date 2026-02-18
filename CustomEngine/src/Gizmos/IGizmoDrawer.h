@@ -3,6 +3,6 @@
 
 class IGizmoDrawer {
 public:
-    virtual ~IGizmoDrawer() = default; // virtual destructor
-    virtual void DrawGizmos(Entity* entity) = 0; // public pure virtual
+    virtual ~IGizmoDrawer() = default;
+    virtual void DrawGizmos(Entity* entity) = 0;
 };
