@@ -87,8 +87,8 @@ int main() {
     SystemManager::AddSystem<CameraSystem>();
     //SystemManager::AddSystem<ScriptingSystem>();
     SystemManager::AddSystem<AudioSystem>();
-    SystemManager::AddSystem<RenderSystem>();
     SystemManager::AddSystem<GizmoRendererSystem>();
+    SystemManager::AddSystem<RenderSystem>();
     //SystemManager::AddSystem<UISystem>();
     SystemManager::InitAllSystems();
 

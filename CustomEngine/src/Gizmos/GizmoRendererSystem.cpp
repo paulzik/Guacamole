@@ -92,6 +92,10 @@ void GizmoRendererSystem::Update()
         vertices.data(),
         GL_DYNAMIC_DRAW);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDepthMask(GL_FALSE);
+
     glUseProgram(gizmoShader->programID);
 
     // Set matrices
@@ -112,6 +116,9 @@ void GizmoRendererSystem::Update()
 
     glBindVertexArray(0);
 
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
+    glEnable(GL_DEPTH_TEST);
     Gizmos::Clear();
 }
 
