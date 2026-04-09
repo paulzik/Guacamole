@@ -66,8 +66,6 @@ void CameraController::Update()
 
 void CameraController::Destroy()
 {
-    delete mouse;
-    delete keyboard;
-    delete transformComp;
+    // mouse, keyboard, and transformComp are not owned by this component — do not delete them
 }
 
