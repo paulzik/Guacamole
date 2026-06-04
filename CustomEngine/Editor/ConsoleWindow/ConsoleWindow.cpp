@@ -2,6 +2,7 @@
 #include "EditorWindow.h"
 #include "ECS/Entity.h"
 #include "EditorRegistry.h"
+#include "EditorMacro.h"
 #include "imgui.h"
 #include "Utilities/Debug/Debug.h"
 
@@ -33,3 +34,5 @@ void ConsoleWindow::Draw() {
     }
     ImGui::End();
 }
+
+REGISTER_EDITOR_WINDOW(ConsoleWindow)

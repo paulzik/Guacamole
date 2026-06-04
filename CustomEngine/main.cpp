@@ -33,6 +33,7 @@
 #include "Animations/Animation.h"
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
+#include "Editor/MenuBar/MenuBar.h"
 #include "Audio/AudioSource.h"
 #include "Audio/AudioListener.h"
 #include "Physics/BoxCollider.h"
@@ -143,6 +144,12 @@ int main() {
     ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
     InspectorWindow inspectorWindow;
     ConsoleWindow consoleWindow;
+    std::vector<std::unique_ptr<EditorWindow>> editorWindows;
+    editorWindows.push_back(std::make_unique<ScenegraphEditor>(&Scene::Get().GetScenegraph()));
+    editorWindows.push_back(std::make_unique<InspectorWindow>());
+    editorWindows.push_back(std::make_unique<ConsoleWindow>());
+
+    MenuBar menuBar(&editorWindows);
 
     // ---------------- Load model ----------------
     auto modelAsset = Resources::Load("Assets/Models/Miner.fbx");
@@ -193,6 +200,7 @@ int main() {
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
 
+        menuBar.Draw();
         sceneEditor.Draw();
         inspectorWindow.Draw();
         consoleWindow.Draw();

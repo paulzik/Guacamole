@@ -8,3 +8,8 @@ EditorWindow::EditorWindow(const char* name)
 EditorWindow::~EditorWindow()
 {
 }
+
+const char* EditorWindow::GetName()
+{
+    return windowName;
+}
