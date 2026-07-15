@@ -40,6 +40,6 @@ public:
 	void Start();
 
 	Scenegraph& GetScenegraph();
-	Entity* selectedEntity;
+	Entity* selectedEntity = nullptr;
 	AxisSystem axisSystem = Local;
 };

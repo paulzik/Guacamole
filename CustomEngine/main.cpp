@@ -46,6 +46,7 @@
 #include "ECS/Camera/CameraSystem.h"
 #include "ECS/RenderSystem.h"
 #include "Gizmos/GizmoRendererSystem.h"
+#include "Selection/SelectionSystem.h"
 #include "Gizmos/Gizmos.h"
 #include "Audio/AudioSystem.h"
 #include "Animations/AnimationSystem.h"
@@ -86,6 +87,7 @@ int main() {
     SystemManager::AddSystem<AnimationSystem>();
     SystemManager::AddSystem<PhysicsSystem>();
     SystemManager::AddSystem<CameraSystem>();
+    SystemManager::AddSystem<SelectionSystem>();
     //SystemManager::AddSystem<ScriptingSystem>();
     SystemManager::AddSystem<AudioSystem>();
     SystemManager::AddSystem<GizmoRendererSystem>();
