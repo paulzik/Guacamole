@@ -1,39 +1,61 @@
-# Build directory
-CustomEngine/build/
-cmake-build-*/
+# Build output directories
+build/
 out/
+cmake-build-*/
+/x64/
+/Debug/
+/Release/
+CustomEngine/x64/
+CustomEngine/Debug/
+CustomEngine/Release/
 
 # CMake generated files
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+CTestTestfile.cmake
+CMakeUserPresets.json
+_deps/
 Makefile
 
-# Visual Studio / Visual Studio Code
+# Visual Studio
+.vs/
 *.sln
 *.vcxproj
 *.vcxproj.filters
+*.vcxproj.user
 *.user
-*.opensdf
-*.sdf
-*.pdb
-*.obj
-*.tlog
-*.ipch
-*.db
-*.opendb
-.vs/
-*.VC.db
-*.VC.VC.opendb
 *.suo
 *.userosscache
 *.sln.docstates
+*.VC.db
+*.VC.opendb
+*.opendb
+*.sdf
+*.opensdf
+*.ipch
+*.tlog
+*.aps
 
-# Executables
+# Compiled / binary artifacts
 *.exe
 *.dll
 *.so
 *.dylib
+*.obj
+*.o
+*.pdb
+*.idb
+*.ilk
+*.exp
+*.ncb
 
-# Logs
+# Vendored third-party runtime DLLs must stay in the repo
+!CustomEngine/ThirdParty/**/*.dll
+
+# Logs and runtime junk
 *.log
+imgui.ini
+
+# Local tool configuration
+.claude/settings.local.json
