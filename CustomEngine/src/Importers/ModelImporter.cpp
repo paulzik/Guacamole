@@ -16,7 +16,8 @@ std::shared_ptr<Asset> ModelImporter::Load(const std::string& path)
         aiProcess_GenNormals |
         aiProcess_CalcTangentSpace |
         aiProcess_FlipUVs |
-        aiProcess_JoinIdenticalVertices
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_LimitBoneWeights
     );
 
     if (!scene || !scene->HasMeshes())

@@ -26,6 +26,16 @@ void  Animation::AddScaleKey(int boneIndex, float time, const glm::vec3& scale)
     scales[boneIndex].push_back({ time, scale });
 }
 
+bool Animation::HasChannel(int boneIndex) const
+{
+    auto hasKeys = [boneIndex](const auto& tracks)
+        {
+            return boneIndex < static_cast<int>(tracks.size()) && !tracks[boneIndex].empty();
+        };
+
+    return hasKeys(positions) || hasKeys(rotations) || hasKeys(scales);
+}
+
 glm::vec3 Animation::GetInterpolatedPosition(int boneIndex, float time) const
 {
     if (boneIndex >= positions.size() || positions[boneIndex].empty())

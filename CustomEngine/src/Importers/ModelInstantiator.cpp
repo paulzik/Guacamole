@@ -1,6 +1,7 @@
 #include "Importers/ModelInstantiator.h"
 #include "Assets/Model.h"
 #include <memory>
+#include <string>
 #include "ECS/MeshRenderer.h"
 
 std::unique_ptr<Entity> ModelInstantiator::Instantiate(const std::shared_ptr<Asset>& asset,
@@ -14,15 +15,16 @@ std::unique_ptr<Entity> ModelInstantiator::Instantiate(const std::shared_ptr<Ass
     }
 
     auto entity = std::make_unique<Entity>(entityName, position);
+    entity->AddComponent<MeshFilter>(*model->meshes[0]);
 
-    // --------- Only use the FIRST mesh ---------
-    auto& mesh = model->meshes[0];
-
-    // Attach components ONCE
-    MeshFilter& filter = entity->AddComponent<MeshFilter>(*mesh);
-    //MeshRenderer& renderer = entity->AddComponent<MeshRenderer>();
-
-    //renderer.Start();
+    //Extra meshes become child entities so the whole model is visible.
+    //They share the root position because transforms are not hierarchical yet.
+    for (size_t i = 1; i < model->meshes.size(); ++i)
+    {
+        std::string childName = std::string(entityName) + "_Mesh" + std::to_string(i);
+        Entity* child = new Entity(_strdup(childName.c_str()), position, entity.get());
+        child->AddComponent<MeshFilter>(*model->meshes[i]);
+    }
 
     return entity;
 }

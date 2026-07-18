@@ -1,4 +1,7 @@
-﻿#include "AnimationSystem.h"
+#include "AnimationSystem.h"
+#include "Time/Time.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <iostream>
 
 void AnimationSystem::TryRegister(Component* c)
@@ -9,30 +12,23 @@ void AnimationSystem::TryRegister(Component* c)
 
 bool AnimationSystem::Init()
 {
-	return false;
+	return true;
 }
 
 void AnimationSystem::Update()
 {
-    //MAKE THIS UPDATE ITSELF
-    float deltaTime = 1.0f;
+    float deltaTime = Time::DeltaTime();
 
     for (auto animator : animators)
     {
-        if (animator->model == nullptr) {
-            std::cout << "MODEL" << std::endl;
-        }
-
-        if (animator->currentAnimation == nullptr) {
-            std::cout << "ANIM" << std::endl;
-
-        }
-
         if (!animator->model || !animator->currentAnimation)
-            return;
+            continue;
+
+        auto skeleton = animator->model->skeleton;
+        if (!skeleton)
+            continue;
 
         // Advance current animation time
-        if (!animator->currentAnimation) return;
         animator->currentAnimationTime += deltaTime;
 
         // Loop animation if needed
@@ -45,11 +41,15 @@ void AnimationSystem::Update()
         }
 
         // Update all bones in the skeleton
-        auto skeleton = animator->model->skeleton;
-        if (!skeleton) return;
-
         for (int boneIndex = 0; boneIndex < skeleton->GetBoneCount(); ++boneIndex)
         {
+            //Bones the animation does not drive keep their bind pose
+            if (!animator->currentAnimation->HasChannel(boneIndex))
+            {
+                skeleton->SetLocalBoneTransform(boneIndex, skeleton->GetBone(boneIndex).localBindPose);
+                continue;
+            }
+
             glm::vec3 pos = animator->currentAnimation->GetInterpolatedPosition(boneIndex, animator->currentAnimationTime);
             glm::quat rot = animator->currentAnimation->GetInterpolatedRotation(boneIndex, animator->currentAnimationTime);
             glm::vec3 scale = animator->currentAnimation->GetInterpolatedScale(boneIndex, animator->currentAnimationTime);
@@ -65,9 +65,10 @@ void AnimationSystem::Update()
         // After all bones are updated, compute final global transforms
         skeleton->ComputeGlobalTransforms();
 
-        animator->currentNormalizedTime = animator->currentAnimation ? (animator->currentAnimationTime / animator->currentAnimation->GetDuration()) : 0.0f;
+        animator->currentNormalizedTime = animationDuration > 0.0f
+            ? (animator->currentAnimationTime / animationDuration)
+            : 0.0f;
     }
-
 }
 
 void AnimationSystem::Shutdown()

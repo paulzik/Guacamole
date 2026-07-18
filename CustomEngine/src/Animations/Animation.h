@@ -19,6 +19,7 @@ public:
     void AddScaleKey(int boneIndex, float time, const glm::vec3& scale);
 
     // Sampling
+    bool HasChannel(int boneIndex) const;
     glm::vec3 GetInterpolatedPosition(int boneIndex, float time) const;
     glm::quat GetInterpolatedRotation(int boneIndex, float time) const;
     glm::vec3 GetInterpolatedScale(int boneIndex, float time) const;

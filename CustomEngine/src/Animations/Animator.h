@@ -17,6 +17,9 @@ struct Animator : public Component {
 
     float currentNormalizedTime = 0.0f;
 
+    Animator() = default;
+    Animator(std::shared_ptr<Model> _model) : model(std::move(_model)) {}
+
     void Play(std::shared_ptr<Animation> animation);
     void Stop();
     void Start() override;

@@ -110,7 +110,7 @@ int main() {
     auto skinnedShader = Shader::FromFiles("Assets/Shaders/SkinnedVertex.vert", "Assets/Shaders/BasicFragment.frag");
 
     // ---------------- Camera ----------------
-    Entity camera("MainCamera", vec3(0, 0, 3));
+    Entity camera("MainCamera", vec3(0, 0, 4));
     Camera& cameraComp = camera.AddComponent<Camera>();
     Scene::Get().AddCamera(&cameraComp);
     camera.AddComponent<AudioListener>();
@@ -162,8 +162,21 @@ int main() {
     auto soldierMaterial = make_shared<Material>(texture2D, nullptr, standardShader);
     soldier->GetComponent<MeshRenderer>().material = soldierMaterial;
 
-    //auto modelPtr = std::dynamic_pointer_cast<Model>(modelAsset);
-    //Animator& animator = soldier->AddComponent<Animator>(modelPtr);
+    // ---------------- Animated character ----------------
+    auto generalAsset = Resources::Load("Assets/Models/GeneralAnimated.fbx");
+    auto generalModel = std::dynamic_pointer_cast<Model>(generalAsset);
+    shared_ptr<Entity> general = ModelInstantiator::Instantiate(generalAsset, "General", vec3(-2.5f, -1.0f, 0));
+    general->GetComponent<Transform>().scale = vec3(0.01f, 0.01f, 0.01f);
+
+    auto generalAlbedo = std::dynamic_pointer_cast<Texture2D>(Resources::Load("Assets/Models/GeneralRed.png"));
+    auto generalMaterial = make_shared<Material>(generalAlbedo, nullptr, skinnedShader);
+
+    general->AddComponent<SkinnedMeshRenderer>().material = generalMaterial;
+    general->AddComponent<Animator>(generalModel);
+
+    //Extra meshes of the model live on child entities
+    for (Entity* child : general->GetChildren())
+        child->AddComponent<SkinnedMeshRenderer>().material = generalMaterial;
 
     // ---------------- ImGui ----------------
     IMGUI_CHECKVERSION();

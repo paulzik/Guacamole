@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec3.hpp>
 #include "RenderSystem.h"
@@ -231,11 +232,16 @@ void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRe
 
     glUniform1f(glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, "metallic"), skinnedMeshRenderer->material->metallic);
 
-    Animator& animator = skinnedMeshRenderer->owner->GetComponent<Animator>();
-    if (&animator && animator.model && animator.model->skeleton)
+    //The animator can live on this entity or on the model's root entity
+    Animator* animator = skinnedMeshRenderer->owner->TryGetComponent<Animator>();
+    if (!animator && skinnedMeshRenderer->owner->GetParent())
+        animator = skinnedMeshRenderer->owner->GetParent()->TryGetComponent<Animator>();
+
+    if (animator && animator->model && animator->model->skeleton)
     {
-        Skeleton* skeleton = animator.model->skeleton.get();
-        const int boneCount = skeleton->GetBoneCount();
+        Skeleton* skeleton = animator->model->skeleton.get();
+        //The shader bone array holds 100 matrices
+        const int boneCount = std::min(skeleton->GetBoneCount(), 100);
 
         for (int i = 0; i < boneCount; ++i)
         {

@@ -20,7 +20,7 @@ class Skeleton
 public:
     Skeleton() = default;
     ~Skeleton() = default;
-    int AddBone(const std::string& name, int parentIndex, const glm::mat4& offsetMatrix);
+    int AddBone(const std::string& name, int parentIndex, const glm::mat4& localBindPose);
     int GetBoneIndex(const std::string& name) const;
     const Bone& GetBone(int index) const;
     int GetBoneCount() const;

@@ -1,10 +1,19 @@
 #include "Skeleton.h"
 #include <glm/gtc/quaternion.hpp> 
 
-int Skeleton::AddBone(const std::string& name, int parentIndex, const glm::mat4& offsetMatrix)
+int Skeleton::AddBone(const std::string& name, int parentIndex, const glm::mat4& localBindPose)
 {
     int index = static_cast<int>(bones.size());
-    bones.push_back({ name, parentIndex, offsetMatrix });
+
+    Bone bone;
+    bone.name = name;
+    bone.parentIndex = parentIndex;
+    bone.localBindPose = localBindPose;
+    bone.offsetMatrix = glm::mat4(1.0f);
+    bone.localTransform = localBindPose;
+    bone.globalTransform = glm::mat4(1.0f);
+
+    bones.push_back(bone);
     nameToIndex[name] = index;
     return index;
 }
