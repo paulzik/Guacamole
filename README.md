@@ -1,15 +1,11 @@
 # Guacamole Engine
 
-A small **3D game engine and editor** written in modern C++ (C++20) with an
-Entity–Component–System core, an OpenGL renderer, and a Dear ImGui-based editor.
-The design is inspired by Unity's workflow: you compose entities from components,
-inspect and tweak them in a live editor, and the engine drives everything through
-discrete systems.
+A small **3D game engine** I created to experiment with the principles of Game Engines and how to implement interesting features in graphics.
 
-> Status: hobby / learning project, actively developed. Windows x64 only.
+Guacamole is written in modern C++ (C++20) with an Entity–Component–System core, an OpenGL renderer and a Dear ImGui-based editor.
 
-<!-- TODO: add a screenshot or GIF of the editor here — it's the single most useful
-     thing for a graphics project. e.g. ![Editor](docs/screenshot.png) -->
+Currently is for Windows x64 only.
+
 
 ## Features
 
@@ -29,7 +25,7 @@ discrete systems.
 - **In-engine editor** (Dear ImGui):
   - Scene graph / hierarchy view
   - Inspector with per-component editors (transform, camera, lights, renderers,
-    colliders, animator, audio source, …)
+    colliders, animator)
   - Console window and menu bar
   - Object selection with transform and collider **gizmos**
 - **Primitive factory** — built-in cube and sphere meshes.
@@ -49,32 +45,10 @@ discrete systems.
 | Images      | [stb_image](https://github.com/nothings/stb) |
 | Build       | CMake |
 
-## Project structure
-
-```
-CustomEngine/
-├── main.cpp              # Entry point: sets up systems, scene, editor loop
-├── CMakeLists.txt        # Build configuration
-├── src/                  # Engine source
-│   ├── ECS/              # Entity, Component, Scene, Transform, renderers, camera
-│   ├── Animations/       # Animator, Skeleton, Animation, AnimationSystem
-│   ├── Physics/          # RigidBody, colliders, PhysicsSystem (Bullet)
-│   ├── Audio/            # AudioSource, AudioListener, AudioSystem (OpenAL)
-│   ├── Importers/        # Asset importer registry (models, textures, shaders, audio)
-│   ├── Lighting/         # Point and directional lights
-│   ├── Gizmos/           # Transform / collider gizmo rendering
-│   ├── Selection/        # Object picking
-│   ├── Input/            # Mouse and keyboard devices
-│   └── ...               # Scenegraph, Systems, Time, Utilities
-├── Editor/               # ImGui editor windows (inspector, scenegraph, console, menu bar)
-├── Assets/               # Models, textures, shaders, audio used by the demo scene
-└── ThirdParty/           # Vendored / submoduled dependencies
-```
 
 ## Building
 
-The project targets **Windows x64** and is built with **Visual Studio 2022**
-(MSVC v143) via CMake.
+The project targets **Windows x64** and is built with **Visual Studio 2022** (MSVC v143) via CMake.
 
 ### Prerequisites
 
@@ -110,11 +84,6 @@ From the `CustomEngine` directory:
 cmake -S . -B build -A x64
 cmake --build build --config Debug
 ```
-
-The build compiles the vendored Assimp and Bullet from source the first time, so
-the initial build takes a few minutes. Required runtime DLLs (SDL3, GLEW, OpenAL)
-are copied next to the executable automatically.
-
 ### Run
 
 The executable expects to run with the `Assets/` folder reachable; CMake sets the
