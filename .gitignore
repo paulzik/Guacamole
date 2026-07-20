@@ -69,6 +69,3 @@ CustomEngine/ThirdParty/glm/*
 # Logs and runtime junk
 *.log
 imgui.ini
-
-# Local tool configuration
-.claude/settings.local.json
