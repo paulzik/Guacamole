@@ -4,8 +4,10 @@ A small **3D game engine** I created to experiment with the principles of Game E
 
 Guacamole is written in modern C++ (C++20) with an Entity–Component–System core, an OpenGL renderer and a Dear ImGui-based editor.
 
-Currently is for Windows x64 only.
 
+https://github.com/user-attachments/assets/26680e1d-bddb-4519-9cfb-4078e62016bb
+
+Currently is for Windows x64 only.
 
 ## Features
 
