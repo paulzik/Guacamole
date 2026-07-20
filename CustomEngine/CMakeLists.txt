@@ -86,8 +86,6 @@ target_include_directories(ImGui PUBLIC
 set_target_properties(ImGui PROPERTIES FOLDER "ThirdParty")
 source_group(TREE "${IMGUI_DIR}" PREFIX "ThirdParty/ImGui" FILES ${IMGUI_SOURCES})
 
-set(OPENAL_DIR "${THIRDPARTY_DIR}/OpenAL")
-
 # ------------------------------
 # Bullet Physics options
 # ------------------------------
@@ -139,15 +137,6 @@ target_link_libraries(CustomEngine PRIVATE
     "${OPENAL_DIR}/lib/OpenAL32.lib"
     opengl32
     assimp
-)
-
-target_link_libraries(CustomEngine PRIVATE
-    ImGui
-    "${SDL3_DIR}/lib/x64/SDL3.lib"
-    "${GLEW_DIR}/lib/Release/x64/glew32.lib"
-    "${OPENAL_DIR}/lib/OpenAL32.lib"
-    opengl32
-    assimp
 
     BulletDynamics
     BulletCollision
@@ -159,9 +148,7 @@ set_target_properties(BulletDynamics PROPERTIES FOLDER "ThirdParty/Bullet")
 set_target_properties(LinearMath PROPERTIES FOLDER "ThirdParty/Bullet")
 
 # ------------------------------
-# Copy DLLs after build
-# ------------------------------
-# Copy DLLs after build safely
+# Copy runtime DLLs next to the executable after build
 # ------------------------------
 set(DLLS_TO_COPY
     "${SDL3_DIR}/lib/x64/SDL3.dll"

@@ -53,6 +53,19 @@ Makefile
 # Vendored third-party runtime DLLs must stay in the repo
 !CustomEngine/ThirdParty/**/*.dll
 
+# Third-party is vendored for an x64 Windows build only.
+# Keep the repo lean: exclude other architectures and unused SDK payloads.
+CustomEngine/ThirdParty/SDL3/lib/x86/
+CustomEngine/ThirdParty/SDL3/lib/arm64/
+CustomEngine/ThirdParty/glew/lib/Release/Win32/
+CustomEngine/ThirdParty/glew/bin/Release/Win32/
+CustomEngine/ThirdParty/imgui/examples/
+# glm is vendored header-only (keep glm/ headers + license, drop docs/tests/build)
+CustomEngine/ThirdParty/glm/*
+!CustomEngine/ThirdParty/glm/glm/
+!CustomEngine/ThirdParty/glm/copying.txt
+!CustomEngine/ThirdParty/glm/readme.md
+
 # Logs and runtime junk
 *.log
 imgui.ini

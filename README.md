@@ -1,0 +1,148 @@
+# Guacamole Engine
+
+A small **3D game engine and editor** written in modern C++ (C++20) with an
+Entity–Component–System core, an OpenGL renderer, and a Dear ImGui-based editor.
+The design is inspired by Unity's workflow: you compose entities from components,
+inspect and tweak them in a live editor, and the engine drives everything through
+discrete systems.
+
+> Status: hobby / learning project, actively developed. Windows x64 only.
+
+<!-- TODO: add a screenshot or GIF of the editor here — it's the single most useful
+     thing for a graphics project. e.g. ![Editor](docs/screenshot.png) -->
+
+## Features
+
+- **Entity–Component–System** — entities composed of components, updated by
+  independent systems through a central `SystemManager`.
+- **OpenGL 3.3 renderer** — Phong lighting with multiple point and directional
+  lights, materials and shaders, textured meshes.
+- **Skeletal animation** — skinned mesh rendering with an `Animator`, skeletons,
+  and animation playback.
+- **Physics** — rigid bodies and box/sphere colliders powered by
+  [Bullet](https://github.com/bulletphysics/bullet3).
+- **3D audio** — positional audio sources and a listener via OpenAL (MP3 decoding
+  through minimp3).
+- **Asset importing** — a pluggable importer registry backed by
+  [Assimp](https://github.com/assimp/assimp) for models (`.fbx`, `.obj`),
+  `stb_image` for textures (`.png`), shaders (`.vert`/`.frag`), and audio (`.mp3`).
+- **In-engine editor** (Dear ImGui):
+  - Scene graph / hierarchy view
+  - Inspector with per-component editors (transform, camera, lights, renderers,
+    colliders, animator, audio source, …)
+  - Console window and menu bar
+  - Object selection with transform and collider **gizmos**
+- **Primitive factory** — built-in cube and sphere meshes.
+
+## Tech stack
+
+| Area        | Library |
+|-------------|---------|
+| Language    | C++20 |
+| Windowing / input | [SDL3](https://libsdl.org) |
+| Rendering   | OpenGL 3.3 core + [GLEW](https://glew.sourceforge.net) |
+| Math        | [GLM](https://github.com/g-truc/glm) |
+| Editor UI   | [Dear ImGui](https://github.com/ocornut/imgui) |
+| Physics     | [Bullet](https://github.com/bulletphysics/bullet3) |
+| Audio       | OpenAL + [minimp3](https://github.com/lieff/minimp3) |
+| Model I/O   | [Assimp](https://github.com/assimp/assimp) |
+| Images      | [stb_image](https://github.com/nothings/stb) |
+| Build       | CMake |
+
+## Project structure
+
+```
+CustomEngine/
+├── main.cpp              # Entry point: sets up systems, scene, editor loop
+├── CMakeLists.txt        # Build configuration
+├── src/                  # Engine source
+│   ├── ECS/              # Entity, Component, Scene, Transform, renderers, camera
+│   ├── Animations/       # Animator, Skeleton, Animation, AnimationSystem
+│   ├── Physics/          # RigidBody, colliders, PhysicsSystem (Bullet)
+│   ├── Audio/            # AudioSource, AudioListener, AudioSystem (OpenAL)
+│   ├── Importers/        # Asset importer registry (models, textures, shaders, audio)
+│   ├── Lighting/         # Point and directional lights
+│   ├── Gizmos/           # Transform / collider gizmo rendering
+│   ├── Selection/        # Object picking
+│   ├── Input/            # Mouse and keyboard devices
+│   └── ...               # Scenegraph, Systems, Time, Utilities
+├── Editor/               # ImGui editor windows (inspector, scenegraph, console, menu bar)
+├── Assets/               # Models, textures, shaders, audio used by the demo scene
+└── ThirdParty/           # Vendored / submoduled dependencies
+```
+
+## Building
+
+The project targets **Windows x64** and is built with **Visual Studio 2022**
+(MSVC v143) via CMake.
+
+### Prerequisites
+
+- Windows 10/11 (x64)
+- [Visual Studio 2022](https://visualstudio.microsoft.com/) with the
+  *Desktop development with C++* workload
+- [CMake](https://cmake.org/) 3.16 or newer (bundled with recent Visual Studio)
+- [Git](https://git-scm.com/) with [Git LFS](https://git-lfs.com/)
+  (some vendored `.lib` files are stored via LFS)
+
+### Clone
+
+`Assimp` and `Bullet` are Git submodules, so clone recursively and pull LFS files:
+
+```bash
+git clone --recursive https://github.com/paulzik/Guacamole.git
+cd Guacamole
+git lfs pull
+```
+
+If you already cloned without `--recursive`:
+
+```bash
+git submodule update --init --recursive
+git lfs pull
+```
+
+### Configure & build
+
+From the `CustomEngine` directory:
+
+```bash
+cmake -S . -B build -A x64
+cmake --build build --config Debug
+```
+
+The build compiles the vendored Assimp and Bullet from source the first time, so
+the initial build takes a few minutes. Required runtime DLLs (SDL3, GLEW, OpenAL)
+are copied next to the executable automatically.
+
+### Run
+
+The executable expects to run with the `Assets/` folder reachable; CMake sets the
+Visual Studio debugger working directory to the build output folder. From that
+folder:
+
+```bash
+./build/Debug/CustomEngine.exe
+```
+
+You can also open the generated `build/CustomEngine.sln` in Visual Studio, set
+`CustomEngine` as the startup project, and run with F5.
+
+## Controls
+
+The demo scene loads with a fly camera:
+
+- **Hold right mouse button** to look around
+- **W / A / S / D** — move forward / left / back / right
+- **Q / E** — move down / up
+- **Left Alt + right mouse** — orbit around the target
+- Click objects in the viewport or scene graph to select them and edit them in the
+  Inspector.
+
+## License
+
+Add a license before publishing (e.g. MIT) so others know how they may use the
+code. The bundled libraries under `CustomEngine/ThirdParty/` retain their own
+licenses (see each library's folder). Verify that the models, textures, and audio
+under `CustomEngine/Assets/` may be redistributed before making the repository
+public.
