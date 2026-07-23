@@ -50,12 +50,14 @@ Currently is for Windows x64 only.
 
 ## Building
 
-The project targets **Windows x64** and is built with **Visual Studio 2022** (MSVC v143) via CMake.
+The project targets **Windows x64** and is built with **Visual Studio** (MSVC) via
+CMake. It works with any recent Visual Studio (2022 or newer) — you just point CMake
+at the version you have installed (see below).
 
 ### Prerequisites
 
 - Windows 10/11 (x64)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) with the
+- [Visual Studio](https://visualstudio.microsoft.com/) 2022 or newer, with the
   *Desktop development with C++* workload
 - [CMake](https://cmake.org/) 3.16 or newer (bundled with recent Visual Studio)
 - [Git](https://git-scm.com/) with [Git LFS](https://git-lfs.com/)
@@ -86,6 +88,18 @@ From the `CustomEngine` directory:
 cmake -S . -B build -A x64
 cmake --build build --config Debug
 ```
+
+By default CMake generates for the newest Visual Studio it finds. If you have more
+than one version installed, pin the generator to the one you'll open the solution in
+so the project uses a toolset that IDE has:
+
+```bash
+# Visual Studio 2022
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+# Visual Studio 2026
+cmake -S . -B build -G "Visual Studio 18 2026" -A x64
+```
+
 ### Run
 
 The executable expects to run with the `Assets/` folder reachable; CMake sets the
@@ -96,8 +110,9 @@ folder:
 ./build/Debug/CustomEngine.exe
 ```
 
-You can also open the generated `build/CustomEngine.sln` in Visual Studio, set
-`CustomEngine` as the startup project, and run with F5.
+You can also open the generated solution in Visual Studio — `build/CustomEngine.sln`,
+or `build/CustomEngine.slnx` on Visual Studio 2026 and newer — set `CustomEngine` as
+the startup project, and run with F5.
 
 ## Controls
 
@@ -109,11 +124,3 @@ The demo scene loads with a fly camera:
 - **Left Alt + right mouse** — orbit around the target
 - Click objects in the viewport or scene graph to select them and edit them in the
   Inspector.
-
-## License
-
-Add a license before publishing (e.g. MIT) so others know how they may use the
-code. The bundled libraries under `CustomEngine/ThirdParty/` retain their own
-licenses (see each library's folder). Verify that the models, textures, and audio
-under `CustomEngine/Assets/` may be redistributed before making the repository
-public.

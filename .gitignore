@@ -21,6 +21,7 @@ Makefile
 # Visual Studio
 .vs/
 *.sln
+*.slnx
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
