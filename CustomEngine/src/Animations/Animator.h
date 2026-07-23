@@ -14,6 +14,7 @@ struct Animator : public Component {
 
     float currentAnimationTime = 0.0f;
     bool loop = true;
+    bool play = false;
 
     float currentNormalizedTime = 0.0f;
 

@@ -12,7 +12,48 @@ void AnimationSystem::TryRegister(Component* c)
 
 bool AnimationSystem::Init()
 {
+    for (auto animator : animators) {
+        if (!animator->model || !animator->currentAnimation)
+            continue;
+
+        if (!animator->model->skeleton)
+            continue;
+
+        // Pose at the starting time so the model is correct even before it plays.
+        ApplyPose(animator);
+    }
+
 	return true;
+}
+
+void AnimationSystem::ApplyPose(Animator* animator)
+{
+    auto skeleton = animator->model->skeleton;
+
+    // Update all bones in the skeleton
+    for (int boneIndex = 0; boneIndex < skeleton->GetBoneCount(); ++boneIndex)
+    {
+        //Bones the animation does not drive keep their bind pose
+        if (!animator->currentAnimation->HasChannel(boneIndex))
+        {
+            skeleton->SetLocalBoneTransform(boneIndex, skeleton->GetBone(boneIndex).localBindPose);
+            continue;
+        }
+
+        glm::vec3 pos = animator->currentAnimation->GetInterpolatedPosition(boneIndex, animator->currentAnimationTime);
+        glm::quat rot = animator->currentAnimation->GetInterpolatedRotation(boneIndex, animator->currentAnimationTime);
+        glm::vec3 scale = animator->currentAnimation->GetInterpolatedScale(boneIndex, animator->currentAnimationTime);
+
+        // Build local transform for this bone
+        glm::mat4 localTransform = glm::translate(glm::mat4(1.0f), pos) *
+            glm::mat4_cast(rot) *
+            glm::scale(glm::mat4(1.0f), scale);
+
+        skeleton->SetLocalBoneTransform(boneIndex, localTransform);
+    }
+
+    // After all bones are updated, compute final global transforms
+    skeleton->ComputeGlobalTransforms();
 }
 
 void AnimationSystem::Update()
@@ -28,42 +69,23 @@ void AnimationSystem::Update()
         if (!skeleton)
             continue;
 
-        // Advance current animation time
-        animator->currentAnimationTime += deltaTime;
-
-        // Loop animation if needed
         float animationDuration = animator->currentAnimation->GetDuration();
-        if (animator->currentAnimationTime > animationDuration) {
-            if (animator->loop)
-                animator->currentAnimationTime = fmod(animator->currentAnimationTime, animationDuration);
-            else
-                animator->currentAnimationTime = animationDuration;
-        }
 
-        // Update all bones in the skeleton
-        for (int boneIndex = 0; boneIndex < skeleton->GetBoneCount(); ++boneIndex)
+        if (animator->play)
         {
-            //Bones the animation does not drive keep their bind pose
-            if (!animator->currentAnimation->HasChannel(boneIndex))
-            {
-                skeleton->SetLocalBoneTransform(boneIndex, skeleton->GetBone(boneIndex).localBindPose);
-                continue;
+            animator->currentAnimationTime += deltaTime;
+
+            // Loop animation if needed
+            if (animator->currentAnimationTime > animationDuration) {
+                if (animator->loop)
+                    animator->currentAnimationTime = fmod(animator->currentAnimationTime, animationDuration);
+                else
+                    animator->currentAnimationTime = animationDuration;
             }
-
-            glm::vec3 pos = animator->currentAnimation->GetInterpolatedPosition(boneIndex, animator->currentAnimationTime);
-            glm::quat rot = animator->currentAnimation->GetInterpolatedRotation(boneIndex, animator->currentAnimationTime);
-            glm::vec3 scale = animator->currentAnimation->GetInterpolatedScale(boneIndex, animator->currentAnimationTime);
-
-            // Build local transform for this bone
-            glm::mat4 localTransform = glm::translate(glm::mat4(1.0f), pos) *
-                glm::mat4_cast(rot) *
-                glm::scale(glm::mat4(1.0f), scale);
-
-            skeleton->SetLocalBoneTransform(boneIndex, localTransform);
         }
 
-        // After all bones are updated, compute final global transforms
-        skeleton->ComputeGlobalTransforms();
+        // Pose the skeleton at the current time, whether playing or paused.
+        ApplyPose(animator);
 
         animator->currentNormalizedTime = animationDuration > 0.0f
             ? (animator->currentAnimationTime / animationDuration)

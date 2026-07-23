@@ -11,5 +11,6 @@ struct AnimationSystem : public System {
     void Update() override;
     void Shutdown() override;
 
-    void UpdateAnimation(float deltaTime);
+private:
+    void ApplyPose(Animator* animator);
 };

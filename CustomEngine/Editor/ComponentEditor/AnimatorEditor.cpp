@@ -66,6 +66,14 @@ void AnimatorEditor::Draw(Component* component)
     {
         animator->loop = loop;
     }
+
+    
+    bool play = animator->play;
+    if (ImGui::Checkbox(("Play##" + uniqueID).c_str(), &play))
+    {
+        animator->play = play;
+    }
+    
     ImGui::TreePop();
 
 }
