@@ -34,6 +34,7 @@
 #include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Editor/MenuBar/MenuBar.h"
+#include "Editor/EditorStyle.h"
 #include "Audio/AudioSource.h"
 #include "Audio/AudioListener.h"
 #include "Physics/BoxCollider.h"
@@ -182,9 +183,10 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
+    LoadEditorFonts(19.0f);
     ImGui_ImplSDL3_InitForOpenGL(window, glContext);
     ImGui_ImplOpenGL3_Init("#version 330");
-    ImGui::StyleColorsDark();
+    ApplyEditorStyle();
 
     auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
     AudioSource& audioSource = cube1.AddComponent<AudioSource>();
