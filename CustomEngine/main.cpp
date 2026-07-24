@@ -144,9 +144,6 @@ int main() {
     light2.AddComponent<PointLight>(vec3(1, 0, 0), 1.0f);
 
     // ---------------- Scenegraph Editor / Inspector ----------------
-    ScenegraphEditor sceneEditor(&Scene::Get().GetScenegraph());
-    InspectorWindow inspectorWindow;
-    ConsoleWindow consoleWindow;
     std::vector<std::unique_ptr<EditorWindow>> editorWindows;
     editorWindows.push_back(std::make_unique<ScenegraphEditor>(&Scene::Get().GetScenegraph()));
     editorWindows.push_back(std::make_unique<InspectorWindow>());
@@ -218,9 +215,8 @@ int main() {
         ImGui::NewFrame();
 
         menuBar.Draw();
-        sceneEditor.Draw();
-        inspectorWindow.Draw();
-        consoleWindow.Draw();
+        for (auto& window : editorWindows)
+            window->Draw();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

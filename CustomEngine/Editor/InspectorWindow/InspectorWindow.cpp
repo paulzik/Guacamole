@@ -10,7 +10,8 @@ InspectorWindow::InspectorWindow()
 }
 
 void InspectorWindow::Draw() {
-    ImGui::Begin(windowName);
+
+    if (!BeginWindow()) return;
 
     Entity* entity = Scene::Get().selectedEntity;
     if (!entity) {

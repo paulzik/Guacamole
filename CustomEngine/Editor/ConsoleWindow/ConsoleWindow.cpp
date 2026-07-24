@@ -1,7 +1,6 @@
 #include "ConsoleWindow.h"
 #include "EditorWindow.h"
 #include "ECS/Entity.h"
-#include "EditorRegistry.h"
 #include "EditorMacro.h"
 #include "imgui.h"
 #include "Utilities/Debug/Debug.h"
@@ -11,7 +10,8 @@ ConsoleWindow::ConsoleWindow(): EditorWindow("Console")
 }
 
 void ConsoleWindow::Draw() {
-    ImGui::Begin(windowName);
+    if (!BeginWindow()) return;
+
     const std::vector<LogEntry> logs = Debug::GetLogs();
     for(LogEntry log : logs)
     {

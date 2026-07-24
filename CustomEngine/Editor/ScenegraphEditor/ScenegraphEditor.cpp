@@ -15,7 +15,7 @@ ScenegraphEditor::~ScenegraphEditor() {
 
 void ScenegraphEditor::Draw()
 {
-    ImGui::Begin(windowName);
+    if (!BeginWindow()) return;
 
     Entity* selected = Scene::Get().selectedEntity;
 

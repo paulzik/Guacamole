@@ -29,7 +29,7 @@ void MenuBar::Draw()
         if (ImGui::BeginMenu("Windows"))
         {
             for (auto& w : *windows)
-                ImGui::MenuItem(w->GetName(), nullptr);
+                ImGui::MenuItem(w->GetName(), nullptr, &w->open);
             ImGui::EndMenu();
         }
 
