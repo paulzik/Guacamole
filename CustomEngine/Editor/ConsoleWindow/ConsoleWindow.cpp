@@ -12,26 +12,43 @@ ConsoleWindow::ConsoleWindow(): EditorWindow("Console")
 void ConsoleWindow::Draw() {
     if (!BeginWindow()) return;
 
-    const std::vector<LogEntry> logs = Debug::GetLogs();
-    for(LogEntry log : logs)
+    auto toggleButton = [](const char* icon, bool& state)
     {
-        ImVec4 logColor;
-        if (log.level == LogLevel::Info) {
-            logColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-            ImGui::TextColored(logColor, "Log:");
+        const bool active = state;
+        if (active)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.17f, 0.36f, 0.53f, 1.00f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.22f, 0.45f, 0.66f, 1.00f));
         }
-        else if (log.level == LogLevel::Warning) {
-            logColor = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);
+        if (ImGui::Button(icon))
+            state = !state;
+        if (active)
+            ImGui::PopStyleColor(2);
+    };
 
-            ImGui::TextColored(ImVec4(logColor), "Warning:");
-        }
-        else if (log.level == LogLevel::Error) {
-            logColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+    toggleButton("\xE2\x84\xB9", showLogs);
+    ImGui::SameLine();
+    toggleButton("\xE2\x9A\xA0", showWarnings);
+    ImGui::SameLine();
+    toggleButton("\xE2\x9C\x96", showErrors);
 
-            ImGui::TextColored(logColor, "Error:");
-        }
-        ImGui::SameLine(); ImGui::TextColored(logColor, log.message.c_str());
+    ImGui::Separator();
+
+    ImGui::BeginChild("ConsoleScroll");
+    for (const LogEntry& log : Debug::GetLogs())
+    {
+        if (log.level == LogLevel::Info    && !showLogs)     continue;
+        if (log.level == LogLevel::Warning && !showWarnings) continue;
+        if (log.level == LogLevel::Error   && !showErrors)   continue;
+
+        const char* icon =
+            log.level == LogLevel::Warning ? "\xE2\x9A\xA0" :
+            log.level == LogLevel::Error   ? "\xE2\x9C\x96" : "\xE2\x84\xB9";
+
+        ImGui::Text("[%s] %s %s", log.timestamp.c_str(), icon, log.message.c_str());
     }
+    ImGui::EndChild();
+
     ImGui::End();
 }
 

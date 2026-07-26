@@ -13,6 +13,7 @@ struct LogEntry
 {
     LogLevel level;
     std::string message;
+    std::string timestamp;
 };
 
 class Debug{
@@ -23,5 +24,6 @@ public:
 
     static const std::vector<LogEntry>& GetLogs();
 private:
+    static std::string CurrentTimestamp();
     static std::vector<LogEntry> logs;
 };

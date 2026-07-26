@@ -96,6 +96,30 @@ static bool TryLoadFont(ImGuiIO& io, const char* path, float sizePx, const char*
     return false;
 }
 
+// Merges a symbol/icon font into the last loaded font, so glyphs missing from
+// the main UI font (info/warning/cross icons, etc.) resolve instead of showing '?'.
+static void MergeSymbolFont(ImGuiIO& io, float sizePx)
+{
+    const char* symbolFonts[] = {
+        "C:/Windows/Fonts/seguisym.ttf",  // Segoe UI Symbol
+        "C:/Windows/Fonts/seguiemj.ttf",  // Segoe UI Emoji (fallback)
+    };
+
+    ImFontConfig cfg;
+    cfg.MergeMode = true;
+    for (const char* path : symbolFonts)
+    {
+        if (!std::filesystem::exists(path))
+            continue;
+        if (io.Fonts->AddFontFromFileTTF(path, sizePx, &cfg) != nullptr)
+        {
+            std::cout << "[EditorStyle] Merged symbol font: " << path << std::endl;
+            return;
+        }
+    }
+    std::cout << "[EditorStyle] No symbol font found; icon glyphs may show as '?'." << std::endl;
+}
+
 void LoadEditorFonts(float sizePx)
 {
     ImGuiIO& io = ImGui::GetIO();
@@ -108,7 +132,10 @@ void LoadEditorFonts(float sizePx)
     };
     for (const char* path : bundled)
         if (TryLoadFont(io, path, sizePx, "bundled"))
+        {
+            MergeSymbolFont(io, sizePx);
             return;
+        }
 
     // 2) A Windows system font (Segoe UI reads like a modern editor UI).
     const char* system[] = {
@@ -117,9 +144,13 @@ void LoadEditorFonts(float sizePx)
     };
     for (const char* path : system)
         if (TryLoadFont(io, path, sizePx, "system"))
+        {
+            MergeSymbolFont(io, sizePx);
             return;
+        }
 
     // 3) Fall back to ImGui's built-in font so the UI always renders.
     io.Fonts->AddFontDefault();
+    MergeSymbolFont(io, sizePx);
     std::cout << "[EditorStyle] Using default ImGui font." << std::endl;
 }
