@@ -26,6 +26,17 @@ public:
     void AddForce(const glm::vec3& force);
     const char* GetComponentName() const override;
 
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Mass", mass);
+        visitor.Visit("Friction", friction);
+        visitor.Visit("Restitution", restitution);
+        visitor.Visit("LinearDamping", linearDamping);
+        visitor.Visit("AngularDamping", angularDamping);
+        visitor.Visit("UseGravity", useGravity);
+        visitor.Visit("IsKinematic", isKinematic);
+    }
+
 private:
     void* m_InternalBody;
     friend class PhysicsSystem;

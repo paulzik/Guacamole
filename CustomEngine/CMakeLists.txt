@@ -180,6 +180,22 @@ foreach(dll ${DLLS_TO_COPY})
     endif()
 endforeach()
 # ------------------------------
+# Engine-owned assets travel with the executable, so the engine never depends
+# on a project folder containing them. Resources resolves "engine://" against
+# this directory at runtime.
+# ------------------------------
+add_custom_command(TARGET CustomEngine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/EngineAssets"
+        "$<TARGET_FILE_DIR:CustomEngine>/EngineAssets"
+)
+
+# Project opened when none is given on the command line (development default).
+target_compile_definitions(CustomEngine PRIVATE
+    GUACAMOLE_DEFAULT_PROJECT="${CMAKE_SOURCE_DIR}/../SampleProject"
+)
+
+# ------------------------------
 # Set working directory for VS debugger
 # ------------------------------
 set_property(TARGET CustomEngine PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")

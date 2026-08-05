@@ -1,9 +1,11 @@
 #include "SceneSerializer.h"
+#include "ECS/Scene.h"
+#include "ECS/Entity.h"
+#include "YamlFieldVisitors.h"
+#include "Utilities/Debug/Debug.h"
 #include <yaml-cpp/yaml.h>
 #include <fstream>
 #include <filesystem>
-#include "../ECS/Entity.h"
-#include "../ECS/Scene.h"
 #include <vector>
 
 bool SceneSerializer::Serialize(const std::filesystem::path& path) {
@@ -26,7 +28,9 @@ bool SceneSerializer::Serialize(const std::filesystem::path& path) {
         for (const auto& c : e->GetAllComponents())
         {
             out << YAML::Key << c->GetComponentName() << YAML::Value << YAML::BeginMap;
-            //c->Serialize(out);
+            YamlWriteVisitor writer(out);
+            c->Reflect(writer);
+
             out << YAML::EndMap;
         }
         out << YAML::EndMap;

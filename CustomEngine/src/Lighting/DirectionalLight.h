@@ -12,4 +12,11 @@ struct DirectionalLight : public Light {
     {
     }
     COMPONENT_NAME(DirectionalLight);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Color", color);
+        visitor.Visit("Intensity", intensity);
+        visitor.Visit("Direction", direction);
+    }
 };

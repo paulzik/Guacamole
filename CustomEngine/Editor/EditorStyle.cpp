@@ -1,5 +1,6 @@
 #include "EditorStyle.h"
 #include "imgui.h"
+#include "Importers/Resources.h"
 
 #include <filesystem>
 #include <iostream>
@@ -124,18 +125,22 @@ void LoadEditorFonts(float sizePx)
 {
     ImGuiIO& io = ImGui::GetIO();
 
-    // 1) A font bundled with the project (drop any of these into Assets/Fonts/).
+    // 1) A font shipped with the engine (drop any of these into EngineAssets/Fonts/).
+    // The editor's own look must not depend on what a project happens to contain.
     const char* bundled[] = {
-        "Assets/Fonts/Roboto-Regular.ttf",
-        "Assets/Fonts/Inter-Regular.ttf",
-        "Assets/Fonts/OpenSans-Regular.ttf",
+        "Fonts/Roboto-Regular.ttf",
+        "Fonts/Inter-Regular.ttf",
+        "Fonts/OpenSans-Regular.ttf",
     };
     for (const char* path : bundled)
-        if (TryLoadFont(io, path, sizePx, "bundled"))
+    {
+        const std::string enginePath = (Resources::GetEnginePath() / path).string();
+        if (TryLoadFont(io, enginePath.c_str(), sizePx, "engine"))
         {
             MergeSymbolFont(io, sizePx);
             return;
         }
+    }
 
     // 2) A Windows system font (Segoe UI reads like a modern editor UI).
     const char* system[] = {

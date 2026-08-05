@@ -22,4 +22,12 @@ private:
     Transform* transformComp;
 
     COMPONENT_NAME(CameraController);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Sensitivity", sensitivity);
+        visitor.Visit("MoveSpeed", moveSpeed);
+        visitor.Visit("Pitch", pitch);
+        visitor.Visit("Yaw", yaw);
+    }
 };

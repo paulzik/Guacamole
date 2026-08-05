@@ -10,4 +10,9 @@ struct SkinnedMeshRenderer : public Component {
     bool wireframe = false;
 
     COMPONENT_NAME(SkinnedMeshRenderer);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Wireframe", wireframe);
+    }
 };

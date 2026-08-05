@@ -26,4 +26,13 @@ public:
     glm::vec3 currentPosition;
 
     COMPONENT_NAME(AudioSource);
+
+    // 'clip' still needs an asset reference (a path), which the visitor cannot
+    // express yet - see the asset-reference work still outstanding.
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Volume", volume);
+        visitor.Visit("Pitch", pitch);
+        visitor.Visit("Loop", loop);
+    }
 };

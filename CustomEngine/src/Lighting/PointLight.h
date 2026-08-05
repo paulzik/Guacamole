@@ -14,4 +14,11 @@ struct PointLight : public Light {
     }
 
     COMPONENT_NAME(PointLight);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Color", color);
+        visitor.Visit("Intensity", intensity);
+        visitor.Visit("Radius", radius);
+    }
 };

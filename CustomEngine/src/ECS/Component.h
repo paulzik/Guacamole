@@ -1,5 +1,6 @@
 #pragma once
 #include "ComponentMacros.h"
+#include "IFieldVisitor.h"
 
 class Entity;
 
@@ -15,5 +16,8 @@ struct Component {
     virtual void Destroy();
 
     virtual const char* GetComponentName() const = 0;
+
+    // Names this component's serializable fields.
+    virtual void Reflect(IFieldVisitor& visitor) {}
 };
 

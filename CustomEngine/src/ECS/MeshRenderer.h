@@ -9,4 +9,10 @@ struct MeshRenderer : public Component {
     bool wireframe = false;
 
     COMPONENT_NAME(MeshRenderer);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Wireframe", wireframe);
+    }
+
 };

@@ -13,4 +13,13 @@ struct Transform : public Component {
 	glm::vec3 up = glm::vec3(0, 0, -1);
 
 	COMPONENT_NAME(Transform);
+
+	// modelMatrix is recomputed every frame by TransformSystem, so it is
+	// derived state and deliberately not persisted.
+	void Reflect(IFieldVisitor& visitor) override
+	{
+		visitor.Visit("Position", position);
+		visitor.Visit("Rotation", rotation);
+		visitor.Visit("Scale", scale);
+	}
 };

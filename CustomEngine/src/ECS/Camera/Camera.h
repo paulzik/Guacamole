@@ -20,4 +20,16 @@ struct Camera : public Component {
     float farPlane = 100.0f;
 
     COMPONENT_NAME(Camera);
+
+    // viewMatrix/projectionMatrix and forward are rebuilt each frame by
+    // CameraSystem, so only the inputs that produce them are persisted.
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("LookAt", lookAtVector);
+        visitor.Visit("Up", upVector);
+        visitor.Visit("Fov", fov);
+        visitor.Visit("Aspect", aspect);
+        visitor.Visit("NearPlane", nearPlane);
+        visitor.Visit("FarPlane", farPlane);
+    }
 };

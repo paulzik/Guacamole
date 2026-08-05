@@ -35,6 +35,8 @@
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Editor/MenuBar/MenuBar.h"
 #include "Editor/EditorStyle.h"
+#include "Project/ProjectSettings.h"
+#include <filesystem>
 #include "Audio/AudioSource.h"
 #include "Audio/AudioListener.h"
 #include "Physics/BoxCollider.h"
@@ -58,9 +60,24 @@
 using namespace glm;
 using namespace std;
 
-int main() {
+int main(int argc, char** argv) {
     // ---------------- SDL + OpenGL ----------------
     SDL_Init(SDL_INIT_VIDEO);
+
+    // ---------------- Engine / project roots ----------------
+    if (const char* enginePath = SDL_GetBasePath())
+        Resources::SetEnginePath(std::filesystem::path(enginePath) / "EngineAssets");
+
+    // A project folder can be passed on the command line; otherwise fall back
+    // to the sample project that ships with the repository.
+    std::filesystem::path projectFolder = (argc > 1)
+        ? std::filesystem::path(argv[1])
+        : std::filesystem::path(GUACAMOLE_DEFAULT_PROJECT);
+
+    if (!ProjectSettings::Get().Load(projectFolder / "project.yaml"))
+        ProjectSettings::Get().UseFolder(projectFolder);
+
+    Resources::SetBasePath(ProjectSettings::Get().GetRootPath());
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -102,13 +119,11 @@ int main() {
     Input::AddDevice<Keyboard>();
     Input::Init();
 
-
-
     //Shaders
-    auto standardShader = Shader::FromFiles("Assets/Shaders/BasicVertex.vert", "Assets/Shaders/BasicFragment.frag");
+    auto standardShader = Shader::FromFiles("engine://Shaders/BasicVertex.vert", "engine://Shaders/BasicFragment.frag");
     auto standardMaterial = make_shared<Material>(standardShader);
 
-    auto skinnedShader = Shader::FromFiles("Assets/Shaders/SkinnedVertex.vert", "Assets/Shaders/BasicFragment.frag");
+    auto skinnedShader = Shader::FromFiles("engine://Shaders/SkinnedVertex.vert", "engine://Shaders/BasicFragment.frag");
 
     // ---------------- Camera ----------------
     Entity camera("MainCamera", vec3(0, 0, 4));
@@ -149,7 +164,7 @@ int main() {
     editorWindows.push_back(std::make_unique<InspectorWindow>());
     editorWindows.push_back(std::make_unique<ConsoleWindow>());
 
-    MenuBar menuBar(&editorWindows);
+    MenuBar menuBar(&editorWindows, window);
 
     // ---------------- Load model ----------------
     auto modelAsset = Resources::Load("Assets/Models/Miner.fbx");
@@ -199,8 +214,10 @@ int main() {
         while (SDL_PollEvent(&e)) {
             ImGui_ImplSDL3_ProcessEvent(&e);
             if (e.type == SDL_EVENT_QUIT) running = false;
+            menuBar.HandleEvent(e);
             Input::SDL3_ProcessEvent(&e);
         }
+
         Input::Update();
         Time::Update();
         

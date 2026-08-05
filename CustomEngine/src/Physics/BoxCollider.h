@@ -11,4 +11,10 @@ struct BoxCollider : public Collider {
     }
 
     COMPONENT_NAME(BoxCollider);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("IsTrigger", isTrigger);
+        visitor.Visit("HalfExtend", colliderDescriptor.halfExtend);
+    }
 };

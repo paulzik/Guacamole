@@ -10,4 +10,10 @@ struct SphereCollider : public Collider {
     }
 
     COMPONENT_NAME(SphereCollider);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("IsTrigger", isTrigger);
+        visitor.Visit("Radius", colliderDescriptor.radius);
+    }
 };

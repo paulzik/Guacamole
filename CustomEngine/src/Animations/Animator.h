@@ -29,4 +29,12 @@ struct Animator : public Component {
     void SetCurrentAnimationIndex(int index);
 
     COMPONENT_NAME(Animation);
+
+    void Reflect(IFieldVisitor& visitor) override
+    {
+        visitor.Visit("Loop", loop);
+        visitor.Visit("Play", play);
+        visitor.Visit("CurrentAnimationTime", currentAnimationTime);
+        visitor.Visit("CurrentAnimationIndex", currentAnimationIndex);
+    }
 };

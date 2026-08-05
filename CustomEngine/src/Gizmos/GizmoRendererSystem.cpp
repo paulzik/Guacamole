@@ -37,7 +37,7 @@ bool GizmoRendererSystem::Init()
 
     glBindVertexArray(0);
 
-    gizmoShader = Shader::FromFiles("Assets/Shaders/GizmosVertex.vert", "Assets/Shaders/GizmosFragment.frag");
+    gizmoShader = Shader::FromFiles("engine://Shaders/GizmosVertex.vert", "engine://Shaders/GizmosFragment.frag");
 
     return true;
 }
