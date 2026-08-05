@@ -4,6 +4,7 @@
 #include <filesystem>
 #include "../ECS/Entity.h"
 #include "../ECS/Scene.h"
+#include <vector>
 
 bool SceneSerializer::Serialize(const std::filesystem::path& path) {
     YAML::Emitter out;
@@ -21,7 +22,15 @@ bool SceneSerializer::Serialize(const std::filesystem::path& path) {
         out << YAML::Key << "Name" << YAML::Value << e->GetName();
         out << YAML::Key << "Parent" << YAML::Value<< (e->GetParent() ? e->GetParent()->GetEntityID() : 0);
 
-        // transform, components, parent UUID... go here
+        out << YAML::Key << "Components" << YAML::Value << YAML::BeginMap;
+        for (const auto& c : e->GetAllComponents())
+        {
+            out << YAML::Key << c->GetComponentName() << YAML::Value << YAML::BeginMap;
+            //c->Serialize(out);
+            out << YAML::EndMap;
+        }
+        out << YAML::EndMap;
+
         out << YAML::EndMap;
     }
     
