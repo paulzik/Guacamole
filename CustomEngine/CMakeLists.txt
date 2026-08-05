@@ -126,6 +126,16 @@ set(ASSIMP_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(ThirdParty/assimp EXCLUDE_FROM_ALL)
 
+# --- yaml-cpp options (scene serialization) ---
+set(YAML_CPP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "" FORCE)
+set(YAML_CPP_INSTALL OFF CACHE BOOL "" FORCE)
+set(YAML_CPP_FORMAT_SOURCE OFF CACHE BOOL "" FORCE)
+set(YAML_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(ThirdParty/yaml-cpp EXCLUDE_FROM_ALL)
+
 
 # ------------------------------
 # Linking
@@ -137,6 +147,7 @@ target_link_libraries(CustomEngine PRIVATE
     "${OPENAL_DIR}/lib/OpenAL32.lib"
     opengl32
     assimp
+    yaml-cpp::yaml-cpp
 
     BulletDynamics
     BulletCollision
@@ -146,6 +157,7 @@ target_link_libraries(CustomEngine PRIVATE
 set_target_properties(BulletCollision PROPERTIES FOLDER "ThirdParty/Bullet")
 set_target_properties(BulletDynamics PROPERTIES FOLDER "ThirdParty/Bullet")
 set_target_properties(LinearMath PROPERTIES FOLDER "ThirdParty/Bullet")
+set_target_properties(yaml-cpp PROPERTIES FOLDER "ThirdParty")
 
 # ------------------------------
 # Copy runtime DLLs next to the executable after build

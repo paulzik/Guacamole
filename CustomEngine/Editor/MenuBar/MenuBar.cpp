@@ -1,4 +1,5 @@
 #include "MenuBar.h"
+#include "../../src/Scene/SceneSerializer.h"
 #include <imgui.h>
 #include <SDL3/SDL.h>
 
@@ -15,7 +16,9 @@ void MenuBar::Draw()
             if (ImGui::MenuItem("New Scene")) {}
             if (ImGui::MenuItem("Open Scene")) {}
             ImGui::Separator();
-            if (ImGui::MenuItem("Save ")) {}
+            if (ImGui::MenuItem("Save ")) {
+                SceneSerializer::Serialize("C:/Users/paulz/OneDrive/Desktop/MyScene.scene");
+            }
             if (ImGui::MenuItem("Save As")) {}
             ImGui::Separator();
             if (ImGui::MenuItem("Exit")) {

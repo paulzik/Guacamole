@@ -2,10 +2,13 @@
 #include "Scene.h"
 #include "Transform.h"
 #include <iostream>
+#include <random>
 
 Entity::Entity(const char* _name, glm::vec3 entityPosition, Entity* parent)
     : name(_name)
 {
+    entityID = GenerateEntityID();
+
     auto transform = std::make_unique<Transform>(); // default constructor
     transform->position = entityPosition;          // assign manually
     components.push_back(std::move(transform));
@@ -16,6 +19,8 @@ Entity::Entity(const char* _name, glm::vec3 entityPosition, Entity* parent)
 Entity::Entity(const char* _name, glm::vec3 entityPosition)
     : name(_name)
 {
+    entityID = GenerateEntityID();
+
     auto transform = std::make_unique<Transform>(); // default constructor
     transform->position = entityPosition;          // assign manually
     components.push_back(std::move(transform));
@@ -29,6 +34,20 @@ Entity::~Entity() {
 
 const char* Entity::GetName() {
 	return name;
+}
+
+uint64_t Entity::GetEntityID() {
+    return entityID;
+}
+
+
+uint64_t Entity::GenerateEntityID()
+{
+    static std::random_device rd;
+    static std::mt19937_64 engine(rd());
+    static std::uniform_int_distribution<uint64_t> dist(1, UINT64_MAX);
+
+    return dist(engine);
 }
 
 void Entity::PrintComponents()

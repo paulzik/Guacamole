@@ -1,23 +1,21 @@
 #pragma once
 #include "Component.h"
 #include <glm/vec3.hpp>
-#include <list>
 #include <vector>
 #include <memory>
-#include <stdexcept>
 #include <iostream>
 #include "Systems/SystemManager.h"
-#include <unordered_map>
 #include <typeindex>
 
 class Entity {
 
 private:
     std::vector<std::unique_ptr<Component>> components;
-    int EntityID;
+    uint64_t entityID;
     const char* name;
     Entity* parent = nullptr;
     std::vector<Entity*> children;
+    uint64_t GenerateEntityID();
 
 public:
     Entity(const char* name, glm::vec3 entityPosition, Entity* parent);
@@ -36,6 +34,8 @@ public:
     std::vector<Entity*> GetChildren();
     void AddChild(Entity* child);
     void RemoveChild(Entity* child);
+
+    uint64_t GetEntityID();
 
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)
