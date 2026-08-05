@@ -4,3 +4,6 @@
 [submodule "CustomEngine/ThirdParty/bullet3"]
 	path = CustomEngine/ThirdParty/bullet3
 	url = https://github.com/bulletphysics/bullet3
+[submodule "CustomEngine/ThirdParty/yaml-cpp"]
+	path = CustomEngine/ThirdParty/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
