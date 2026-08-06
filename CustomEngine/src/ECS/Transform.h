@@ -14,8 +14,6 @@ struct Transform : public Component {
 
 	COMPONENT_NAME(Transform);
 
-	// modelMatrix is recomputed every frame by TransformSystem, so it is
-	// derived state and deliberately not persisted.
 	void Reflect(IFieldVisitor& visitor) override
 	{
 		visitor.Visit("Position", position);

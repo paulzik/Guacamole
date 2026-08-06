@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_opengl3.h"
+#include <iostream>
 #include <memory>
 #include <vector>
 #include "ECS/Entity.h"
@@ -30,6 +31,7 @@
 #include "Editor/MenuBar/MenuBar.h"
 #include "Editor/EditorStyle.h"
 #include "Project/ProjectSettings.h"
+#include "ECS/ComponentFactory.h"
 #include <filesystem>
 #include "Audio/AudioSource.h"
 #include "Audio/AudioListener.h"

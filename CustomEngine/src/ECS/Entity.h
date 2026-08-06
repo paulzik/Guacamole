@@ -39,9 +39,14 @@ public:
 
     uint64_t GetEntityID();
 
-    const std::vector<std::unique_ptr<Component>>& GetAllComponents() const { 
-        return components; 
+    const std::vector<std::unique_ptr<Component>>& GetAllComponents() const {
+        return components;
     }
+
+
+    Component& AttachComponent(std::unique_ptr<Component> component);
+    Component* GetComponentByName(const std::string& name);
+    Component* GetOrCreateComponent(const std::string& name);
 
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)

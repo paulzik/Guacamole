@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "Scene.h"
 #include "Transform.h"
+#include "ComponentFactory.h"
 #include <iostream>
 #include <random>
 
@@ -23,6 +24,40 @@ Entity::Entity(const std::string& _name, glm::vec3 entityPosition)
     auto transform = std::make_unique<Transform>();
     transform->position = entityPosition;
     components.push_back(std::move(transform));
+}
+
+Component& Entity::AttachComponent(std::unique_ptr<Component> component)
+{
+    component->owner = this;
+
+    Component& ref = *component;
+    components.push_back(std::move(component));
+
+    SystemManager::OnComponentAdded(&ref);
+
+    return ref;
+}
+
+Component* Entity::GetComponentByName(const std::string& name)
+{
+    for (auto& c : components)
+    {
+        if (name == c->GetComponentName())
+            return c.get();
+    }
+    return nullptr;
+}
+
+Component* Entity::GetOrCreateComponent(const std::string& name)
+{
+    if (Component* existing = GetComponentByName(name))
+        return existing;
+
+    std::unique_ptr<Component> created = ComponentFactory::Instance().Create(name);
+    if (!created)
+        return nullptr; // unknown component type - caller decides what to do
+
+    return &AttachComponent(std::move(created));
 }
 
 Entity::~Entity() {

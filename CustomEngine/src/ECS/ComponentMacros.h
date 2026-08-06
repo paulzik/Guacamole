@@ -1,8 +1,11 @@
 #pragma once
+#include "ComponentFactory.h"
 
-#define COMPONENT_NAME(type)                      \
-public:                                          \
-    static constexpr const char* StaticName()     \
-    { return #type; }                             \
-    const char* GetComponentName() const override \
-    { return StaticName(); }
+#define COMPONENT_NAME(type)                                              \
+public:                                                                   \
+    static constexpr const char* StaticName()                             \
+    { return #type; }                                                     \
+    const char* GetComponentName() const override                         \
+    { return StaticName(); }                                              \
+    inline static const bool _componentRegistered =                       \
+        ComponentFactory::Register<type>();

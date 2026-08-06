@@ -24,7 +24,11 @@ public:
     void Destroy() override;
 
     void AddForce(const glm::vec3& force);
-    const char* GetComponentName() const override;
+
+    // Was a hand-written GetComponentName(); the macro yields the same string
+    // ("RigidBody") and also provides StaticName(), which the scene loader's
+    // ComponentFactory needs.
+    COMPONENT_NAME(RigidBody);
 
     void Reflect(IFieldVisitor& visitor) override
     {
