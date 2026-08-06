@@ -117,6 +117,14 @@ void Scene::Start()
 	}
 }
 
+void Scene::Clear() {
+	selectedEntity = nullptr;
+	sceneCamera = nullptr;
+	lights.clear();
+	scenegraph.Clear();
+	entities.clear();
+}
+
 
 void Scene::PrintEntities() {
 	scenegraph.PrintEntities();

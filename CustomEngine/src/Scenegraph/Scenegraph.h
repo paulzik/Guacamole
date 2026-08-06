@@ -12,6 +12,9 @@ public:
 
 	void AddEntity(Entity* entity, Entity* parent);
 	void RemoveEntity(Entity* entity);
+
+	void Clear();
+
 	Entity* GetEntity(Entity* target);
 	Entity* GetEntityRecursive(Entity* current, Entity* target);
 

@@ -44,6 +44,8 @@ public:
 	void Update();
 	void Start();
 
+	void Clear();
+
 	Scenegraph& GetScenegraph();
 	Entity* selectedEntity = nullptr;
 	AxisSystem axisSystem = Local;

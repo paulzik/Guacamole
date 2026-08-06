@@ -55,6 +55,11 @@ Entity* Scenegraph::GetEntityRecursive(Entity* current, Entity* target)
 }
 
 
+void Scenegraph::Clear()
+{
+	roots.clear();
+}
+
 void Scenegraph::RemoveEntity(Entity* entity)
 {
 	roots.erase(
