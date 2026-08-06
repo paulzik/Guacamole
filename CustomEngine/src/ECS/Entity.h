@@ -18,8 +18,8 @@ private:
     uint64_t GenerateEntityID();
 
 public:
-    Entity(const char* name, glm::vec3 entityPosition, Entity* parent);
-    Entity(const char* name, glm::vec3 entityPosition);
+    Entity(const std::string& name, glm::vec3 entityPosition, Entity* parent);
+    Entity(const std::string& name, glm::vec3 entityPosition);
     ~Entity();
 
     std::string GetName();

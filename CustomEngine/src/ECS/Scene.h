@@ -13,9 +13,9 @@ enum AxisSystem
 class Scene {
 private:
 	Scenegraph scenegraph;
-	std::vector<Entity*> entities;
+	std::vector<std::unique_ptr<Entity>> entities;
 
-	Camera* sceneCamera;
+	Camera* sceneCamera = nullptr;
 	std::vector<Light*> lights;
 
 public:
@@ -24,7 +24,8 @@ public:
 
 	static Scene& Get();
 
-	void AddEntity(Entity* entity, Entity* parent);
+	// Creates an entity owned by the Scene and returns a non-owning pointer.
+	Entity* CreateEntity(const std::string& name, glm::vec3 position, Entity* parent = nullptr);
 	void RemoveEntity(Entity* entity);
 	void PrintEntities();
 
@@ -34,7 +35,7 @@ public:
 	void AddLight(Light* light);
 	std::vector<Light*> GetLights();
 
-	const std::vector<Entity*>& GetEntities() const;
+	const std::vector<std::unique_ptr<Entity>>& GetEntities() const;
 
 	void Update();
 	void Start();

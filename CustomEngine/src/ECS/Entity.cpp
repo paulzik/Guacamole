@@ -4,32 +4,30 @@
 #include <iostream>
 #include <random>
 
-Entity::Entity(const char* _name, glm::vec3 entityPosition, Entity* parent)
+Entity::Entity(const std::string& _name, glm::vec3 entityPosition, Entity* parent)
     : name(_name)
 {
     entityID = GenerateEntityID();
 
-    auto transform = std::make_unique<Transform>(); // default constructor
-    transform->position = entityPosition;          // assign manually
+    auto transform = std::make_unique<Transform>();
+    transform->position = entityPosition;
     components.push_back(std::move(transform));
 
-    Scene::Get().AddEntity(this, parent);
 }
 
-Entity::Entity(const char* _name, glm::vec3 entityPosition)
+Entity::Entity(const std::string& _name, glm::vec3 entityPosition)
     : name(_name)
 {
     entityID = GenerateEntityID();
 
-    auto transform = std::make_unique<Transform>(); // default constructor
-    transform->position = entityPosition;          // assign manually
+    auto transform = std::make_unique<Transform>();
+    transform->position = entityPosition;
     components.push_back(std::move(transform));
-
-    Scene::Get().AddEntity(this, nullptr);
 }
 
 Entity::~Entity() {
-
+    for (auto& component : components)
+        SystemManager::OnComponentRemoved(component.get());
 }
 
 std::string Entity::GetName() {

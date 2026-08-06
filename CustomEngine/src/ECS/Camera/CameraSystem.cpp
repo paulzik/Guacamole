@@ -9,6 +9,12 @@ void CameraSystem::TryRegister(Component* c)
             mainCamera = cam;
 }
 
+void CameraSystem::TryUnregister(Component* c)
+{
+    if (mainCamera && mainCamera == dynamic_cast<Camera*>(c))
+        mainCamera = nullptr;
+}
+
 bool CameraSystem::Init()
 {
 	return true;

@@ -32,6 +32,7 @@ public:
     }
 
 	static void OnComponentAdded(Component* c);
+	static void OnComponentRemoved(Component* c);
 	void ShutdownSystem(System* system);
 
 	static void ShutdownAllSystems();

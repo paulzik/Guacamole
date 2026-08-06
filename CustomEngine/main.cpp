@@ -126,37 +126,39 @@ int main(int argc, char** argv) {
     auto skinnedShader = Shader::FromFiles("engine://Shaders/SkinnedVertex.vert", "engine://Shaders/BasicFragment.frag");
 
     // ---------------- Camera ----------------
-    Entity camera("MainCamera", vec3(0, 0, 4));
-    Camera& cameraComp = camera.AddComponent<Camera>();
+    Entity* camera = Scene::Get().CreateEntity("MainCamera", vec3(0, 0, 4));
+    Camera& cameraComp = camera->AddComponent<Camera>();
     Scene::Get().AddCamera(&cameraComp);
-    camera.AddComponent<AudioListener>();
-    camera.AddComponent<CameraController>();
+    camera->AddComponent<AudioListener>();
+    camera->AddComponent<CameraController>();
 
     // ---------------- Scene primitives ----------------
-    Entity cube1("Cube1", vec3(-1.2f, 0, 0));
-    MeshFilter& cubeMesh = cube1.AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
-    MeshRenderer& cubeRenderer = cube1.AddComponent<MeshRenderer>();
+    Entity* cube1 = Scene::Get().CreateEntity("Cube1", vec3(-1.2f, 0, 0));
+    MeshFilter& cubeMesh = cube1->AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
+    MeshRenderer& cubeRenderer = cube1->AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
-    cube1.AddComponent<RigidBody>(1.0f);
-    cube1.AddComponent<BoxCollider>(false, glm::vec3(0.5f));
+    // Collider first: PhysicsSystem only registers a RigidBody once its
+    // Collider is present.
+    cube1->AddComponent<BoxCollider>(false, glm::vec3(0.5f));
+    cube1->AddComponent<RigidBody>(1.0f);
 
-    Entity sphereStatic("SphereStatic", vec3(-1.2f, -3, 0));
-    MeshFilter& sphereStaticMesh = sphereStatic.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.5f));
-    MeshRenderer& sphereStaticRenderer = sphereStatic.AddComponent<MeshRenderer>();
+    Entity* sphereStatic = Scene::Get().CreateEntity("SphereStatic", vec3(-1.2f, -3, 0));
+    MeshFilter& sphereStaticMesh = sphereStatic->AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.5f));
+    MeshRenderer& sphereStaticRenderer = sphereStatic->AddComponent<MeshRenderer>();
     sphereStaticRenderer.material = standardMaterial;
-    sphereStatic.AddComponent<RigidBody>(0);
-    sphereStatic.AddComponent<SphereCollider>(false, 0.5f);
+    sphereStatic->AddComponent<SphereCollider>(false, 0.5f);
+    sphereStatic->AddComponent<RigidBody>(0);
 
-    Entity sphere1("Sphere1", vec3(1, 1, -1));
-    MeshFilter& sphereMesh = sphere1.AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
-    MeshRenderer& sphereRenderer = sphere1.AddComponent<MeshRenderer>();
+    Entity* sphere1 = Scene::Get().CreateEntity("Sphere1", vec3(1, 1, -1));
+    MeshFilter& sphereMesh = sphere1->AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
+    MeshRenderer& sphereRenderer = sphere1->AddComponent<MeshRenderer>();
     sphereRenderer.material = standardMaterial;
 
-    Entity light1("Light1", vec3(-5, 0, 0));
-    light1.AddComponent<PointLight>(vec3(1, 1, 1), 1.0f);
+    Entity* light1 = Scene::Get().CreateEntity("Light1", vec3(-5, 0, 0));
+    light1->AddComponent<PointLight>(vec3(1, 1, 1), 1.0f);
 
-    Entity light2("Light2", vec3(5, 0, 3));
-    light2.AddComponent<PointLight>(vec3(1, 0, 0), 1.0f);
+    Entity* light2 = Scene::Get().CreateEntity("Light2", vec3(5, 0, 3));
+    light2->AddComponent<PointLight>(vec3(1, 0, 0), 1.0f);
 
     // ---------------- Scenegraph Editor / Inspector ----------------
     std::vector<std::unique_ptr<EditorWindow>> editorWindows;
@@ -168,7 +170,7 @@ int main(int argc, char** argv) {
 
     // ---------------- Load model ----------------
     auto modelAsset = Resources::Load("Assets/Models/Miner.fbx");
-    shared_ptr<Entity> soldier = ModelInstantiator::Instantiate(modelAsset, "Miner");    
+    Entity* soldier = ModelInstantiator::Instantiate(modelAsset, "Miner");
     MeshRenderer& soldierRenderer = soldier->AddComponent<MeshRenderer>();
     auto albedo = Resources::Load("Assets/Models/MinerTexture.png");
     auto texture2D = std::dynamic_pointer_cast<Texture2D>(albedo);
@@ -178,7 +180,7 @@ int main(int argc, char** argv) {
     // ---------------- Animated character ----------------
     auto generalAsset = Resources::Load("Assets/Models/GeneralAnimated.fbx");
     auto generalModel = std::dynamic_pointer_cast<Model>(generalAsset);
-    shared_ptr<Entity> general = ModelInstantiator::Instantiate(generalAsset, "General", vec3(-2.5f, -1.0f, 0));
+    Entity* general = ModelInstantiator::Instantiate(generalAsset, "General", vec3(-2.5f, -1.0f, 0));
     general->GetComponent<Transform>().scale = vec3(0.01f, 0.01f, 0.01f);
 
     auto generalAlbedo = std::dynamic_pointer_cast<Texture2D>(Resources::Load("Assets/Models/GeneralRed.png"));
@@ -201,7 +203,7 @@ int main(int argc, char** argv) {
     ApplyEditorStyle();
 
     auto audioClip = Resources::Load<AudioClip>("Assets/Audio/youwin.mp3");
-    AudioSource& audioSource = cube1.AddComponent<AudioSource>();
+    AudioSource& audioSource = cube1->AddComponent<AudioSource>();
     audioSource.clip = audioClip;
     //audioSource.Play();
 

@@ -10,6 +10,12 @@ void AnimationSystem::TryRegister(Component* c)
         animators.push_back(anim);
 }
 
+void AnimationSystem::TryUnregister(Component* c)
+{
+    if (auto anim = dynamic_cast<Animator*>(c))
+        std::erase(animators, anim);
+}
+
 bool AnimationSystem::Init()
 {
     for (auto animator : animators) {

@@ -28,6 +28,15 @@ void RenderSystem::TryRegister(Component* c)
         skinnedRenderers.push_back(smr);
 }
 
+void RenderSystem::TryUnregister(Component* c)
+{
+    if (auto mr = dynamic_cast<MeshRenderer*>(c))
+        std::erase(meshRenderers, mr);
+
+    if (auto smr = dynamic_cast<SkinnedMeshRenderer*>(c))
+        std::erase(skinnedRenderers, smr);
+}
+
 void RenderSystem::Update()
 {
     for (auto renderer : meshRenderers) {

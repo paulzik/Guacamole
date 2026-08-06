@@ -7,6 +7,7 @@ class CameraSystem : public System {
     Camera* mainCamera;
 
     void TryRegister(Component* c) override;
+    void TryUnregister(Component* c) override;
 
     bool Init() override;
     void Update() override;

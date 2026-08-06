@@ -13,6 +13,7 @@ public:
     void Shutdown() override;
 
     void TryRegister(Component* c) override;
+    void TryUnregister(Component* c) override;
 
     //Returns the closest entity under the given screen position, or nullptr
     Entity* Pick(float mouseX, float mouseY);

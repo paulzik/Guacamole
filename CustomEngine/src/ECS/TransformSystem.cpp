@@ -8,9 +8,7 @@ bool TransformSystem::Init()
 
 void TransformSystem::Update()
 {
-    const auto& entities = Scene::Get().GetEntities();
-
-    for (Entity* e : entities)
+    for (const auto& e : Scene::Get().GetEntities())
     {
         Transform* t = e->TryGetComponent<Transform>();
         if (!t) continue;

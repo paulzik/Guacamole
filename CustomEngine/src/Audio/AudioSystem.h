@@ -9,6 +9,7 @@
 class AudioSystem : public System {
 public:
     void TryRegister(Component* c) override;
+    void TryUnregister(Component* c) override;
 
     bool Init() override;
     void Update() override;

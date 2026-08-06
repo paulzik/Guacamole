@@ -20,6 +20,20 @@ void AudioSystem::TryRegister(Component* c)
     }
 }
 
+void AudioSystem::TryUnregister(Component* c)
+{
+    if (auto aS = dynamic_cast<AudioSource*>(c)) {
+        std::erase(audioSources, aS);
+        return;
+    }
+
+    // The listener also caches a Transform owned by the same entity.
+    if (audioListener && audioListener == dynamic_cast<AudioListener*>(c)) {
+        audioListener = nullptr;
+        audioListenerTransform = nullptr;
+    }
+}
+
 bool AudioSystem::Init()
 {
     sDevice = alcOpenDevice(nullptr);

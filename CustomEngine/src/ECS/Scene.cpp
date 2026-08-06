@@ -15,15 +15,15 @@ Scene::~Scene() {
 
 }
 
-void Scene::AddEntity(Entity* entity, Entity* parent = nullptr)
+Entity* Scene::CreateEntity(const std::string& name, glm::vec3 position, Entity* parent)
 {
-	if (!entity) {
-		std::cerr << "Entity to insert is null" << std::endl;
-		return;
-	}
+	auto entity = std::make_unique<Entity>(name, position, parent);
+	Entity* raw = entity.get();            
 
-	entities.push_back(entity);
-	scenegraph.AddEntity(entity, parent);
+	entities.push_back(std::move(entity));
+	scenegraph.AddEntity(raw, parent);
+
+	return raw;
 }
 
 Camera* Scene::GetCamera()
@@ -54,7 +54,7 @@ std::vector<Light*> Scene::GetLights()
 	return lights;
 }
 
-const std::vector<Entity*>& Scene::GetEntities() const
+const std::vector<std::unique_ptr<Entity>>& Scene::GetEntities() const
 {
 	return entities;
 }
@@ -70,33 +70,36 @@ void Scene::RemoveEntity(Entity* entity) {
 		return;
 	}
 
-	// Remove from the linear vector
-	auto it = std::find(entities.begin(), entities.end(), entity);
+	scenegraph.RemoveEntity(entity);
+
+	if (selectedEntity == entity)
+		selectedEntity = nullptr;
+
+	// Lights are tracked by the Scene rather than a System, so drop them here.
+	for (Light* light : entity->GetComponents<Light>())
+		std::erase(lights, light);
+
+	auto it = std::find_if(entities.begin(), entities.end(),
+		[entity](const std::unique_ptr<Entity>& e) { return e.get() == entity; });
+
 	if (it != entities.end()) {
 		entities.erase(it);
 	}
 	else {
 		std::cerr << "Entity not found in linear vector" << std::endl;
 	}
-
-	// Remove from the scenegraph
-	scenegraph.RemoveEntity(entity);
-
-	delete entity;
 }
 
 void Scene::Update() 
 {
-	for (Entity* e : entities)
-	{
+	for (const auto& e : entities) {
 		e->Update();
 	}
 }
 
 void Scene::Start() 
 {
-	for (Entity* e : entities)
-	{
+	for (const auto& e : entities) {
 		e->Start();
 	}
 }

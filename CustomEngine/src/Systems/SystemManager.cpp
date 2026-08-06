@@ -22,6 +22,12 @@ void SystemManager::OnComponentAdded(Component* c)
         system->TryRegister(c);
 }
 
+void SystemManager::OnComponentRemoved(Component* c)
+{
+    for (auto& [_, system] : systems)
+        system->TryUnregister(c);
+}
+
 void SystemManager::ShutdownSystem(System* system)
 {
     auto it = std::find_if(

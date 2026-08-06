@@ -6,6 +6,7 @@
 struct AnimationSystem : public System {
     std::vector<Animator*> animators;
     void TryRegister(Component* c) override;
+    void TryUnregister(Component* c) override;
 
     bool Init() override;
     void Update() override;

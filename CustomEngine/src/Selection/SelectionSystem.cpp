@@ -35,6 +35,15 @@ void SelectionSystem::TryRegister(Component* c)
     pickables.push_back({ mesh, min, max });
 }
 
+void SelectionSystem::TryUnregister(Component* c)
+{
+    auto mesh = dynamic_cast<MeshFilter*>(c);
+    if (!mesh)
+        return;
+
+    std::erase_if(pickables, [mesh](const Pickable& p) { return p.mesh == mesh; });
+}
+
 void SelectionSystem::Update()
 {
     Mouse* mouse = Input::GetDevice<Mouse>();

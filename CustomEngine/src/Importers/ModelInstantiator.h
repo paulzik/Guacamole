@@ -8,8 +8,8 @@ class ModelInstantiator
 public:
     virtual ~ModelInstantiator() = default;
 
-    static std::unique_ptr<Entity> Instantiate(const std::shared_ptr<Asset>& asset,
-                                               const char* entityName,
-                                               const glm::vec3& position = glm::vec3(0));
+    static Entity* Instantiate(const std::shared_ptr<Asset>& asset,
+                               const std::string& entityName,
+                               const glm::vec3& position = glm::vec3(0));
 
 };

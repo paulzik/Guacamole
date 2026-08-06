@@ -17,7 +17,7 @@ bool SceneSerializer::Serialize(const std::filesystem::path& path) {
     out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
     
     
-    for (Entity* e : Scene::Get().GetEntities())
+    for (const auto& e : Scene::Get().GetEntities())
     {
         out << YAML::BeginMap;
         out << YAML::Key << "Id" << YAML::Value << e->GetEntityID();

@@ -33,6 +33,12 @@ void PhysicsSystem::TryRegister(Component* c)
     RegisterBody(body);
 }
 
+void PhysicsSystem::TryUnregister(Component* c)
+{
+    if (auto* body = dynamic_cast<RigidBody*>(c))
+        RemoveBody(body);
+}
+
 
 bool PhysicsSystem::Init() {
     collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -101,6 +107,13 @@ void PhysicsSystem::SyncTransforms()
 
 void PhysicsSystem::RegisterBody(RigidBody* body)
 {
+    if (!body || body->m_InternalBody)
+        return;
+
+    Entity* owner = body->owner;
+    if (!owner || !owner->HasComponent<Transform>() || !owner->HasComponent<Collider>())
+        return;
+
     //Get the Collider shape from the component here
     Collider& collider = body->owner->GetComponent<Collider>();
 
