@@ -11,12 +11,16 @@ enum AxisSystem
 };
 
 class Scene {
+	friend class SceneSerializer;
 private:
 	Scenegraph scenegraph;
 	std::vector<std::unique_ptr<Entity>> entities;
 
 	Camera* sceneCamera = nullptr;
 	std::vector<Light*> lights;
+
+	Entity* CreateEntity(const std::string& name, glm::vec3 position, Entity* parent, uint64_t entityID);
+
 
 public:
 	Scene();

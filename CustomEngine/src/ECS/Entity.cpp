@@ -1,30 +1,24 @@
 #include "Entity.h"
-#include "Scene.h"
 #include "Transform.h"
 #include "ComponentFactory.h"
 #include <iostream>
 #include <random>
 
-Entity::Entity(const std::string& _name, glm::vec3 entityPosition, Entity* parent)
-    : name(_name)
+Entity::Entity(const std::string& name,glm::vec3 position,Entity* parent,uint64_t entityID)
+    : name(name),parent(parent),entityID(entityID)
 {
-    entityID = GenerateEntityID();
-
     auto transform = std::make_unique<Transform>();
-    transform->position = entityPosition;
-    components.push_back(std::move(transform));
-
-}
-
-Entity::Entity(const std::string& _name, glm::vec3 entityPosition)
-    : name(_name)
-{
-    entityID = GenerateEntityID();
-
-    auto transform = std::make_unique<Transform>();
-    transform->position = entityPosition;
+    transform->position = position;
     components.push_back(std::move(transform));
 }
+
+Entity::Entity(const std::string& name,glm::vec3 position,Entity* parent)
+    : Entity(name, position, parent, GenerateEntityID())
+{}
+
+Entity::Entity(const std::string& name,glm::vec3 position)
+    : Entity(name, position, nullptr, GenerateEntityID())
+{}
 
 Component& Entity::AttachComponent(std::unique_ptr<Component> component)
 {

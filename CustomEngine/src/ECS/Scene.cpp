@@ -15,15 +15,20 @@ Scene::~Scene() {
 
 }
 
-Entity* Scene::CreateEntity(const std::string& name, glm::vec3 position, Entity* parent)
+Entity* Scene::CreateEntity(const std::string& name, glm::vec3 position, Entity* parent, uint64_t entityID)
 {
-	auto entity = std::make_unique<Entity>(name, position, parent);
-	Entity* raw = entity.get();            
+	std::unique_ptr<Entity> entity(new Entity(name, position, parent, entityID));
+	Entity* raw = entity.get();
 
 	entities.push_back(std::move(entity));
 	scenegraph.AddEntity(raw, parent);
 
 	return raw;
+}
+
+Entity* Scene::CreateEntity(const std::string& name, glm::vec3 position, Entity* parent)
+{
+	return CreateEntity(name, position, parent, Entity::GenerateEntityID());
 }
 
 Camera* Scene::GetCamera()

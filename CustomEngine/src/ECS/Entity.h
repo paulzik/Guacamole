@@ -17,11 +17,16 @@ private:
     std::string name;
     Entity* parent = nullptr;
     std::vector<Entity*> children;
-    uint64_t GenerateEntityID();
+
+    static uint64_t GenerateEntityID();
+
+    Entity(const std::string& name, glm::vec3 position, Entity* parent, uint64_t entityID);
+    Entity(const std::string& name, glm::vec3 position, Entity* parent);
+    Entity(const std::string& name, glm::vec3 position);
+
+    friend class Scene;
 
 public:
-    Entity(const std::string& name, glm::vec3 entityPosition, Entity* parent);
-    Entity(const std::string& name, glm::vec3 entityPosition);
     ~Entity();
 
     std::string GetName();
@@ -42,7 +47,6 @@ public:
     const std::vector<std::unique_ptr<Component>>& GetAllComponents() const {
         return components;
     }
-
 
     Component& AttachComponent(std::unique_ptr<Component> component);
     Component* GetComponentByName(const std::string& name);

@@ -28,9 +28,6 @@ struct Animator : public Component {
     void PlayByIndex(int index);
     void SetCurrentAnimationIndex(int index);
 
-    // Was COMPONENT_NAME(Animation), which named the unrelated Animation asset
-    // class. Harmless while the macro only stringified it, but it registered
-    // the wrong type once registration became automatic.
     COMPONENT_NAME(Animator);
 
     void Reflect(IFieldVisitor& visitor) override
