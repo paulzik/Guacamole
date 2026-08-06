@@ -4,6 +4,11 @@
 
 struct BoxCollider : public Collider {
 
+    BoxCollider() : Collider(true) {
+        colliderDescriptor.type = ColliderType::Box;
+        colliderDescriptor.halfExtend = glm::vec3(1.0f,1.0f,1.0f);
+    }
+
     BoxCollider(bool trigger, glm::vec3 halfExtends) : Collider(trigger) 
     {
         colliderDescriptor.type = ColliderType::Box;

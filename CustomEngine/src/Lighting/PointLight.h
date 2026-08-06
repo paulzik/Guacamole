@@ -8,6 +8,8 @@
 struct PointLight : public Light {
     float radius = 5.0f;
 
+    PointLight() : Light(POINT, glm::vec3(1.0f, 1.0f, 1.0f), 0.8f), radius(5.0f) {}
+
     PointLight(glm::vec3 _color, float _intencity, float _radius = 20.0f)
         : Light(POINT, _color, _intencity), radius(_radius)
     {

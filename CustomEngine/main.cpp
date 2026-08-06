@@ -1,12 +1,9 @@
 ﻿#include <SDL3/SDL.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_opengl3.h"
-#include <iostream>
 #include <memory>
 #include <vector>
 #include "ECS/Entity.h"
@@ -28,10 +25,7 @@
 #include "Importers/Texture2DImporter.h"
 #include "Importers/AudioClipImporter.h"
 #include "Lighting/PointLight.h"
-#include "Lighting/DirectionalLight.h"
 #include "Animations/Animator.h"
-#include "Animations/Animation.h"
-#include "Utilities/Debug/Debug.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Editor/MenuBar/MenuBar.h"
 #include "Editor/EditorStyle.h"
@@ -50,7 +44,6 @@
 #include "ECS/RenderSystem.h"
 #include "Gizmos/GizmoRendererSystem.h"
 #include "Selection/SelectionSystem.h"
-#include "Gizmos/Gizmos.h"
 #include "Audio/AudioSystem.h"
 #include "Animations/AnimationSystem.h"
 #include "Input/Input.h"
