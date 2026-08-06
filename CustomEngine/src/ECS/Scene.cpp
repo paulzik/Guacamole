@@ -64,20 +64,28 @@ Scenegraph& Scene::GetScenegraph()
 	return scenegraph;
 }
 
-void Scene::RemoveEntity(Entity* entity) {
+void Scene::DeleteEntity(Entity* entity) {
 	if (!entity) {
-		std::cerr << "Entity to remove is null" << std::endl;
+		std::cerr << "Entity to delete is null" << std::endl;
 		return;
 	}
+
+	for (Entity* child : entity->GetChildren())
+		DeleteEntity(child);
+
+	if (Entity* parent = entity->GetParent())
+		parent->RemoveChild(entity);
 
 	scenegraph.RemoveEntity(entity);
 
 	if (selectedEntity == entity)
 		selectedEntity = nullptr;
 
-	// Lights are tracked by the Scene rather than a System, so drop them here.
 	for (Light* light : entity->GetComponents<Light>())
 		std::erase(lights, light);
+
+	if (sceneCamera && sceneCamera->owner == entity)
+		sceneCamera = nullptr;
 
 	auto it = std::find_if(entities.begin(), entities.end(),
 		[entity](const std::unique_ptr<Entity>& e) { return e.get() == entity; });

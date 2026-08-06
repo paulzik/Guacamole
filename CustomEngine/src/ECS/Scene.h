@@ -24,9 +24,9 @@ public:
 
 	static Scene& Get();
 
-	// Creates an entity owned by the Scene and returns a non-owning pointer.
 	Entity* CreateEntity(const std::string& name, glm::vec3 position, Entity* parent = nullptr);
-	void RemoveEntity(Entity* entity);
+
+	void DeleteEntity(Entity* entity);
 	void PrintEntities();
 
 	Camera* GetCamera();

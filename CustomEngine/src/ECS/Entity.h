@@ -6,6 +6,8 @@
 #include <iostream>
 #include "Systems/SystemManager.h"
 #include <typeindex>
+#include <stdexcept>
+#include <string>
 
 class Entity {
 
@@ -58,14 +60,16 @@ public:
         return ref;
     }
 
-    //Gets the first component of type T it gets in the components
     template<typename T>
     T& GetComponent() {
         for (auto& c : components) {
             if (auto ptr = dynamic_cast<T*>(c.get()))
                 return *ptr; // returns lvalue
         }
-        std::cout << "Component " << typeid(T).name()<< " not found in entity " << GetName() << std::endl;
+
+        throw std::runtime_error(
+            "Component " + std::string(typeid(T).name()) +
+            " not found in entity " + GetName());
     }
 
     template<typename T>
