@@ -1,0 +1,156 @@
+Version: 1
+Scene: Main
+Entities:
+  - Id: 16230906880885811824
+    Name: MainCamera
+    Parent: 0
+    Components:
+      Transform:
+        Position: [0, 0, 4]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      Camera:
+        LookAt: [0, 0, 0]
+        Up: [0, 1, 0]
+        Fov: 0.7853982
+        Aspect: 1.7777778
+        NearPlane: 0.1
+        FarPlane: 100
+      AudioListener:
+        {}
+      CameraController:
+        Sensitivity: 0.1
+        MoveSpeed: 2
+        Pitch: 0
+        Yaw: -0
+  - Id: 16322478613433077615
+    Name: Cube1
+    Parent: 0
+    Components:
+      Transform:
+        Position: [-1.2, 0, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      MeshFilter:
+        {}
+      MeshRenderer:
+        Wireframe: false
+      BoxCollider:
+        IsTrigger: false
+        HalfExtend: [0.5, 0.5, 0.5]
+      RigidBody:
+        Mass: 1
+        Friction: 0.5
+        Restitution: 0
+        LinearDamping: 0
+        AngularDamping: 0
+        UseGravity: true
+        IsKinematic: false
+      AudioSource:
+        Volume: 1
+        Pitch: 1
+        Loop: false
+  - Id: 13650171943721847184
+    Name: SphereStatic
+    Parent: 0
+    Components:
+      Transform:
+        Position: [-1.2, -3, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      MeshFilter:
+        {}
+      MeshRenderer:
+        Wireframe: false
+      SphereCollider:
+        IsTrigger: false
+        Radius: 0.5
+      RigidBody:
+        Mass: 0
+        Friction: 0.5
+        Restitution: 0
+        LinearDamping: 0
+        AngularDamping: 0
+        UseGravity: true
+        IsKinematic: false
+  - Id: 2865313143922370877
+    Name: Sphere1
+    Parent: 0
+    Components:
+      Transform:
+        Position: [1, 1, -1]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      MeshFilter:
+        {}
+      MeshRenderer:
+        Wireframe: false
+  - Id: 11662453092969810377
+    Name: Light1
+    Parent: 0
+    Components:
+      Transform:
+        Position: [-5, 0, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      PointLight:
+        Color: [1, 1, 1]
+        Intensity: 1
+        Radius: 20
+  - Id: 9100499980614533256
+    Name: Light2
+    Parent: 0
+    Components:
+      Transform:
+        Position: [5, 0, 3]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      PointLight:
+        Color: [1, 0, 0]
+        Intensity: 1
+        Radius: 20
+  - Id: 10023810395820311034
+    Name: Miner
+    Parent: 0
+    Components:
+      Transform:
+        Position: [0, 0, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+      MeshFilter:
+        {}
+      MeshRenderer:
+        Wireframe: false
+  - Id: 1660990234980898852
+    Name: General
+    Parent: 0
+    Components:
+      Transform:
+        Position: [-2.5, -1, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [0.01, 0.01, 0.01]
+      MeshFilter:
+        {}
+      SkinnedMeshRenderer:
+        Wireframe: false
+      Animator:
+        Loop: true
+        Play: false
+        CurrentAnimationTime: 0
+        CurrentAnimationIndex: 0
+  - Id: 1578488746039913266
+    Name: TestParent
+    Parent: 0
+    Components:
+      Transform:
+        Position: [3, 0, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]
+  - Id: 9204863798318738720
+    Name: TestChild
+    Parent: 1578488746039913266
+    Components:
+      Transform:
+        Position: [0, 1, 0]
+        Rotation: [0, 0, 0, 0]
+        Scale: [1, 1, 1]

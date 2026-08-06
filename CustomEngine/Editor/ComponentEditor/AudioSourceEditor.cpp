@@ -4,7 +4,11 @@
 
 void AudioSourceEditor::Draw(Component* component) {
     AudioSource* audioSource = static_cast<AudioSource*>(component);
-    ImGui::LabelText("AudioClip", audioSource->clip->GetAudioName().c_str());
+
+    if (audioSource->clip)
+        ImGui::LabelText("AudioClip", audioSource->clip->GetAudioName().c_str());
+    else
+        ImGui::TextDisabled("No audio clip assigned.");
 
     ImGui::SeparatorText("Controlls");
     float volume = audioSource->volume;

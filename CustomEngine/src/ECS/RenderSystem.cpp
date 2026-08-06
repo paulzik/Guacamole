@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include "Utilities/Debug/Debug.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/vec3.hpp>
 #include "RenderSystem.h"
@@ -57,12 +58,19 @@ void RenderSystem::Shutdown()
 
 void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
 {
+    // A scene can have no active camera; every matrix below reads through it.
+    Camera* camera = Scene::Get().GetCamera();
+    if (!camera)
+        return;
+
     if (!meshRenderer->material) {
-        std::cerr << "MeshRenderer ERROR: No material assigned! in entity: " << meshRenderer->owner->GetName() << std::endl;
+        std::cerr << "MeshRenderer ERROR: No material assigned! in entity: "
+                  << meshRenderer->owner->GetName() << std::endl;
         return;
     }
-    if (meshRenderer->material->shader->programID == 0) {
-        std::cerr << "MeshRenderer ERROR: Shader program not compiled!\n";
+    if (!meshRenderer->material->shader || meshRenderer->material->shader->programID == 0) {
+        std::cerr << "MeshRenderer ERROR: Shader program not compiled! in entity: "
+                  << meshRenderer->owner->GetName() << std::endl;
         return;
     }
 
@@ -80,12 +88,12 @@ void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
 
     glUniformMatrix4fv(
         glGetUniformLocation(meshRenderer->material->shader->programID, "view"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->viewMatrix)
+        1, GL_FALSE, glm::value_ptr(camera->viewMatrix)
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(meshRenderer->material->shader->programID, "projection"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->projectionMatrix)
+        1, GL_FALSE, glm::value_ptr(camera->projectionMatrix)
     );
 
     // -----------------------------
@@ -93,7 +101,7 @@ void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
     // -----------------------------
     glUniform3fv(
         glGetUniformLocation(meshRenderer->material->shader->programID, "viewPos"),
-        1, glm::value_ptr(Scene::Get().GetCamera()->owner->GetComponent<Transform>().position)
+        1, glm::value_ptr(camera->owner->GetComponent<Transform>().position)
     );
 
     // -----------------------------
@@ -157,12 +165,19 @@ void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
 
 void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRenderer)
 {
+    // A scene can have no active camera; every matrix below reads through it.
+    Camera* camera = Scene::Get().GetCamera();
+    if (!camera)
+        return;
+
     if (!skinnedMeshRenderer->material) {
-        std::cerr << "SkinnedMeshRenderer ERROR: No material assigned!\n";
+        std::cerr << "SkinnedMeshRenderer ERROR: No material assigned! in entity: "
+                  << skinnedMeshRenderer->owner->GetName() << std::endl;
         return;
     }
-    if (skinnedMeshRenderer->material->shader->programID == 0) {
-        std::cerr << "SkinnedMeshRenderer ERROR: Shader program not compiled!\n";
+    if (!skinnedMeshRenderer->material->shader || skinnedMeshRenderer->material->shader->programID == 0) {
+        std::cerr << "SkinnedMeshRenderer ERROR: Shader program not compiled! in entity: "
+                  << skinnedMeshRenderer->owner->GetName() << std::endl;
         return;
     }
 
@@ -180,12 +195,12 @@ void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRe
 
     glUniformMatrix4fv(
         glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, "view"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->viewMatrix)
+        1, GL_FALSE, glm::value_ptr(camera->viewMatrix)
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, "projection"),
-        1, GL_FALSE, glm::value_ptr(Scene::Get().GetCamera()->projectionMatrix)
+        1, GL_FALSE, glm::value_ptr(camera->projectionMatrix)
     );
 
     // -----------------------------
@@ -193,7 +208,7 @@ void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRe
     // -----------------------------
     glUniform3fv(
         glGetUniformLocation(skinnedMeshRenderer->material->shader->programID, "viewPos"),
-        1, glm::value_ptr(Scene::Get().GetCamera()->owner->GetComponent<Transform>().position)
+        1, glm::value_ptr(camera->owner->GetComponent<Transform>().position)
     );
 
     // -----------------------------

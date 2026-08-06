@@ -9,11 +9,26 @@ void SkinnedMeshRendererEditor::Draw(Component* component) {
 
     std::shared_ptr<Material> material = skinnedMeshRenderer->material;
 
-    std::string vertexShaderName = material->shader->GetVertexShader()->name;
-    ImGui::LabelText("VertexShader", vertexShaderName.c_str());
+    if (!material) {
+        ImGui::TextDisabled("No material assigned.");
 
-    std::string fragmentShaderName = material->shader->GetFragmentShader()->name;
-    ImGui::LabelText("FragmentShader", fragmentShaderName.c_str());
+        bool noMatWireframe = skinnedMeshRenderer->wireframe;
+        if (ImGui::Checkbox("Wireframe", &noMatWireframe)) {
+            skinnedMeshRenderer->wireframe = noMatWireframe;
+        }
+        return;
+    }
+
+    if (material->shader) {
+        std::string vertexShaderName = material->shader->GetVertexShader()->name;
+        ImGui::LabelText("VertexShader", vertexShaderName.c_str());
+
+        std::string fragmentShaderName = material->shader->GetFragmentShader()->name;
+        ImGui::LabelText("FragmentShader", fragmentShaderName.c_str());
+    }
+    else {
+        ImGui::TextDisabled("No shader assigned.");
+    }
 
     if (material->albedo) {
         GLuint my_tex_id = material->albedo->ID;

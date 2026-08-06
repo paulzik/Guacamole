@@ -65,6 +65,11 @@ void GizmoRendererSystem::Update()
     if (lines.empty())
         return;
 
+    // A scene can have no active camera (for example right after loading one that contains none) fixes crash.
+    Camera* camera = Scene::Get().GetCamera();
+    if (!camera)
+        return;
+
     std::vector<float> vertices;
     vertices.reserve(lines.size() * 2 * 6);
     for (const auto& line : lines)
@@ -102,13 +107,13 @@ void GizmoRendererSystem::Update()
     glUniformMatrix4fv(
         glGetUniformLocation(gizmoShader->programID, "view"),
         1, GL_FALSE,
-        glm::value_ptr(Scene::Get().GetCamera()->viewMatrix)
+        glm::value_ptr(camera->viewMatrix)
     );
 
     glUniformMatrix4fv(
         glGetUniformLocation(gizmoShader->programID, "projection"),
         1, GL_FALSE,
-        glm::value_ptr(Scene::Get().GetCamera()->projectionMatrix)
+        glm::value_ptr(camera->projectionMatrix)
     );
     glBindVertexArray(vao);
 

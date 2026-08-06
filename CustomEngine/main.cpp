@@ -30,7 +30,9 @@
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Editor/MenuBar/MenuBar.h"
 #include "Editor/EditorStyle.h"
+#include "Utilities/Debug/Debug.h"
 #include "Project/ProjectSettings.h"
+#include "Scene/SceneSerializer.h"
 #include "ECS/ComponentFactory.h"
 #include <filesystem>
 #include "Audio/AudioSource.h"
