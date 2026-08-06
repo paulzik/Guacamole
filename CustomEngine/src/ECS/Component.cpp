@@ -12,7 +12,3 @@ void Component::Start() {
 void Component::Update() {
     // default empty implementation
 }
-
-void Component::Destroy() {
-    // default empty implementation
-}

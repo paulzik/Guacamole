@@ -64,10 +64,4 @@ void CameraController::Update()
     */
 }
 
-void CameraController::Destroy()
-{
-    mouse = nullptr;
-    keyboard = nullptr;
-    transformComp = nullptr;
-}
 

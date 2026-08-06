@@ -13,10 +13,6 @@ void RigidBody::Update()
 {
 }
 
-void RigidBody::Destroy()
-{
-}
-
 void RigidBody::AddForce(const glm::vec3& force)
 {
 
