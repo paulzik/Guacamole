@@ -42,7 +42,8 @@ void ScenegraphEditor::Draw()
             if (selected && IsAncestorOf(entity, selected))
                 ImGui::SetNextItemOpen(true);
 
-            bool node_open = ImGui::TreeNodeEx((void*)entity, flags, "%s", entity->GetName());
+            // %s expects a const char* - passing std::string through varargs is UB.
+            bool node_open = ImGui::TreeNodeEx((void*)entity, flags, "%s", entity->GetName().c_str());
 
             if (ImGui::IsItemClicked())
             {

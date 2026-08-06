@@ -32,7 +32,7 @@ Entity::~Entity() {
 
 }
 
-const char* Entity::GetName() {
+std::string Entity::GetName() {
 	return name;
 }
 

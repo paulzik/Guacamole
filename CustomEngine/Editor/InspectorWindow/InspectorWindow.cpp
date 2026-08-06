@@ -20,7 +20,8 @@ void InspectorWindow::Draw() {
         return;
     }
 
-    ImGui::Text("Entity: %s", entity->GetName());
+    // %s expects a const char* - passing std::string through varargs is UB.
+    ImGui::Text("Entity: %s", entity->GetName().c_str());
 
     // Draw all components for this entity
     for (Component* c : entity->GetComponents<Component>()) {

@@ -12,7 +12,7 @@ class Entity {
 private:
     std::vector<std::unique_ptr<Component>> components;
     uint64_t entityID;
-    const char* name;
+    std::string name;
     Entity* parent = nullptr;
     std::vector<Entity*> children;
     uint64_t GenerateEntityID();
@@ -22,7 +22,7 @@ public:
     Entity(const char* name, glm::vec3 entityPosition);
     ~Entity();
 
-    const char* GetName();
+    std::string GetName();
     void PrintComponents();
 
     void Update();
