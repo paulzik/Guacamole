@@ -19,6 +19,7 @@ public:
     float roughness = 1.0f;
     
 
+    Material() = default;
     Material(std::shared_ptr<Shader> s);
     Material(std::shared_ptr<Texture2D> a, std::shared_ptr<Texture2D> n, std::shared_ptr<Shader> s);
     virtual ~Material() = default;

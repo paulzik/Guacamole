@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "ECS/Component.h"
+#include "ECS/AssetReflection.h"
 #include "AudioClip.h"
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -29,6 +30,7 @@ public:
 
     void Reflect(IFieldVisitor& visitor) override
     {
+        VisitAssetRef(visitor, "Clip", clip);
         visitor.Visit("Volume", volume);
         visitor.Visit("Pitch", pitch);
         visitor.Visit("Loop", loop);

@@ -1,7 +1,7 @@
 Version: 1
 Scene: Main
 Entities:
-  - Id: 16230906880885811824
+  - Id: 3838087567414612237
     Name: MainCamera
     Parent: 0
     Components:
@@ -23,7 +23,7 @@ Entities:
         MoveSpeed: 2
         Pitch: 0
         Yaw: -0
-  - Id: 16322478613433077615
+  - Id: 16140913061896356937
     Name: Cube1
     Parent: 0
     Components:
@@ -32,9 +32,16 @@ Entities:
         Rotation: [0, 0, 0, 0]
         Scale: [1, 1, 1]
       MeshFilter:
-        {}
+        Mesh: engine://Meshes/Cube
       MeshRenderer:
         Wireframe: false
+        VertexShader: engine://Shaders/BasicVertex.vert
+        FragmentShader: engine://Shaders/BasicFragment.frag
+        Albedo: ""
+        Normal: ""
+        BaseColor: [1, 1, 1, 1]
+        Metallic: 0
+        Roughness: 1
       BoxCollider:
         IsTrigger: false
         HalfExtend: [0.5, 0.5, 0.5]
@@ -47,10 +54,11 @@ Entities:
         UseGravity: true
         IsKinematic: false
       AudioSource:
+        Clip: Assets/Audio/youwin.mp3
         Volume: 1
         Pitch: 1
         Loop: false
-  - Id: 13650171943721847184
+  - Id: 12912357341852228473
     Name: SphereStatic
     Parent: 0
     Components:
@@ -59,9 +67,16 @@ Entities:
         Rotation: [0, 0, 0, 0]
         Scale: [1, 1, 1]
       MeshFilter:
-        {}
+        Mesh: engine://Meshes/Sphere
       MeshRenderer:
         Wireframe: false
+        VertexShader: engine://Shaders/BasicVertex.vert
+        FragmentShader: engine://Shaders/BasicFragment.frag
+        Albedo: ""
+        Normal: ""
+        BaseColor: [1, 1, 1, 1]
+        Metallic: 0
+        Roughness: 1
       SphereCollider:
         IsTrigger: false
         Radius: 0.5
@@ -73,7 +88,7 @@ Entities:
         AngularDamping: 0
         UseGravity: true
         IsKinematic: false
-  - Id: 2865313143922370877
+  - Id: 7314151374545209652
     Name: Sphere1
     Parent: 0
     Components:
@@ -82,10 +97,17 @@ Entities:
         Rotation: [0, 0, 0, 0]
         Scale: [1, 1, 1]
       MeshFilter:
-        {}
+        Mesh: engine://Meshes/Sphere
       MeshRenderer:
         Wireframe: false
-  - Id: 11662453092969810377
+        VertexShader: engine://Shaders/BasicVertex.vert
+        FragmentShader: engine://Shaders/BasicFragment.frag
+        Albedo: ""
+        Normal: ""
+        BaseColor: [1, 1, 1, 1]
+        Metallic: 0
+        Roughness: 1
+  - Id: 9233696179736764311
     Name: Light1
     Parent: 0
     Components:
@@ -97,7 +119,7 @@ Entities:
         Color: [1, 1, 1]
         Intensity: 1
         Radius: 20
-  - Id: 9100499980614533256
+  - Id: 4585294881363436463
     Name: Light2
     Parent: 0
     Components:
@@ -109,7 +131,7 @@ Entities:
         Color: [1, 0, 0]
         Intensity: 1
         Radius: 20
-  - Id: 10023810395820311034
+  - Id: 14010245449308645955
     Name: Miner
     Parent: 0
     Components:
@@ -118,10 +140,17 @@ Entities:
         Rotation: [0, 0, 0, 0]
         Scale: [1, 1, 1]
       MeshFilter:
-        {}
+        Mesh: Assets/Models/Miner.fbx#0
       MeshRenderer:
         Wireframe: false
-  - Id: 1660990234980898852
+        VertexShader: engine://Shaders/BasicVertex.vert
+        FragmentShader: engine://Shaders/BasicFragment.frag
+        Albedo: Assets/Models/MinerTexture.png
+        Normal: ""
+        BaseColor: [1, 1, 1, 1]
+        Metallic: 0
+        Roughness: 1
+  - Id: 7588318837378598143
     Name: General
     Parent: 0
     Components:
@@ -130,27 +159,19 @@ Entities:
         Rotation: [0, 0, 0, 0]
         Scale: [0.01, 0.01, 0.01]
       MeshFilter:
-        {}
+        Mesh: Assets/Models/GeneralAnimated.fbx#0
       SkinnedMeshRenderer:
         Wireframe: false
+        VertexShader: engine://Shaders/SkinnedVertex.vert
+        FragmentShader: engine://Shaders/BasicFragment.frag
+        Albedo: Assets/Models/GeneralRed.png
+        Normal: ""
+        BaseColor: [1, 1, 1, 1]
+        Metallic: 0
+        Roughness: 1
       Animator:
+        Model: Assets/Models/GeneralAnimated.fbx
         Loop: true
         Play: false
         CurrentAnimationTime: 0
         CurrentAnimationIndex: 0
-  - Id: 1578488746039913266
-    Name: TestParent
-    Parent: 0
-    Components:
-      Transform:
-        Position: [3, 0, 0]
-        Rotation: [0, 0, 0, 0]
-        Scale: [1, 1, 1]
-  - Id: 9204863798318738720
-    Name: TestChild
-    Parent: 1578488746039913266
-    Components:
-      Transform:
-        Position: [0, 1, 0]
-        Rotation: [0, 0, 0, 0]
-        Scale: [1, 1, 1]

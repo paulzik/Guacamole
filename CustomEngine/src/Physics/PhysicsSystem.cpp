@@ -12,25 +12,17 @@ void PhysicsSystem::TryRegister(Component* c)
     if (!body)
         return;
 
-    // Avoid double-registration
-    if (body->m_InternalBody)
-        return;
-
     Entity* owner = body->owner;
     if (!owner)
         return;
 
-    // Physics requires these component
     if (!owner->HasComponent<Transform>() || !owner->HasComponent<Collider>())
     {
         Debug::LogError(
             std::string("RigidBody added without Transform or Collider on entity: ")
             + owner->GetName()
         );
-        return;
     }
-
-    RegisterBody(body);
 }
 
 void PhysicsSystem::TryUnregister(Component* c)

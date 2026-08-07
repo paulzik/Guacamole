@@ -1,5 +1,6 @@
 #pragma once
 #include "ECS/Component.h"
+#include "ECS/AssetReflection.h"
 #include "Animation.h"
 #include "Assets/Model.h"
 #include <vector>
@@ -32,6 +33,7 @@ struct Animator : public Component {
 
     void Reflect(IFieldVisitor& visitor) override
     {
+        VisitAssetRef(visitor, "Model", model);
         visitor.Visit("Loop", loop);
         visitor.Visit("Play", play);
         visitor.Visit("CurrentAnimationTime", currentAnimationTime);
