@@ -21,13 +21,14 @@ bool SelectionSystem::Init()
 void SelectionSystem::TryRegister(Component* c)
 {
     auto mesh = dynamic_cast<MeshFilter*>(c);
-    if (!mesh || mesh->vertices.empty())
+
+    if (!mesh || !mesh->mesh || mesh->mesh->vertices.empty())
         return;
 
     glm::vec3 min(std::numeric_limits<float>::max());
     glm::vec3 max(std::numeric_limits<float>::lowest());
 
-    for (const Vertex& v : mesh->vertices) {
+    for (const Vertex& v : mesh->mesh->vertices) {
         min = glm::min(min, v.position);
         max = glm::max(max, v.position);
     }

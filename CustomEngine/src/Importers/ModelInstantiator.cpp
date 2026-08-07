@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include "ECS/MeshRenderer.h"
+#include "ECS/MeshFilter.h"
 #include "ECS/Scene.h"
 
 Entity* ModelInstantiator::Instantiate(const std::shared_ptr<Asset>& asset,
@@ -16,13 +17,13 @@ Entity* ModelInstantiator::Instantiate(const std::shared_ptr<Asset>& asset,
     }
 
     Entity* entity = Scene::Get().CreateEntity(entityName, position);
-    entity->AddComponent<MeshFilter>(*model->meshes[0]);
+    entity->AddComponent<MeshFilter>(model->meshes[0]);
 
     for (size_t i = 1; i < model->meshes.size(); ++i)
     {
         std::string childName = entityName + "_Mesh" + std::to_string(i);
         Entity* child = Scene::Get().CreateEntity(childName, position, entity);
-        child->AddComponent<MeshFilter>(*model->meshes[i]);
+        child->AddComponent<MeshFilter>(model->meshes[i]);
     }
 
     return entity;

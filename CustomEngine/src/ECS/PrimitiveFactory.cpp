@@ -9,7 +9,7 @@ PrimitiveFactory::~PrimitiveFactory() {
 
 }
 
-MeshFilter PrimitiveFactory::CreateCubePrimitive(float size)
+std::shared_ptr<Mesh> PrimitiveFactory::CreateCubePrimitive(float size)
 {
     float h = size * 0.5f;
 
@@ -66,10 +66,10 @@ MeshFilter PrimitiveFactory::CreateCubePrimitive(float size)
         20,21,22, 22,23,20
     };
 
-    return MeshFilter(verts, idx);
+    return std::make_shared<Mesh>(verts, idx);
 }
 
-MeshFilter PrimitiveFactory::CreateSpherePrimitive(float radius)
+std::shared_ptr<Mesh> PrimitiveFactory::CreateSpherePrimitive(float radius)
 {
     const int sectors = 32; // longitude
     const int stacks = 16;  // latitude
@@ -121,6 +121,6 @@ MeshFilter PrimitiveFactory::CreateSpherePrimitive(float radius)
         }
     }
 
-    return MeshFilter(verts, idx);
+    return std::make_shared<Mesh>(verts, idx);
 }
 

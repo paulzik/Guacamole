@@ -28,15 +28,18 @@ std::shared_ptr<Asset> ModelImporter::Load(const std::string& path)
         );
     }
 
-    // --- Meshes ---
-    auto meshFilters = ProcessScene(scene);
+    // --- Meshes (CPU data only for now) ---
+    auto meshData = ProcessScene(scene);
 
     // --- Skeleton ---
     std::shared_ptr<Skeleton> skeleton = nullptr;
     if (scene->HasAnimations())
     {
         skeleton = BuildSkeleton(scene);
-        ExtractBoneWeights(scene, meshFilters, skeleton);
+
+        // Writes bone ids/weights into the vertices, so it has to run before
+        // the data is handed to a Mesh and uploaded.
+        ExtractBoneWeights(scene, meshData, skeleton);
     }
 
     // --- Animations ---
@@ -46,17 +49,26 @@ std::shared_ptr<Asset> ModelImporter::Load(const std::string& path)
         animations = LoadAnimations(scene, skeleton);
     }
 
+    // --- Upload: the vertex data is final from here on ---
+    std::vector<std::shared_ptr<Mesh>> meshes;
+    meshes.reserve(meshData.size());
+    for (auto& data : meshData)
+    {
+        meshes.push_back(std::make_shared<Mesh>(std::move(data.vertices),
+                                                std::move(data.indices)));
+    }
+
     return std::make_shared<Model>(
-        meshFilters,
+        meshes,
         skeleton,
         animations
     );
 }
 
 
-std::vector<std::shared_ptr<MeshFilter>> ModelImporter::ProcessScene(const aiScene* scene)
+std::vector<ModelImporter::MeshData> ModelImporter::ProcessScene(const aiScene* scene)
 {
-    std::vector<std::shared_ptr<MeshFilter>> meshes;
+    std::vector<MeshData> meshes;
 
     for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
     {
@@ -67,7 +79,7 @@ std::vector<std::shared_ptr<MeshFilter>> ModelImporter::ProcessScene(const aiSce
     return meshes;
 }
 
-std::shared_ptr<MeshFilter> ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+ModelImporter::MeshData ModelImporter::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -138,7 +150,7 @@ std::shared_ptr<MeshFilter> ModelImporter::ProcessMesh(aiMesh* mesh, const aiSce
         }
     }
 
-    return std::make_shared<MeshFilter>(vertices, indices);
+    return MeshData{ std::move(vertices), std::move(indices) };
 }
 
 
@@ -181,14 +193,13 @@ glm::mat4 ModelImporter::AssimpToGLM(const aiMatrix4x4& from) {
 
 void ModelImporter::ExtractBoneWeights(
     const aiScene* scene,
-    std::vector<std::shared_ptr<MeshFilter>>& meshes,
+    std::vector<MeshData>& meshes,
     std::shared_ptr<Skeleton> skeleton)
 {
     for (size_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex)
     {
         aiMesh* ai_mesh = scene->mMeshes[meshIndex];
-        auto& meshFilter = meshes[meshIndex];
-        auto& vertices = meshFilter->vertices;
+        auto& vertices = meshes[meshIndex].vertices;
 
         for (unsigned int b = 0; b < ai_mesh->mNumBones; ++b)
         {

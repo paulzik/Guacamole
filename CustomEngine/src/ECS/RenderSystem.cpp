@@ -152,7 +152,14 @@ void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
     // -----------------------------
     // DRAW MESH
     // -----------------------------
-    MeshFilter& mesh = meshRenderer->owner->GetComponent<MeshFilter>();
+    MeshFilter* meshFilter = meshRenderer->owner->TryGetComponent<MeshFilter>();
+
+    // The mesh is an asset reference now, so it can legitimately be missing -
+    // a loaded scene whose mesh failed to resolve, for instance.
+    if (!meshFilter || !meshFilter->mesh)
+        return;
+
+    const Mesh& mesh = *meshFilter->mesh;
 
     glBindVertexArray(mesh.VAO);
     if (meshRenderer->wireframe)
@@ -160,7 +167,7 @@ void RenderSystem::UpdateMeshRenderers(MeshRenderer* meshRenderer)
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.indices.size()), GL_UNSIGNED_INT, 0);
 }
 
 void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRenderer)
@@ -285,9 +292,14 @@ void RenderSystem::UpdateSkinnedMeshRenderers(SkinnedMeshRenderer* skinnedMeshRe
     // -----------------------------
     // DRAW MESH
     // -----------------------------
-    MeshFilter& mesh = skinnedMeshRenderer->owner->GetComponent<MeshFilter>();
+    MeshFilter* meshFilter = skinnedMeshRenderer->owner->TryGetComponent<MeshFilter>();
+
+    if (!meshFilter || !meshFilter->mesh)
+        return;
+
+    const Mesh& mesh = *meshFilter->mesh;
 
     glBindVertexArray(mesh.VAO);
-    glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.indices.size()), GL_UNSIGNED_INT, 0);
 }
 

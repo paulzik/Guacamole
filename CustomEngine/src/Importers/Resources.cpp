@@ -1,5 +1,6 @@
 #include "Importers/Resources.h"
 #include "Importers/AssetImporterRegistry.h"
+#include "ECS/PrimitiveFactory.h"
 #include <filesystem>
 #include <string>
 #include <iostream>
@@ -14,8 +15,35 @@ std::filesystem::path Resources::Resolve(const std::string& path)
     return s_BasePath / path;
 }
 
+// Built-in meshes have no file: they are generated on first request and then cached
+static std::shared_ptr<Asset> CreateBuiltInMesh(const std::string& name)
+{
+    if (name == "Cube")   return PrimitiveFactory::CreateCubePrimitive();
+    if (name == "Sphere") return PrimitiveFactory::CreateSpherePrimitive();
+
+    std::cerr << "Unknown built-in mesh: " << name << std::endl;
+    return nullptr;
+}
+
 std::shared_ptr<Asset> Resources::Load(const std::string& path)
 {
+    if (auto cached = s_Cache.find(path); cached != s_Cache.end())
+        return cached->second;
+
+    // Built-in generated assets, before any filesystem lookup.
+    const std::string builtInMeshes = std::string(EngineScheme) + "Meshes/";
+    if (path.rfind(builtInMeshes, 0) == 0)
+    {
+        std::shared_ptr<Asset> generated = CreateBuiltInMesh(path.substr(builtInMeshes.size()));
+        if (!generated)
+            return nullptr;
+
+        generated->path = path;
+        generated->name = path.substr(builtInMeshes.size());
+        s_Cache[path] = generated;
+        return generated;
+    }
+
     std::filesystem::path fullPath = Resolve(path);
 
     if (!std::filesystem::exists(fullPath))
@@ -35,13 +63,12 @@ std::shared_ptr<Asset> Resources::Load(const std::string& path)
 
     std::shared_ptr<Asset> asset = importer->Load(fullPath.string());
 
-    // Record where the asset came from, centrally, so every importer gets this
-    // for free. The stored path is the one the caller passed in, so it can be
-    // written into a scene file and handed back to Load() unchanged.
     if (asset)
     {
         asset->path = path;
         asset->name = fullPath.filename().string();
+
+        s_Cache[path] = asset;
     }
 
     return asset;

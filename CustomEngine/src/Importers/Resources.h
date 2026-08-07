@@ -2,20 +2,16 @@
 #include <memory>
 #include <string>
 #include <filesystem>
+#include <unordered_map>
 class Asset;
 
-// Resolves asset paths against one of two roots:
-//
-//   "Assets/Models/Miner.fbx"          -> the open project's folder
-//   "engine://Shaders/BasicVertex.vert"-> the engine's own files, next to the exe
-//
-// Engine code must use the engine:// form so it never depends on a project
-// happening to contain a particular file.
 class Resources
 {
 private:
     inline static std::filesystem::path s_BasePath;    // project root
     inline static std::filesystem::path s_EnginePath;  // engine root
+
+    inline static std::unordered_map<std::string, std::shared_ptr<Asset>> s_Cache;
 
 public:
     static constexpr const char* EngineScheme = "engine://";
@@ -25,8 +21,6 @@ public:
     template<typename T>
     static std::shared_ptr<T> Load(const std::string& path)
     {
-        // path/name are filled in by the non-template Load, so every asset gets
-        // them regardless of which overload was used.
         auto asset = Load(path);
         return std::dynamic_pointer_cast<T>(asset);
     }

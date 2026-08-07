@@ -131,7 +131,9 @@ int main(int argc, char** argv) {
 
     // ---------------- Scene primitives ----------------
     Entity* cube1 = Scene::Get().CreateEntity("Cube1", vec3(-1.2f, 0, 0));
-    MeshFilter& cubeMesh = cube1->AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
+    MeshFilter& cubeMesh = cube1->AddComponent<MeshFilter>(Resources::Load<Mesh>("engine://Meshes/Cube"));;
+    //MeshFilter& cubeMesh = cube1->AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
+    
     MeshRenderer& cubeRenderer = cube1->AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
     // Collider first: PhysicsSystem only registers a RigidBody once its
@@ -140,14 +142,14 @@ int main(int argc, char** argv) {
     cube1->AddComponent<RigidBody>(1.0f);
 
     Entity* sphereStatic = Scene::Get().CreateEntity("SphereStatic", vec3(-1.2f, -3, 0));
-    MeshFilter& sphereStaticMesh = sphereStatic->AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.5f));
+    MeshFilter& sphereStaticMesh = sphereStatic->AddComponent<MeshFilter>(Resources::Load<Mesh>("engine://Meshes/Sphere"));
     MeshRenderer& sphereStaticRenderer = sphereStatic->AddComponent<MeshRenderer>();
     sphereStaticRenderer.material = standardMaterial;
     sphereStatic->AddComponent<SphereCollider>(false, 0.5f);
     sphereStatic->AddComponent<RigidBody>(0);
 
     Entity* sphere1 = Scene::Get().CreateEntity("Sphere1", vec3(1, 1, -1));
-    MeshFilter& sphereMesh = sphere1->AddComponent<MeshFilter>(PrimitiveFactory::CreateSpherePrimitive(0.8f));
+    MeshFilter& sphereMesh = sphere1->AddComponent<MeshFilter>(Resources::Load<Mesh>("engine://Meshes/Sphere"));
     MeshRenderer& sphereRenderer = sphere1->AddComponent<MeshRenderer>();
     sphereRenderer.material = standardMaterial;
 
@@ -205,6 +207,7 @@ int main(int argc, char** argv) {
     //audioSource.Play();
 
     Scene::Get().Start();
+
 
     bool running = true;
     while (running) {
