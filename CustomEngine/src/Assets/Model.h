@@ -21,4 +21,6 @@ public:
     }
 
     ~Model() override = default;
+
+    void OnPathAssigned() override;
 };

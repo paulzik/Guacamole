@@ -8,4 +8,6 @@ public:
     std::string name;
 
     virtual ~Asset() = default;
+
+    virtual void OnPathAssigned() {}
 };
