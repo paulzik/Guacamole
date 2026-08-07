@@ -6,8 +6,15 @@
 
 void MeshFilterEditor::Draw(Component* component) {
     MeshFilter* meshFilter = static_cast<MeshFilter*>(component);
-    ImGui::LabelText("Mesh", meshFilter->mesh.get()->name.c_str());
-    int triangles = meshFilter->mesh->indices.size()/3;
+
+    if (!meshFilter->mesh) {
+        ImGui::TextDisabled("No mesh assigned.");
+        return;
+    }
+
+    ImGui::LabelText("Mesh", meshFilter->mesh->name.c_str());
+
+    int triangles = static_cast<int>(meshFilter->mesh->indices.size() / 3);
     std::string s = std::to_string(triangles);
     ImGui::LabelText("Triangles", s.c_str());
 }

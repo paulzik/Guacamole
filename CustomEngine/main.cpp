@@ -10,7 +10,6 @@
 #include "ECS/Entity.h"
 #include "ECS/Scene.h"
 #include "ECS/MeshFilter.h"
-#include "ECS/PrimitiveFactory.h"
 #include "ECS/MeshRenderer.h"
 #include "ECS/SkinnedMeshRenderer.h"
 #include "ECS/Transform.h"
@@ -30,10 +29,8 @@
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
 #include "Editor/MenuBar/MenuBar.h"
 #include "Editor/EditorStyle.h"
-#include "Utilities/Debug/Debug.h"
 #include "Project/ProjectSettings.h"
 #include "Scene/SceneSerializer.h"
-#include "ECS/ComponentFactory.h"
 #include <filesystem>
 #include "Audio/AudioSource.h"
 #include "Audio/AudioListener.h"
@@ -132,12 +129,8 @@ int main(int argc, char** argv) {
     // ---------------- Scene primitives ----------------
     Entity* cube1 = Scene::Get().CreateEntity("Cube1", vec3(-1.2f, 0, 0));
     MeshFilter& cubeMesh = cube1->AddComponent<MeshFilter>(Resources::Load<Mesh>("engine://Meshes/Cube"));;
-    //MeshFilter& cubeMesh = cube1->AddComponent<MeshFilter>(PrimitiveFactory::CreateCubePrimitive());
-    
     MeshRenderer& cubeRenderer = cube1->AddComponent<MeshRenderer>();
     cubeRenderer.material = standardMaterial;
-    // Collider first: PhysicsSystem only registers a RigidBody once its
-    // Collider is present.
     cube1->AddComponent<BoxCollider>(false, glm::vec3(0.5f));
     cube1->AddComponent<RigidBody>(1.0f);
 
