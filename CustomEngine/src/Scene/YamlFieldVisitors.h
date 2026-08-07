@@ -2,10 +2,11 @@
 #include "ECS/IFieldVisitor.h"
 #include <yaml-cpp/yaml.h>
 
-// Writes each visited field as a key/value pair into the emitter.
 class YamlWriteVisitor : public IFieldVisitor {
 public:
     explicit YamlWriteVisitor(YAML::Emitter& emitter) : out(emitter) {}
+
+    bool IsReading() const override { return false; }
 
     void Visit(const char* name, bool& value) override;
     void Visit(const char* name, int& value) override;
@@ -21,10 +22,11 @@ private:
     YAML::Emitter& out;
 };
 
-// Reads each visited field from the node. Fields missing from the file are left at their current value
 class YamlReadVisitor : public IFieldVisitor {
 public:
     explicit YamlReadVisitor(const YAML::Node& source) : node(source) {}
+
+    bool IsReading() const override { return true; }
 
     void Visit(const char* name, bool& value) override;
     void Visit(const char* name, int& value) override;

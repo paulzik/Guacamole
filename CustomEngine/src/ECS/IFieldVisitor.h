@@ -9,6 +9,8 @@ class IFieldVisitor {
 public:
     virtual ~IFieldVisitor() = default;
 
+    virtual bool IsReading() const = 0;
+
     virtual void Visit(const char* name, bool& value) = 0;
     virtual void Visit(const char* name, int& value) = 0;
     virtual void Visit(const char* name, float& value) = 0;

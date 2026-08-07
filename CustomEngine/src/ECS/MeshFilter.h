@@ -1,5 +1,6 @@
 #pragma once
 #include "ECS/Component.h"
+#include "ECS/AssetReflection.h"
 #include "../Assets/Mesh.h"
 #include <memory>
 
@@ -14,8 +15,6 @@ struct MeshFilter : public Component {
     COMPONENT_NAME(MeshFilter);
 
     void Reflect(IFieldVisitor& v) override {
-        
-        /* the mesh reference */ 
-    
+        VisitAssetRef(v, "Mesh", mesh);
     }
 };
