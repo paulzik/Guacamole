@@ -11,6 +11,7 @@
 
 static Uint32 s_openProjectEvent = 0;
 static Uint32 s_openSceneEvent = 0;
+static Uint32 s_saveSceneEvent = 0;
 
 // Scene files only, so the picker does not offer to open a model or a texture.
 static const SDL_DialogFileFilter s_sceneFilters[] = {
@@ -26,6 +27,9 @@ MenuBar::MenuBar(std::vector<std::unique_ptr<EditorWindow>>* windows, SDL_Window
 
     if (s_openSceneEvent == 0)
         s_openSceneEvent = SDL_RegisterEvents(1);
+
+    if (s_saveSceneEvent == 0)
+        s_saveSceneEvent = SDL_RegisterEvents(1);
 }
 
 static void PushChosenPath(Uint32 eventType, const char* const* filelist)
@@ -50,12 +54,25 @@ static void OnSceneChosen(void* /*userdata*/, const char* const* filelist, int)
     PushChosenPath(s_openSceneEvent, filelist);
 }
 
+static void OnSaveLocationChosen(void* /*userdata*/, const char* const* filelist, int)
+{
+    PushChosenPath(s_saveSceneEvent, filelist);
+}
+
+static std::filesystem::path EnsureSceneExtension(std::filesystem::path path)
+{
+    if (path.extension() != ".scene")
+        path.replace_extension(".scene");
+    return path;
+}
+
 bool MenuBar::HandleEvent(const SDL_Event& event)
 {
     const bool isProject = (s_openProjectEvent != 0 && event.type == s_openProjectEvent);
     const bool isScene   = (s_openSceneEvent   != 0 && event.type == s_openSceneEvent);
+    const bool isSaveAs  = (s_saveSceneEvent   != 0 && event.type == s_saveSceneEvent);
 
-    if (!isProject && !isScene)
+    if (!isProject && !isScene && !isSaveAs)
         return false;
 
     char* chosen = static_cast<char*>(event.user.data1);
@@ -65,9 +82,18 @@ bool MenuBar::HandleEvent(const SDL_Event& event)
     const std::filesystem::path selected = chosen;
     SDL_free(chosen);
 
+    if (isSaveAs)
+    {
+        const std::filesystem::path target = EnsureSceneExtension(selected);
+        if (SceneSerializer::Serialize(target))
+            currentScenePath = target;
+        return true;
+    }
+
     if (isScene)
     {
-        SceneSerializer::DeSerialize(selected);
+        if (SceneSerializer::DeSerialize(selected))
+            currentScenePath = selected;
         return true;
     }
 
@@ -87,10 +113,12 @@ bool MenuBar::HandleEvent(const SDL_Event& event)
     {
         Debug::LogWarning("Project declares no StartupScene - starting empty");
         Scene::Get().Clear();
+        currentScenePath.clear();
     }
     else
     {
-        SceneSerializer::DeSerialize(ProjectSettings::Get().GetRootPath() / startupScene);
+        currentScenePath = ProjectSettings::Get().GetRootPath() / startupScene;
+        SceneSerializer::DeSerialize(currentScenePath);
     }
 
     return true;
@@ -102,29 +130,45 @@ void MenuBar::Draw()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Open Project")) {
+            if (ImGui::MenuItem("Open Project")) 
+            {
                 const std::string start = ProjectSettings::Get().GetRootPath().parent_path().string();
                 SDL_ShowOpenFolderDialog(OnFolderChosen, this, sdlWindow, start.c_str(), false);
             }
             ImGui::Separator();
             if (ImGui::MenuItem("New Scene")) {}
-            if (ImGui::MenuItem("Open Scene")) {
-
-                const std::string start =
-                    (ProjectSettings::Get().GetRootPath() / "Assets").string();
+            if (ImGui::MenuItem("Open Scene")) 
+            {
+                const std::string start = (ProjectSettings::Get().GetRootPath() / "Assets").string();
 
                 SDL_ShowOpenFileDialog(OnSceneChosen, this, sdlWindow,
                                        s_sceneFilters, SDL_arraysize(s_sceneFilters),
                                        start.c_str(), false);
             }
-            if (ImGui::MenuItem("Clear Scene")) {
+            if (ImGui::MenuItem("Clear Scene")) 
+            {
                 Scene::Get().Clear();
             }
+
             ImGui::Separator();
-            if (ImGui::MenuItem("Save ")) {
-                SceneSerializer::Serialize(ProjectSettings::Get().GetRootPath() / ProjectSettings::Get().GetStartupScene());
+
+            if (ImGui::MenuItem("Save"))
+            {
+                const std::filesystem::path target = !currentScenePath.empty()
+                    ? currentScenePath
+                    : ProjectSettings::Get().GetRootPath() / ProjectSettings::Get().GetStartupScene();
+
+                if (SceneSerializer::Serialize(target))
+                    currentScenePath = target;
             }
-            if (ImGui::MenuItem("Save As")) {}
+            if (ImGui::MenuItem("Save As"))
+            {
+                const std::string start = (ProjectSettings::Get().GetRootPath() / "Assets").string();
+
+                SDL_ShowSaveFileDialog(OnSaveLocationChosen, this, sdlWindow,
+                                       s_sceneFilters, SDL_arraysize(s_sceneFilters),
+                                       start.c_str());
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Exit")) {
                 SDL_Event quit{ SDL_EVENT_QUIT };
