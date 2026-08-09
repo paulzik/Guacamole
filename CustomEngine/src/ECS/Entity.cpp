@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "Transform.h"
 #include "ComponentFactory.h"
+#include <algorithm>
 #include <iostream>
 #include <random>
 
@@ -30,6 +31,21 @@ Component& Entity::AttachComponent(std::unique_ptr<Component> component)
     SystemManager::OnComponentAdded(&ref);
 
     return ref;
+}
+
+void Entity::RemoveComponent(Component* component)
+{
+    if (!component)
+        return;
+
+    auto it = std::find_if(components.begin(), components.end(),
+        [component](const std::unique_ptr<Component>& c) { return c.get() == component; });
+
+    if (it == components.end())
+        return;
+
+    SystemManager::OnComponentRemoved(component);
+    components.erase(it);
 }
 
 Component* Entity::GetComponentByName(const std::string& name)

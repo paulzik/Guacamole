@@ -51,6 +51,7 @@ public:
     Component& AttachComponent(std::unique_ptr<Component> component);
     Component* GetComponentByName(const std::string& name);
     Component* GetOrCreateComponent(const std::string& name);
+    void RemoveComponent(Component* component);
 
     template<typename T, typename... Args>
     T& AddComponent(Args&&... args)
