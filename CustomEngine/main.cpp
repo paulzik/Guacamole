@@ -27,6 +27,7 @@
 #include "Lighting/PointLight.h"
 #include "Animations/Animator.h"
 #include "Editor/ConsoleWindow/ConsoleWindow.h"
+#include "Editor/ContentBrowserWindow/ContentBrowserWindow.h"
 #include "Editor/MenuBar/MenuBar.h"
 #include "Editor/EditorStyle.h"
 #include "Project/ProjectSettings.h"
@@ -157,6 +158,7 @@ int main(int argc, char** argv) {
     editorWindows.push_back(std::make_unique<ScenegraphEditor>(&Scene::Get().GetScenegraph()));
     editorWindows.push_back(std::make_unique<InspectorWindow>());
     editorWindows.push_back(std::make_unique<ConsoleWindow>());
+    editorWindows.push_back(std::make_unique<ContentBrowserWindow>());
 
     MenuBar menuBar(&editorWindows, window);
 
