@@ -34,8 +34,8 @@ void MeshRendererEditor::Draw(Component* component) {
         GLuint my_tex_id = material->albedo->ID;
 
         ImVec2 size(32, 32);
-        ImVec2 uv0(0, 0);
-        ImVec2 uv1(1, 1);
+        ImVec2 uv0(0, 1);
+        ImVec2 uv1(1, 0);
         ImVec4 bg_col(0, 0, 0, 1);
         ImVec4 tint_col(1, 1, 1, 1);
 
