@@ -119,6 +119,7 @@ void Entity::AddChild(Entity* child)
 {
     if (!child) {
         std::cout << "Child is null abort" << std::endl;
+        return;
     }
 
     children.push_back(child);
